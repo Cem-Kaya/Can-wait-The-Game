@@ -18,9 +18,10 @@ public class Colection_script : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-        Debug.Log("naem :" + collision.tag);
+        //Debug.Log("naem :" + collision.tag);
 		if(collision.tag == "Player")
 		{
+            box_mover.coin_num++;
             Destroy(gameObject);
 		}
 	}

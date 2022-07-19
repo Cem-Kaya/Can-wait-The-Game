@@ -8,7 +8,9 @@ public class box_mover : MonoBehaviour
 {
     public float speed ;   
     public Player_input_actions control ;
+	public Text coin_text;
 
+	public static int coin_num; 
 	Rigidbody2D rb;
 	private int moving;
 	private Vector2 movement_direction;
@@ -27,12 +29,13 @@ public class box_mover : MonoBehaviour
 	{
 		movement_direction = new Vector2(0, 0);
 		moving = 0;
+		coin_num = 0;
 		speed = 5;
 		rb = GetComponent<Rigidbody2D>();
 	}
 	public void Update()
 	{
-		
+		coin_text.text = "coind :" + coin_num;
 	}
 
 	public void FixedUpdate()
