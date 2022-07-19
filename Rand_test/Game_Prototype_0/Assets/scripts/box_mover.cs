@@ -2,6 +2,7 @@
 //using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 	
 public class box_mover : MonoBehaviour
 {
@@ -26,7 +27,7 @@ public class box_mover : MonoBehaviour
 	{
 		movement_direction = new Vector2(0, 0);
 		moving = 0;
-		speed = 3;
+		speed = 5;
 		rb = GetComponent<Rigidbody2D>();
 	}
 	public void Update()
@@ -40,7 +41,7 @@ public class box_mover : MonoBehaviour
 			rb.velocity = new Vector2(movement_direction.x , movement_direction.y );
 			rb.velocity *= speed;
 		}
-		Debug.Log("moving is :" + moving);
+		//Debug.Log("moving is :" + moving);
 
 	}
 	public void start_move(Vector2 input_diraction)
@@ -56,7 +57,7 @@ public class box_mover : MonoBehaviour
 	public void end_move(Vector2 input_diraction)
 	{
 		moving--;
-		Debug.Log("moveing: "+ moving);
+		//Debug.Log("moveing: "+ moving);
 	}
 
 	private void OnEnable()
