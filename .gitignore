@@ -11,6 +11,9 @@
 /[Uu]ser[Ss]ettings/
 #personal log 
 log.docx
+/[Vv]ids/
+*.xlsx
+*.mkv
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
 /[Mm]emoryCaptures/

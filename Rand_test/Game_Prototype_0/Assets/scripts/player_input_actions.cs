@@ -35,6 +35,15 @@ public partial class @Player_input_actions : IInputActionCollection2, IDisposabl
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""fire"",
+                    ""type"": ""Value"",
+                    ""id"": ""2bd26b3d-a170-4d12-8b72-488489bc1cc7"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -92,6 +101,61 @@ public partial class @Player_input_actions : IInputActionCollection2, IDisposabl
                     ""action"": ""move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""da9c697c-30db-408e-b83d-b97c60dc0119"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""fire"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""4899a227-ca6f-4f15-8c73-7470be0b50cb"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""491b552a-70c7-4171-a1b3-66671da330e1"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""66bc8f48-f4b3-4d81-8434-eae8b16e7b04"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""a2765029-a914-43ac-b1a1-7da40389858c"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -113,6 +177,7 @@ public partial class @Player_input_actions : IInputActionCollection2, IDisposabl
         // player
         m_player = asset.FindActionMap("player", throwIfNotFound: true);
         m_player_move = m_player.FindAction("move", throwIfNotFound: true);
+        m_player_fire = m_player.FindAction("fire", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -173,11 +238,13 @@ public partial class @Player_input_actions : IInputActionCollection2, IDisposabl
     private readonly InputActionMap m_player;
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_player_move;
+    private readonly InputAction m_player_fire;
     public struct PlayerActions
     {
         private @Player_input_actions m_Wrapper;
         public PlayerActions(@Player_input_actions wrapper) { m_Wrapper = wrapper; }
         public InputAction @move => m_Wrapper.m_player_move;
+        public InputAction @fire => m_Wrapper.m_player_fire;
         public InputActionMap Get() { return m_Wrapper.m_player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -190,6 +257,9 @@ public partial class @Player_input_actions : IInputActionCollection2, IDisposabl
                 @move.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
                 @move.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
                 @move.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
+                @fire.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFire;
+                @fire.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFire;
+                @fire.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFire;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -197,6 +267,9 @@ public partial class @Player_input_actions : IInputActionCollection2, IDisposabl
                 @move.started += instance.OnMove;
                 @move.performed += instance.OnMove;
                 @move.canceled += instance.OnMove;
+                @fire.started += instance.OnFire;
+                @fire.performed += instance.OnFire;
+                @fire.canceled += instance.OnFire;
             }
         }
     }
@@ -213,5 +286,6 @@ public partial class @Player_input_actions : IInputActionCollection2, IDisposabl
     public interface IPlayerActions
     {
         void OnMove(InputAction.CallbackContext context);
+        void OnFire(InputAction.CallbackContext context);
     }
 }
