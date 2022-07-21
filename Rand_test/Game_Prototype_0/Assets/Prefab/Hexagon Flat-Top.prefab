@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1742684183307504907}
   - component: {fileID: 4309976001858774725}
   - component: {fileID: 5231094680143644166}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Hexagon Flat-Top
   m_TagString: Bullet
   m_Icon: {fileID: 0}
@@ -152,4 +152,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifetime: 3
-  max_bounce: 1
+  max_bounce: 2

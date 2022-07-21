@@ -6,6 +6,7 @@ public class Bullet_controller : MonoBehaviour
 {
     public float lifetime= 3 ;
     public uint max_bounce = 5 ;
+    public float damage = 1;
     // Start is called before the first frame update
     void Start()
     {

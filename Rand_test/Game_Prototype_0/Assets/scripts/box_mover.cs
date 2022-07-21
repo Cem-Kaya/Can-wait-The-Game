@@ -53,7 +53,7 @@ public class box_mover : MonoBehaviour
 	}
 	public void Update()
 	{
-		coin_text.text = "coind :" + coin_num;
+		coin_text.text = " coin :" + coin_num;
 	}
 
 	public void FixedUpdate()
