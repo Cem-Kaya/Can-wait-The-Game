@@ -207,9 +207,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58333d271cac7f744b65f9231008e721, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  amiba: {fileID: 2528314809511988402}
   state: 1
-  vision_range: 3
-  speed: 10
+  vision_range: 6
+  speed: 3
   player: {fileID: 0}
   health: 100
 --- !u!50 &2528314809511988412

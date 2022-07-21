@@ -12,8 +12,9 @@ public enum Ai_state
 
 public class Eneymy_ai : MonoBehaviour
 {
-    public Ai_state state = Ai_state.walk;
-    public float vision_range = 10 ;
+	public GameObject amiba;
+	public Ai_state state = Ai_state.walk;
+    public float vision_range = 5 ;
 	public float speed = 3 ;
     public GameObject player;
 	public float health = 100.0f;
@@ -21,10 +22,13 @@ public class Eneymy_ai : MonoBehaviour
 	private Quaternion look_dir; 
 	private Vector2 walking_direction;
 	private Rigidbody2D rb;
+	private bool once ;
+
 	// Start is called before the first frame update
 	private void Awake()
 	{
-		
+		state = Ai_state.walk;
+		once = false;
 	}
 	void Start()
     {
@@ -79,43 +83,50 @@ public class Eneymy_ai : MonoBehaviour
 			
 		}
 	}
-
-	private IEnumerator interp_look()
-	{
-		while (true)
-		{
-			for (int i = 0; i< 100 ;i++) { 
-				//look_dir= Vector3.Lerp(startMarker.position, endMarker.position, i){
-				yield return null;
-
-			}
-
-
-		}
-	}
+	
 	private void walk()
 	{
-		transform.rotation =  Quaternion.LookRotation(Vector3.forward, walking_direction);
-		rb.velocity = Vector2.ClampMagnitude(walking_direction * speed, speed);
+		//transform.rotation = look_dir;//Quaternion.LookRotation(Vector3.forward, walking_direction);
+		rb.velocity = Vector2.ClampMagnitude(walking_direction * speed + new Vector2(0.5f,0.5f), speed);
 	}
 	
 	private void attack()
 	{
-		walking_direction = player.transform.position - transform.position * 2;		
+		walking_direction = player.transform.position - transform.position    ;
+		walking_direction.Normalize();
 		rb.velocity = Vector2.ClampMagnitude(walking_direction * speed , speed)  ;
 		
 	}
 	private void die()
 	{
-		Destroy(gameObject);
+		if (once== false)
+		{			
+			once = true;
+			Debug.Log(GetInstanceID());
+			GameObject child_amiba = Instantiate(amiba, transform.position + new Vector3(Random.Range(-1, 1), Random.Range(-1, 1), 1), Quaternion.identity);
+			GameObject child_amiba2 = Instantiate(amiba, transform.position + new Vector3(Random.Range(-1, 1), Random.Range(-1, 1), 1), Quaternion.identity);
+			child_amiba.transform.localScale = new Vector3(transform.localScale.x * 0.5f, transform.localScale.y * 0.5f, transform.localScale.z * 0.5f);
+			child_amiba2.transform.localScale = new Vector3(transform.localScale.x * 0.5f, transform.localScale.y * 0.5f, transform.localScale.z * 0.5f);
+		}
+		StartCoroutine(delayed_death());
+
 	}
+
+	private IEnumerator delayed_death()
+	{
+		
+		yield return new WaitForFixedUpdate() ;
+		Destroy(gameObject);		
+	}
+
+
 	private bool close_enough()
 	{
 		for(int i = 0; i< 36; i++)
 		{
 			Vector2 pos = new Vector2(transform.position.x, transform.position.y );
 						
-			Debug.DrawLine(pos + new Vector2( Mathf.Sin(2f * Mathf.PI / 36.0f * i), Mathf.Cos(2f * Mathf.PI / 36.0f * i)) * vision_range , pos + new Vector2( Mathf.Sin(2f * Mathf.PI / 36.0f * i+1 ) , Mathf.Cos(2f * Mathf.PI / 36.0f * i + 1) ) * vision_range, Color.black , 0.5f );
+			//Debug.DrawLine(pos + new Vector2( Mathf.Sin(2f * Mathf.PI / 36.0f * i), Mathf.Cos(2f * Mathf.PI / 36.0f * i)) * vision_range , pos + new Vector2( Mathf.Sin(2f * Mathf.PI / 36.0f * i+1 ) , Mathf.Cos(2f * Mathf.PI / 36.0f * i + 1) ) * vision_range, Color.black , 0.5f );
 		}
 		return Vector2.Distance(transform.position, player.transform.position) < vision_range;
 	}
@@ -132,7 +143,7 @@ public class Eneymy_ai : MonoBehaviour
 			}
 		}
 		else if (other.gameObject.tag == "Bullet")
-		{
+		{		
 			health -= other.gameObject.GetComponent<Bullet_controller>().damage;
 			//Debug.Log("health :" + health);
 			if (health <= 0)

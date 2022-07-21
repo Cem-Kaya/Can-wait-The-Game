@@ -992,6 +992,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: extra_weight
       objectReference: {fileID: 0}
+    - target: {fileID: 2528314809511988414, guid: 299b75fe50a1ad2468efafad58816e64, type: 3}
+      propertyPath: speed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2528314809511988414, guid: 299b75fe50a1ad2468efafad58816e64, type: 3}
+      propertyPath: vision_range
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 299b75fe50a1ad2468efafad58816e64, type: 3}
 --- !u!1 &1539181258
@@ -1436,6 +1444,10 @@ PrefabInstance:
     - target: {fileID: 2931956275494323237, guid: d671f7c276cbfe14580dae75a61972c0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2931956275494323238, guid: d671f7c276cbfe14580dae75a61972c0, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d671f7c276cbfe14580dae75a61972c0, type: 3}
