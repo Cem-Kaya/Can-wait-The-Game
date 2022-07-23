@@ -14,7 +14,8 @@ public class box_mover : MonoBehaviour
 	private ulong  last_firesd ;
 	private ulong timer;
 	private uint fdelay; // 0.01 sec is 1  
-	
+	private float terminal_velocity ;
+
 	public static int coin_num; 
 	Rigidbody2D rb;
 	private int moving;
@@ -26,7 +27,7 @@ public class box_mover : MonoBehaviour
 	public void Awake()
 	{		
 		control = new Player_input_actions();
-		
+		terminal_velocity = 10 ;
 		control.player.move.started += ctx => start_move(ctx.ReadValue<Vector2>());// gets input too early cant read multipress // register to the system with contect ctx 
 		control.player.move.performed += ctx => mid_move(ctx.ReadValue<Vector2>()); // register to the system with contect ctx 
 		control.player.move.canceled += ctx => end_move(ctx.ReadValue<Vector2>()); // register to the system with contect ctx 
@@ -58,6 +59,8 @@ public class box_mover : MonoBehaviour
 
 	public void FixedUpdate()
 	{
+		rb.velocity = Vector3.ClampMagnitude(rb.velocity, terminal_velocity);
+		Debug.Log("V : "+ rb.velocity);
 		fire();
 		if (moving>0) {			
 			rb.velocity = new Vector2(movement_direction.x , movement_direction.y );
