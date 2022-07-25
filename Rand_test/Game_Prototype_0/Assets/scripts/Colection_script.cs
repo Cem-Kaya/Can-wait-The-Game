@@ -21,7 +21,9 @@ public class Colection_script : MonoBehaviour
         //Debug.Log("naem :" + collision.tag);
 		if(other.gameObject.tag == "Player")
 		{
-            box_mover.coin_num++;
+            box_mover my_box_mover;
+            my_box_mover = other.gameObject.GetComponent<box_mover>();
+            my_box_mover.coin_num++;
             Destroy(gameObject);
 		}
 	}

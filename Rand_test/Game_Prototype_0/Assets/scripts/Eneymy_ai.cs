@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+
 public enum Ai_state
 {
 	idle,
@@ -20,6 +21,7 @@ public class Eneymy_ai : MonoBehaviour
 	public float speed = 3 ;
     public GameObject player;
 	public float health = 100.0f;
+	
 
 	private Quaternion look_dir; 
 	private Vector2 walking_direction;
@@ -129,7 +131,7 @@ public class Eneymy_ai : MonoBehaviour
 		{
 			Vector2 pos = new Vector2(transform.position.x, transform.position.y );
 						
-			//Debug.DrawLine(pos + new Vector2( Mathf.Sin(2f * Mathf.PI / 36.0f * i), Mathf.Cos(2f * Mathf.PI / 36.0f * i)) * vision_range , pos + new Vector2( Mathf.Sin(2f * Mathf.PI / 36.0f * i+1 ) , Mathf.Cos(2f * Mathf.PI / 36.0f * i + 1) ) * vision_range, Color.black , 0.5f );
+			Debug.DrawLine(pos + new Vector2( Mathf.Sin(2f * Mathf.PI / 36.0f * i), Mathf.Cos(2f * Mathf.PI / 36.0f * i)) * vision_range , pos + new Vector2( Mathf.Sin(2f * Mathf.PI / 36.0f * i+1 ) , Mathf.Cos(2f * Mathf.PI / 36.0f * i + 1) ) * vision_range, Color.black , 0.5f );
 		}
 		return Vector2.Distance(transform.position, player.transform.position) < vision_range;
 	}
@@ -153,6 +155,11 @@ public class Eneymy_ai : MonoBehaviour
 			{
 				state = Ai_state.die;
 			}
-		}		
+		}
+		else if (other.gameObject.tag == "Player")
+		{
+			//Debug.Log("Player hit");
+			Player_controller.take_damage(1);
+		}
 	}
 }

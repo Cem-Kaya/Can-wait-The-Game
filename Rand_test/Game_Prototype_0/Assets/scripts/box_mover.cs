@@ -2,21 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
-	
+using TMPro;
+
 public class box_mover : MonoBehaviour
 {
 	public GameObject bullet_prefab; 
     public float speed ;   
     public Player_input_actions control ;
-	public Text coin_text;
-
+	public TextMeshProUGUI coin_text;
+	public TextMeshProUGUI health_text;
+	
 	private ulong  last_firesd ;
 	private ulong timer;
 	private uint fdelay; // 0.01 sec is 1  
 	private float terminal_velocity ;
 
-	public static int coin_num; 
+	public  int coin_num; 
 	Rigidbody2D rb;
 	private int moving;
 	private Vector2 movement_direction;
@@ -27,7 +28,7 @@ public class box_mover : MonoBehaviour
 	public void Awake()
 	{		
 		control = new Player_input_actions();
-		terminal_velocity = 10 ;
+		terminal_velocity = 20 ;
 		control.player.move.started += ctx => start_move(ctx.ReadValue<Vector2>());// gets input too early cant read multipress // register to the system with contect ctx 
 		control.player.move.performed += ctx => mid_move(ctx.ReadValue<Vector2>()); // register to the system with contect ctx 
 		control.player.move.canceled += ctx => end_move(ctx.ReadValue<Vector2>()); // register to the system with contect ctx 
@@ -55,12 +56,13 @@ public class box_mover : MonoBehaviour
 	public void Update()
 	{
 		coin_text.text = " coin :" + coin_num;
+				
 	}
 
 	public void FixedUpdate()
 	{
 		rb.velocity = Vector3.ClampMagnitude(rb.velocity, terminal_velocity);
-		Debug.Log("V : "+ rb.velocity);
+		//Debug.Log("V : "+ rb.velocity);
 		fire();
 		if (moving>0) {			
 			rb.velocity = new Vector2(movement_direction.x , movement_direction.y );
