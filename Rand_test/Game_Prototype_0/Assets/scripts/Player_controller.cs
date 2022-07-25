@@ -85,7 +85,7 @@ public class Player_controller : MonoBehaviour
             instance.StartCoroutine(instance.i_frame_delay());
 
 
-            if (health < 0)
+            if (health < 1 )
             {
                 alive = false;
                 death();

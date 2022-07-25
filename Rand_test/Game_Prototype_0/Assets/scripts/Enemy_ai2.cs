@@ -4,51 +4,52 @@ using UnityEngine;
 using UnityEditor;
 
 
-public enum Ai_state
-{
-	idle,
-	walk,
-	attack,
-	die
-}
 
 
-public class Eneymy_ai : MonoBehaviour
+
+public class Enemy_ai2 : MonoBehaviour
 {
-	public GameObject amiba;
+	public GameObject enemy_bulet_prefab; 
 	public Ai_state state = Ai_state.walk;
-    public float vision_range = 5 ;
-	public float speed = 3 ;
-    public GameObject player;
-	public float health = 100.0f;
-	
+    public float vision_range = 3 ;
+	public float speed = 1 ;	
+	public ulong fdelay;
 
+
+	public GameObject player;
+	public float health = 100.0f;
+
+	private ulong timer;
+	private ulong last_firesd;
 	private Quaternion look_dir; 
 	private Vector2 walking_direction;
 	private Rigidbody2D rb;
-	private bool once ;
+	
 
 	// Start is called before the first frame update
 	private void Awake()
 	{
 		state = Ai_state.walk;
-		once = false;
-		health = 100.0f;
+		timer = 0;
+		last_firesd = 0;
+		health = 500.0f;
 	}
 	void Start()
     {
+		//fdelay = 200;
+
 		rb = GetComponent<Rigidbody2D>();
 		StartCoroutine(random_walk());
 		player = GameObject.FindGameObjectWithTag("Player");
 	}
 
-	// Update is called once per frame
 	void Update()
     {
         
     }
 	private void FixedUpdate()
-	{	
+	{
+		timer++ ;
 		if (close_enough() && state != Ai_state.attack && state != Ai_state.die )
 		{
 			state = Ai_state.attack;
@@ -80,8 +81,7 @@ public class Eneymy_ai : MonoBehaviour
 		{
 			yield return new WaitForSeconds(Random.Range(2, 3));
 			if (state == Ai_state.walk)
-			{
-				
+			{				
 				walking_direction = new Vector2(Random.Range(-1, 1), Random.Range(-1, 1));
 				walking_direction.Normalize();
 			}
@@ -97,29 +97,24 @@ public class Eneymy_ai : MonoBehaviour
 	
 	private void attack()
 	{
-		walking_direction = player.transform.position - transform.position    ;
-		walking_direction.Normalize();
-		rb.velocity = Vector2.ClampMagnitude(walking_direction * speed , speed)  ;
-		
+		if (timer++ > last_firesd + fdelay )
+		{
+			Vector3 fire_direction =   player.transform.position - transform.position;
+			GameObject bullet = Instantiate(enemy_bulet_prefab, transform.position , Quaternion.identity);
+			fire_direction.Normalize();
+			bullet.GetComponent<Rigidbody2D>().velocity = fire_direction * 10;
+			last_firesd = timer;
+		}
 	}
 	private void die()
 	{
-		if (once== false)
-		{			
-			once = true;
-			//Debug.Log(GetInstanceID());
-			GameObject child_amiba = Instantiate(amiba, transform.position + new Vector3(Random.Range(-1, 1), Random.Range(-1, 1), 1), Quaternion.identity);
-			GameObject child_amiba2 = Instantiate(amiba, transform.position + new Vector3(Random.Range(-1, 1), Random.Range(-1, 1), 1), Quaternion.identity);
-			child_amiba.transform.localScale = new Vector3(transform.localScale.x * 0.7f, transform.localScale.y * 0.7f, transform.localScale.z  );
-			child_amiba2.transform.localScale = new Vector3(transform.localScale.x * 0.7f, transform.localScale.y * 0.7f, transform.localScale.z );
-		}
+		
 		StartCoroutine(delayed_death());
 
 	}
 
 	private IEnumerator delayed_death()
-	{
-		
+	{		
 		yield return new WaitForFixedUpdate() ;
 		Destroy(gameObject);		
 	}
@@ -131,7 +126,7 @@ public class Eneymy_ai : MonoBehaviour
 		{
 			Vector2 pos = new Vector2(transform.position.x, transform.position.y );
 						
-			Debug.DrawLine(pos + new Vector2( Mathf.Sin(2f * Mathf.PI / 36.0f * i), Mathf.Cos(2f * Mathf.PI / 36.0f * i)) * vision_range , pos + new Vector2( Mathf.Sin(2f * Mathf.PI / 36.0f * i+1 ) , Mathf.Cos(2f * Mathf.PI / 36.0f * i + 1) ) * vision_range, Color.black , 0.5f );
+			//Debug.DrawLine(pos + new Vector2( Mathf.Sin(2f * Mathf.PI / 36.0f * i), Mathf.Cos(2f * Mathf.PI / 36.0f * i)) * vision_range , pos + new Vector2( Mathf.Sin(2f * Mathf.PI / 36.0f * i+1 ) , Mathf.Cos(2f * Mathf.PI / 36.0f * i + 1) ) * vision_range, Color.black , 0.5f );
 		}
 		return Vector2.Distance(transform.position, player.transform.position) < vision_range;
 	}
