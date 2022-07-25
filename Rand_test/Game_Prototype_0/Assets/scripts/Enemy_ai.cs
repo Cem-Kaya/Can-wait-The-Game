@@ -20,7 +20,7 @@ public class Enemy_ai : MonoBehaviour
     public float vision_range = 5 ;
 	public float speed = 3 ;
     public GameObject player;
-	public float health = 100.0f;
+	public float health = 5.0f;
 	
 
 	private Quaternion look_dir; 
@@ -107,11 +107,14 @@ public class Enemy_ai : MonoBehaviour
 		if (once== false)
 		{			
 			once = true;
+			if ( !( transform.localScale.magnitude < (0.9 ))) // 3.50 is the defult magnatude 
+			{
 			//Debug.Log(GetInstanceID());
-			GameObject child_amiba = Instantiate(amiba, transform.position + new Vector3(Random.Range(-1, 1), Random.Range(-1, 1), 1), Quaternion.identity);
-			GameObject child_amiba2 = Instantiate(amiba, transform.position + new Vector3(Random.Range(-1, 1), Random.Range(-1, 1), 1), Quaternion.identity);
-			child_amiba.transform.localScale = new Vector3(transform.localScale.x * 0.7f, transform.localScale.y * 0.7f, transform.localScale.z  );
-			child_amiba2.transform.localScale = new Vector3(transform.localScale.x * 0.7f, transform.localScale.y * 0.7f, transform.localScale.z );
+				GameObject child_amiba = Instantiate(amiba, transform.position + new Vector3(Random.Range(-1, 1), Random.Range(-1, 1), 1), Quaternion.identity);
+				GameObject child_amiba2 = Instantiate(amiba, transform.position + new Vector3(Random.Range(-1, 1), Random.Range(-1, 1), 1), Quaternion.identity);
+				child_amiba.transform.localScale = new Vector3(transform.localScale.x * 0.7f, transform.localScale.y * 0.7f, transform.localScale.z  );
+				child_amiba2.transform.localScale = new Vector3(transform.localScale.x * 0.7f, transform.localScale.y * 0.7f, transform.localScale.z );
+			}
 		}
 		StartCoroutine(delayed_death());
 
