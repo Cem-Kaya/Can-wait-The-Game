@@ -20,6 +20,7 @@ public class Room : MonoBehaviour
             Debug.Log("Pressed play in wrong scene");
             return; 
         }
+        Room_controller.instance.deploy_room(this);
     }
 
     // Update is called once per frame

@@ -38,17 +38,46 @@ public class Room_controller : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
     {
-        
+        load_room("Start_room", 0, 0);
+        load_room("Default_room", 1,0);
+        load_room("Default_room", -1, 0);
+        load_room("Default_room", 0, 1);
+        load_room("Sample_room", 0, -1);
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        update_room_queue();
+    }
+
+    void update_room_queue()
+    {
+        if (is_loading_room)
+        {
+            return;
+        }
+        //nothing in queue so not wanna do anything
+        if(load_room_queue.Count == 0)
+        {
+            return;
+        }
+
+        current_loading_room_data = load_room_queue.Dequeue();
+        is_loading_room = true;
+
+        StartCoroutine(load_room_routine(current_loading_room_data));
     }
 
     public void load_room(string name, int x, int y)
     {
+        //check to make sure room exists before we load a room so we dont load rooms that overlap
+        if(does_room_exist(x,y))
+        {
+            return;
+        }
+
         //we want to grab our room info and we will assign it to new room info
         Room_info new_room_data = new Room_info();
         new_room_data.name = name;
@@ -64,20 +93,20 @@ public class Room_controller : MonoBehaviour
     {
         //scenes won't load instantly, they'll take some time, depending on items so we want to load it up
         //before next scene starts so gameplay will be fluid.
-        string room_name = current_world_name + info.name;
-
-        //setting additive makes scenes overlap and its important cuz we want all rooms in same scene       
-        AsyncOperation load_room = SceneManager.LoadSceneAsync(room_name, LoadSceneMode.Additive);
+        string room_name =  info.name;
+		Debug.Log(room_name);
+		//setting additive makes scenes overlap and its important cuz we want all rooms in same scene       
+		AsyncOperation load_room = SceneManager.LoadSceneAsync(room_name, LoadSceneMode.Additive);
         
         //this makes courotine happy
         while (!load_room.isDone)
         {
-            yield return null; //what does this do??? why return null?
+            yield return null;
         }
        
     }
 
-    public void register_room(Room room)
+    public void deploy_room(Room room)
     {
         //this will set our room within our scene in right coordinates
         room.transform.position = new Vector3 (current_loading_room_data.x * room.width, current_loading_room_data.y * room.height, 0 );
