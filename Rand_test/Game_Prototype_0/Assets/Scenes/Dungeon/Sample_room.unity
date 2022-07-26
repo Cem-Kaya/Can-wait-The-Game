@@ -178,8 +178,8 @@ MonoBehaviour:
   room_name: 
   x: 0
   y: 0
-  width: 30
-  height: 16
+  width: 32
+  height: 18
 --- !u!4 &237580015 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1742684183307504905, guid: a07b45c6cdea58240b4d0f5df2df931f, type: 3}
@@ -214,7 +214,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 334346544}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.00237, y: 0.8321638, z: -0.01868015}
+  m_LocalPosition: {x: -0.7746436, y: 0.75224376, z: -0.028528735}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -447,7 +447,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 565543729}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.00237, y: 0.8321638, z: -0.01868015}
+  m_LocalPosition: {x: -0.7746436, y: 0.75224376, z: -0.028528735}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
