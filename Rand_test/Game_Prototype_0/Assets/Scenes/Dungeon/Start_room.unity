@@ -405,8 +405,8 @@ MonoBehaviour:
   room_name: Start
   x: 0
   y: 0
-  width: 0
-  height: 0
+  width: 30
+  height: 16
 --- !u!1 &565543729
 GameObject:
   m_ObjectHideFlags: 0

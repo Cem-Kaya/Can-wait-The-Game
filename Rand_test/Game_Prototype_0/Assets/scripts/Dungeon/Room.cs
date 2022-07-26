@@ -30,7 +30,7 @@ public class Room : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.black;
+        Gizmos.color = Color.red;
         Gizmos.DrawWireCube(transform.position, new Vector3(width, height, 0));
     }
 
