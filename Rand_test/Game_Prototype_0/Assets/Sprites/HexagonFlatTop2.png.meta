@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1d0238960e777954cb5bee459a8f0dbf
+guid: cba09a6bb6bda6e47ad94464d8d001de
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -119,36 +119,43 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Hexagon Flat-Top
+      name: HexagonFlatTop_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 15
+        y: 128
         width: 256
-        height: 226
+        height: 128
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -65, y: 113}
-        - {x: -128, y: 4}
-        - {x: -128, y: -4}
-        - {x: -65, y: -113}
-        - {x: 65, y: -113}
-        - {x: 128, y: -4}
-        - {x: 128, y: 4}
-        - {x: 65, y: 113}
-      physicsShape:
-      - - {x: -64, y: 111}
-        - {x: -128, y: 0}
-        - {x: -64, y: -111}
-        - {x: 64, y: -111}
-        - {x: 128, y: 0}
-        - {x: 64, y: 111}
+      outline: []
+      physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 37fc5a28112c12620800000000000000
-      internalID: 2747690628134850419
+      spriteID: a247d59e3d077d14a9a6bf34dc119164
+      internalID: 611936694
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HexagonFlatTop_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 256
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c94d31a06fa20d41b1c8d49a1233bbe
+      internalID: -229106430
       vertices: []
       indices: 
       edges: []
@@ -178,7 +185,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Hexagon Flat-Top: 2747690628134850419
+      HexagonFlatTop_0: 611936694
+      HexagonFlatTop_1: -229106430
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
