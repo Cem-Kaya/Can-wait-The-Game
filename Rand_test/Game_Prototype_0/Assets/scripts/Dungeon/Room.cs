@@ -17,7 +17,7 @@ public class Room : MonoBehaviour
         //make sure we start in right scene
         if(Room_controller.instance == null) //then we pressed play in the wrong scene
         {
-            Debug.Log("Pressed play in wrong scene");
+            //Debug.Log("Pressed play in wrong scene");
             return; 
         }
         Room_controller.instance.deploy_room(this);
