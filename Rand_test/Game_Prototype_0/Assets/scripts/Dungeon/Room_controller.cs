@@ -19,7 +19,7 @@ public class Room_controller : MonoBehaviour
 
     string current_world_name = "Jungle";
 
- 
+    public Room current_room;
 
     Room_info current_loading_room_data;
 
@@ -41,10 +41,10 @@ public class Room_controller : MonoBehaviour
 	void Start()
     {
         load_room("Start_room", 0, 0);
-        load_room("Default_room", 1,0);
-        load_room("Default_room", -1, 0);
-        load_room("Default_room", 0, 1);
-        load_room("Sample_room", 0, -1);
+        //load_room("Default_room", 1,0);
+        //load_room("Default_room", -1, 0);
+        //load_room("Default_room", 0, 1);
+        //load_room("Sample_room", 0, -1);
 
 
     }

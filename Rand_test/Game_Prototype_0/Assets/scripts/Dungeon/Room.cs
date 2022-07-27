@@ -12,15 +12,11 @@ public class Room : MonoBehaviour
     public int width; 
     public int height;
 
-    public GameObject confiner_object;
-
-    public PolygonCollider2D confiner_collider;
+  
 
     private void Awake()
     {
-        confiner_object = GameObject.Find("Cam_collider");
-        confiner_collider = confiner_object.GetComponent<PolygonCollider2D>();
-        Camera_controller.load_new_boundry(confiner_collider);
+        
     }
     
 
