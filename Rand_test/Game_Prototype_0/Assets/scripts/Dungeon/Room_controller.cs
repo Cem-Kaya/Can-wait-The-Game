@@ -73,10 +73,11 @@ public class Room_controller : MonoBehaviour
         StartCoroutine(load_room_routine(current_loading_room_data));
     }
 
-    public void load_room(string name, int x, int y)
+    public void load_room(string name, int in_x, int in_y)
     {
         //check to make sure room exists before we load a room so we dont load rooms that overlap
-        if(does_room_exist(x,y))
+        Debug.Log("Load Room func: " + in_x + in_y);
+        if(does_room_exist(in_x, in_y))
         {
             return;
         }
@@ -84,8 +85,8 @@ public class Room_controller : MonoBehaviour
         //we want to grab our room info and we will assign it to new room info
         Room_info new_room_data = new Room_info();
         new_room_data.name = name;
-        new_room_data.x = x;
-        new_room_data.y = y;
+        new_room_data.x = in_x;
+        new_room_data.y = in_y;
 
         //we want to be able to enqueue up our room for the scene manager to load for us, so
         load_room_queue.Enqueue(new_room_data);
@@ -126,6 +127,12 @@ public class Room_controller : MonoBehaviour
 
     public bool does_room_exist(int in_x, int in_y)
     {
+        Debug.Log("Given Input: " + in_x + " " + in_x);
+        Room icurrent_room = loaded_rooms.Find(item => item.x == in_x && item.y == in_y);
+        if (icurrent_room != null)
+        {
+            Debug.Log("Current Room: " + (int)icurrent_room.x + " " + (int)icurrent_room.y);
+        }
         return loaded_rooms.Find(item => item.x == in_x && item.y == in_y ) != null;
     }
 
