@@ -17,7 +17,8 @@ public class Door_controller : MonoBehaviour
     }
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
-        
+        Debug.Log("######################################################");
+
         Vector2 new_room_dir = transform.position - transform.parent.parent.position;
         new_room_dir.Normalize();
         Debug.Log("Direction of the room is= " + new_room_dir);
@@ -38,7 +39,8 @@ public class Door_controller : MonoBehaviour
 
         Debug.Log("Current room to be given x,y after assigning them = " + x + " " + y);
 
-        Debug.Log("Current room before loading = " + Room_controller.instance.current_room.x + " " + Room_controller.instance.current_room.y);
+        Debug.Log("Current room after loading = " + Room_controller.instance.current_room.x + " " + Room_controller.instance.current_room.y);
+        Debug.Log("######################################################");
 
 
         GameObject player = GameObject.FindGameObjectWithTag("Player");

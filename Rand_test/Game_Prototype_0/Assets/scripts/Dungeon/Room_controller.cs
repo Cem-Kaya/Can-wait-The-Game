@@ -104,7 +104,7 @@ public class Room_controller : MonoBehaviour
         //this makes courotine happy
         while (!load_room.isDone)
         {
-            yield return null;
+			yield return new WaitForFixedUpdate() ;
         }
        
     }
