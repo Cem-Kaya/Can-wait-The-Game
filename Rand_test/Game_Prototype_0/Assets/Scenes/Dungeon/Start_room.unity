@@ -182,8 +182,6 @@ MonoBehaviour:
   y: 0
   width: 32
   height: 18
-  confiner_object: {fileID: 0}
-  confiner_collider: {fileID: 0}
 --- !u!114 &199807859
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -748,6 +746,10 @@ PrefabInstance:
     - target: {fileID: 2528314809511988402, guid: 299b75fe50a1ad2468efafad58816e64, type: 3}
       propertyPath: m_Name
       value: extra_weight
+      objectReference: {fileID: 0}
+    - target: {fileID: 2528314809511988414, guid: 299b75fe50a1ad2468efafad58816e64, type: 3}
+      propertyPath: health
+      value: 25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 299b75fe50a1ad2468efafad58816e64, type: 3}
@@ -1340,6 +1342,10 @@ PrefabInstance:
     - target: {fileID: 8130310601243210536, guid: 365960c04cc8ec44a8491f16cf86ca96, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8130310601243210539, guid: 365960c04cc8ec44a8491f16cf86ca96, type: 3}
+      propertyPath: health
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 8130310601243210548, guid: 365960c04cc8ec44a8491f16cf86ca96, type: 3}
       propertyPath: m_Name

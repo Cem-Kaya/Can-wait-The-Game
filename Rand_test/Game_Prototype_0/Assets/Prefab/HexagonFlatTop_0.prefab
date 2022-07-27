@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7371588465076059789}
   - component: {fileID: 385945535381263313}
   - component: {fileID: 5436673885065468652}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: HexagonFlatTop_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}

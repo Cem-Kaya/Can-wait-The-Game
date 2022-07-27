@@ -33,7 +33,7 @@ public class Enemy_ai : MonoBehaviour
 	{
 		state = Ai_state.walk;
 		once = false;
-		health = 100.0f;
+		health = 25.0f;
 	}
 	void Start()
     {

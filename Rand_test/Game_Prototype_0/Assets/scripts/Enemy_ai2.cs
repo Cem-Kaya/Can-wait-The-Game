@@ -32,7 +32,7 @@ public class Enemy_ai2 : MonoBehaviour
 		state = Ai_state.walk;
 		timer = 0;
 		last_firesd = 0;
-		health = 500.0f;
+		health = 50.0f;
 	}
 	void Start()
     {
