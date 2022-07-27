@@ -27,9 +27,9 @@ public class Door_controller : MonoBehaviour
 
         int y =  Mathf.RoundToInt( new_room_dir.y)  + (int) Room_controller.instance.current_room.y;
         //int y = Mathf.RoundToInt(new_room_dir.y );
-        Debug.Log("Current room to be given= " + x + " " + y);
+        //Debug.Log("Current room to be given= " + x + " " + y);
 
-        Debug.Log("Current room before loading = " + Room_controller.instance.current_room.x + " " + Room_controller.instance.current_room.y);
+        //Debug.Log("Current room before loading = " + Room_controller.instance.current_room.x + " " + Room_controller.instance.current_room.y);
 
 
 
@@ -37,10 +37,10 @@ public class Door_controller : MonoBehaviour
         Room_controller.instance.current_room.x = x;
         Room_controller.instance.current_room.y = y;
 
-        Debug.Log("Current room to be given x,y after assigning them = " + x + " " + y);
+        //Debug.Log("Current room to be given x,y after assigning them = " + x + " " + y);
 
-        Debug.Log("Current room after loading = " + Room_controller.instance.current_room.x + " " + Room_controller.instance.current_room.y);
-        Debug.Log("######################################################");
+        //Debug.Log("Current room after loading = " + Room_controller.instance.current_room.x + " " + Room_controller.instance.current_room.y);
+        //Debug.Log("######################################################");
 
 
         GameObject player = GameObject.FindGameObjectWithTag("Player");
