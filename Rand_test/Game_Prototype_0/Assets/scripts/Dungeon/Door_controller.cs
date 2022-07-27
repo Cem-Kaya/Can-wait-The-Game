@@ -23,12 +23,12 @@ public class Door_controller : MonoBehaviour
         int x = (int)new_roo_dir.x;
         int y = (int)new_roo_dir.y;
 		Room_controller.instance.load_room("Default_room", x, y);
-		
-        
+
+        /*
         GameObject confiner_object = Room_controller.instance.loaded_rooms.Find("Cam_collider");
         PolygonCollider2D confiner_collider = confiner_object.GetComponent<PolygonCollider2D>();
         Camera_controller.load_new_boundry(confiner_collider);
         Room_controller.instance.current_room = gameObject.GetComponent<Room>();  // Room_controller.instance.loaded_rooms[0];
-		
+		*/
     }
 }
