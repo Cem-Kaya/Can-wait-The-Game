@@ -19,6 +19,8 @@ public class Room_controller : MonoBehaviour
 
     string current_world_name = "Jungle";
 
+ 
+
     Room_info current_loading_room_data;
 
     Queue<Room_info> load_room_queue = new Queue<Room_info>();
@@ -43,6 +45,7 @@ public class Room_controller : MonoBehaviour
         load_room("Default_room", -1, 0);
         load_room("Default_room", 0, 1);
         load_room("Sample_room", 0, -1);
+
 
     }
 

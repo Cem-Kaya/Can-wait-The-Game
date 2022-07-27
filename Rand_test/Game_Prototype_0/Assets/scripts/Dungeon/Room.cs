@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class Room : MonoBehaviour
 {
@@ -11,6 +12,18 @@ public class Room : MonoBehaviour
     public int width; 
     public int height;
 
+    public GameObject confiner_object;
+
+    public PolygonCollider2D confiner_collider;
+
+    private void Awake()
+    {
+        confiner_object = GameObject.Find("Cam_collider");
+        confiner_collider = confiner_object.GetComponent<PolygonCollider2D>();
+        Camera_controller.load_new_boundry(confiner_collider);
+    }
+    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,13 +33,17 @@ public class Room : MonoBehaviour
             //Debug.Log("Pressed play in wrong scene");
             return; 
         }
+		
         Room_controller.instance.deploy_room(this);
+
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     void OnDrawGizmos()
