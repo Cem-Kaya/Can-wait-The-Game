@@ -25,6 +25,13 @@ public class box_mover : MonoBehaviour
 	private int fireing ;
 	private Vector2 fire_direction;
 
+	public void teleport_to(Vector2 to )
+	{
+		rb.velocity = new Vector2 (0,0);
+		transform.position = to ;
+
+	}
+	
 	public void Awake()
 	{		
 		control = new Player_input_actions();
