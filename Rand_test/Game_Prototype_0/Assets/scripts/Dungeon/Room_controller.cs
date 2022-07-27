@@ -94,7 +94,7 @@ public class Room_controller : MonoBehaviour
         //scenes won't load instantly, they'll take some time, depending on items so we want to load it up
         //before next scene starts so gameplay will be fluid.
         string room_name =  info.name;
-		Debug.Log(room_name);
+		//Debug.Log(room_name);
 		//setting additive makes scenes overlap and its important cuz we want all rooms in same scene       
 		AsyncOperation load_room = SceneManager.LoadSceneAsync(room_name, LoadSceneMode.Additive);
         

@@ -112,7 +112,7 @@ public class Player_controller : MonoBehaviour
     {
         //Scene$$anonymous$$anager.LoadScene(GetActiveScene().name);
         health = 10;
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("Main_scene");
     }
 }
 
