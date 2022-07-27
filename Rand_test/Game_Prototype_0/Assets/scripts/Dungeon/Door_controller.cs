@@ -6,7 +6,7 @@ using UnityEngine;
 public class Door_controller : MonoBehaviour
 {
     // Start is called before the first frame update
-    bool door_cool_down = false;
+    static bool door_cool_down = false;
     void Start()
     {
         
@@ -19,7 +19,7 @@ public class Door_controller : MonoBehaviour
     }
     private IEnumerator coll_down()
     {
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(1f);
         door_cool_down = false;
     }
 
