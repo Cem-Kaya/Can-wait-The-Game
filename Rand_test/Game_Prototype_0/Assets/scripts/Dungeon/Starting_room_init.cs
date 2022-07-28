@@ -16,7 +16,7 @@ public class Starting_room_init : MonoBehaviour
     }
 	void Start()
     {
-        
+
     }
 
     // Update is called once per frame
