@@ -35,15 +35,16 @@ public class Room_controller : MonoBehaviour
 		{
 			instance = this;
 		}
-		
-	}
+        current_room = new Room();
+        current_room.x = 0;
+        current_room.y = 0;
+        current_room.room_name = "Start_room";
+    }
 	// Start is called before the first frame update
 	void Start()
     {
-        load_room("Start_room", 0, 0);
-        current_room.x = 0;
-        current_room.y = 0;
-        current_room.name = "Start";
+        load_room("Start_room", 0, 0);        
+
         //load_room("Default_room", 1,0);
         //load_room("Default_room", -1, 0);
         //load_room("Default_room", 0, 1);
@@ -136,14 +137,14 @@ public class Room_controller : MonoBehaviour
             initial = false;
             for (int i = 0; i < loaded_rooms.Count; i++)
             {
-                Debug.Log("Room x and y: " + loaded_rooms[i].x + loaded_rooms[i].y);
+                //Debug.Log("Room x and y: " + loaded_rooms[i].x + loaded_rooms[i].y);
                 if (loaded_rooms[i].x == in_x && loaded_rooms[i].y == in_y)
                 {
 
                     return true;
                 }
             }
-            Debug.Log("##############################################");
+            //Debug.Log("##############################################");
             //Debug.Log("Given Input: " + in_x + " " + in_y);
 
             return false;
@@ -157,14 +158,14 @@ public class Room_controller : MonoBehaviour
             }
             for (int i = 0; i < loaded_rooms.Count; i++)
             {
-                Debug.Log("Room x and y: " + loaded_rooms[i].x + loaded_rooms[i].y);
+                //Debug.Log("Room x and y: " + loaded_rooms[i].x + loaded_rooms[i].y);
                 if (loaded_rooms[i].x == in_x && loaded_rooms[i].y == in_y)
                 {
 
                     return true;
                 }
             }
-            Debug.Log("##############################################");
+            //Debug.Log("##############################################");
             //Debug.Log("Given Input: " + in_x + " " + in_y);
 
             return false;
