@@ -25,12 +25,27 @@ public class Room_controller : MonoBehaviour
 
     Queue<Room_info> load_room_queue = new Queue<Room_info>();
 
-    public List<Room> loaded_rooms = new List<Room>();
+    //public List<Room> loaded_rooms = new List<Room>();
+    public Hashtable loaded_rooms = new Hashtable();
+    
+    private bool is_loading_room = false;
 
-    bool is_loading_room = false;
-
-    private void Awake()
+    private bool room_deployed = false;
+    public static bool Room_deployed
     {
+        get{ return instance.room_deployed; }
+        set { instance.room_deployed = value; }
+    }
+	
+		
+	
+
+
+	private void Awake()
+    {
+
+        
+		
         if (instance == null)
         {
             instance = this;
@@ -121,50 +136,50 @@ public class Room_controller : MonoBehaviour
 
         is_loading_room = false;
 
-        loaded_rooms.Add(room);
+        //loaded_rooms.Add(room);
+        //Debug.Log("Room's x,y" + (room.x, room.y));
+        //Debug.Log("current_loading_room_data's x and y" + (current_loading_room_data.x, current_loading_room_data.y));
+        loaded_rooms.Add((room.x, room.y), room);
+        //Debug.Log("Deploy room one " + loaded_rooms[(room.x, room.y)]);
+        //Debug.Log("nonexistent = " + ((loaded_rooms[(6,6)]) == null));
+        Room_deployed = true;
     }
 
     bool initial = true;
     public bool does_room_exist(int in_x, int in_y)
     {
-        if (initial)
-        {
-            initial = false;
-            for (int i = 0; i < loaded_rooms.Count; i++)
-            {
-                //Debug.Log("Room x and y: " + loaded_rooms[i].x + loaded_rooms[i].y);
-                if (loaded_rooms[i].x == in_x && loaded_rooms[i].y == in_y)
-                {
-
-                    return true;
-                }
-            }
-            //Debug.Log("##############################################");
-            //Debug.Log("Given Input: " + in_x + " " + in_y);
-
-            return false;
-        }
-        else
-        {
-
-            if (in_x == 0 && in_y == 0)
+        if (loaded_rooms[(in_x, in_y)] != null )
             {
                 return true;
             }
-            for (int i = 0; i < loaded_rooms.Count; i++)
-            {
-                //Debug.Log("Room x and y: " + loaded_rooms[i].x + loaded_rooms[i].y);
-                if (loaded_rooms[i].x == in_x && loaded_rooms[i].y == in_y)
-                {
-
-                    return true;
-                }
-            }
-            //Debug.Log("##############################################");
-            //Debug.Log("Given Input: " + in_x + " " + in_y);
 
             return false;
-        }
+
+    //    if (initial)
+    //    {
+    //        initial = false;
+    //        if (loaded_rooms[(in_x, in_y)] != null )
+    //        {
+    //            return true;
+    //        }
+
+    //        return false;
+    //    }
+    //    else
+    //    {
+
+    //        if (in_x == 0 && in_y == 0)
+    //        {
+    //            return true;
+    //        }
+
+    //        if (loaded_rooms[(in_x, in_y)] != null)
+    //        {
+    //            return true;
+    //        }
+
+    //        return false;
+    //    }
     }
 
 

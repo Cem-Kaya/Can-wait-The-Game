@@ -13,7 +13,7 @@ public class Camera_controller : MonoBehaviour
 
     private CinemachineConfiner2D confiner;
 
-    private PolygonCollider2D current_bounding_shape;
+    [SerializeField] private PolygonCollider2D current_bounding_shape;
 
     public static void load_new_boundry (PolygonCollider2D new_bounding_shape)
     {

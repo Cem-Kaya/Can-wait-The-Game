@@ -23,6 +23,34 @@ public class Door_controller : MonoBehaviour
         door_cool_down = false;
     }
 
+
+    IEnumerator wait_for_loading(int x , int y , Vector2 new_room_dir )
+    {
+        while ( ! Room_controller.Room_deployed)
+        {
+            yield return new WaitForFixedUpdate();
+        }
+
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        //multi oldugunda objects diye al sonra for looptan teleportla bam bum done
+
+        player.GetComponent<box_mover>().teleport_to(new Vector2(transform.position.x + new_room_dir.x * 5, transform.position.y + new_room_dir.y * 5));
+        //var confiner_room = new Room();
+        Debug.Log("x = " + x + " y = " + y);
+        Room confiner_room = Room_controller.instance.loaded_rooms[(x, y)] as Room;
+
+
+        Debug.Log("name : " + confiner_room);
+        ///////////////////////////////////////////////////////////////////////////
+        //Debug.Log("Room" + confiner_room.x + confiner_room.y);
+        GameObject room_object = confiner_room.gameObject;
+        //PolygonCollider2D confiner_object = confiner_room.GetComponentInParent<PolygonCollider2D>(); 
+        GameObject confiner_object = room_object.transform.Find("Cam_collider").gameObject;
+        PolygonCollider2D confiner_collider = confiner_object.GetComponent<PolygonCollider2D>();
+        //Debug.Log(confiner_collider);
+        Camera_controller.load_new_boundry(confiner_collider);
+    }
+	
     private void OnCollisionEnter2D(Collision2D collision)
 	{
 
@@ -53,24 +81,9 @@ public class Door_controller : MonoBehaviour
                 Room_controller.instance.current_room.x = x;
                 Room_controller.instance.current_room.y = y;
 
-                //Debug.Log("Current room to be given x,y after assigning them = " + x + " " + y);
-
-                //Debug.Log("Current room after loading = " + Room_controller.instance.current_room.x + " " + Room_controller.instance.current_room.y);
-                //Debug.Log("######################################################");
-
-
-                GameObject player = GameObject.FindGameObjectWithTag("Player");
-                //multi oldugunda objects diye al sonra for looptan teleportla bam bum done
-
-                player.GetComponent<box_mover>().teleport_to(new Vector2(transform.position.x + new_room_dir.x * 5, transform.position.y + new_room_dir.y * 5));
-                /*
-                Room confiner_room = Room_controller.instance.loaded_rooms.Find(iter => iter.x == x && iter.y == y  ) ;
-                //PolygonCollider2D confiner_object = confiner_room.GetComponentInParent<PolygonCollider2D>(); 
-                PolygonCollider2D confiner_collider = confiner_room.GetComponentInParent<PolygonCollider2D>();
-                Camera_controller.load_new_boundry(confiner_collider);
-                Room_controller.instance.current_room = gameObject.GetComponent<Room>();  // Room_controller.instance.loaded_rooms[0];
-                */
-            }
+                Room_controller.Room_deployed = false;
+                StartCoroutine(wait_for_loading(x , y , new_room_dir ));
+			}
         }
     }
 }

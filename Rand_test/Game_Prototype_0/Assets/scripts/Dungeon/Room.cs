@@ -16,7 +16,7 @@ public class Room : MonoBehaviour
 
     private void Awake()
     {
-        
+        Room_controller.instance.deploy_room(this);
     }
     
 
@@ -29,7 +29,7 @@ public class Room : MonoBehaviour
             Debug.Log("Pressed play in wrong scene");
             return; 
         }
-        Room_controller.instance.deploy_room(this);
+        
         
 
 
