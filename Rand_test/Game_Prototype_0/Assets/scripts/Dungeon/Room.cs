@@ -17,21 +17,23 @@ public class Room : MonoBehaviour
     private void Awake()
     {
         Room_controller.instance.deploy_room(this);
+       
+
     }
-    
+
 
     // Start is called before the first frame update
     void Start()
     {
+
         //make sure we start in right scene
-        if(Room_controller.instance == null) //then we pressed play in the wrong scene
+        if (Room_controller.instance == null) //then we pressed play in the wrong scene
         {
             Debug.Log("Pressed play in wrong scene");
             return; 
         }
-        Room_controller.Room_deployed = true;
 
-
+        Room_controller.Room_deployed = true; 
 
 
     }
@@ -52,8 +54,6 @@ public class Room : MonoBehaviour
 	{
         return new Vector2(x * width, y * height);
 	}
-	public void load_room() {
-		
-    }
+	
 
 }

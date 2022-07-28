@@ -12,7 +12,7 @@ public class Starting_room_init : MonoBehaviour
         confiner_object = GameObject.Find("Cam_collider");
         confiner_collider = confiner_object.GetComponent<PolygonCollider2D>();
         Camera_controller.load_new_boundry(confiner_collider);
-        Room_controller.instance.current_room = gameObject.GetComponent<Room>();  // Room_controller.instance.loaded_rooms[0];
+        Room_controller.instance.current_room =  gameObject.GetComponent<Room>() ;  // Room_controller.instance.loaded_rooms[0];
     }
 	void Start()
     {

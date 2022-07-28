@@ -26,8 +26,9 @@ public class Room_controller : MonoBehaviour
     Queue<Room_info> load_room_queue = new Queue<Room_info>();
 
     //public List<Room> loaded_rooms = new List<Room>();
-    public Hashtable loaded_rooms = new Hashtable();
-    
+    //public Hashtable  loaded_rooms = new Hashtable();
+    public Dictionary<(int,int), Room> loaded_rooms = new Dictionary<(int, int), Room>();
+
     private bool is_loading_room = false;
 
     private bool room_deployed = false;
@@ -42,20 +43,17 @@ public class Room_controller : MonoBehaviour
 
 
 	private void Awake()
-    {
-
-        
-		
-        if (instance == null)
+    {      
+		if (instance == null)
         {
             instance = this;
         }
-
     }
     // Start is called before the first frame update
     void Start()
     {
         load_room("Start_room", 0, 0);
+
         //load_room("Default_room", 1,0);
         //load_room("Default_room", -1, 0);
         //load_room("Default_room", 0, 1);
@@ -67,26 +65,10 @@ public class Room_controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        update_room_queue();
+		
     }
 
-    void update_room_queue()
-    {
-        if (is_loading_room)
-        {
-            return;
-        }
-        //nothing in queue so not wanna do anything
-        if (load_room_queue.Count == 0)
-        {
-            return;
-        }
-
-        current_loading_room_data = load_room_queue.Dequeue();
-        is_loading_room = true;
-
-        StartCoroutine(load_room_routine(current_loading_room_data));
-    }
+    
 
     public void load_room(string name, int in_x, int in_y)
     {
@@ -104,7 +86,10 @@ public class Room_controller : MonoBehaviour
         new_room_data.y = in_y;
 
         //we want to be able to enqueue up our room for the scene manager to load for us, so
-        load_room_queue.Enqueue(new_room_data);
+
+        current_loading_room_data = new_room_data;
+        StartCoroutine(load_room_routine(new_room_data));
+
 
     }
 
@@ -145,42 +130,29 @@ public class Room_controller : MonoBehaviour
         
     }
 
-    //bool initial = true;
+  
     public bool does_room_exist(int in_x, int in_y)
     {
-        if (loaded_rooms[(in_x, in_y)] != null )
-            {
-                return true;
-            }
 
-            return false;
+        if (loaded_rooms.ContainsKey((in_x, in_y)) == true)
+        {
+                    return true;
+        }
 
-    //    if (initial)
-    //    {
-    //        initial = false;
-    //        if (loaded_rooms[(in_x, in_y)] != null )
-    //        {
-    //            return true;
-    //        }
-
-    //        return false;
-    //    }
-    //    else
-    //    {
-
-    //        if (in_x == 0 && in_y == 0)
-    //        {
-    //            return true;
-    //        }
-
-    //        if (loaded_rooms[(in_x, in_y)] != null)
-    //        {
-    //            return true;
-    //        }
-
-    //        return false;
-    //    }
+        return false;
+        
     }
 
+    public void Debug_print_loaded_rooms()
+    {
+
+        string all_rooms = "All loaded rooms in " + current_room.x.ToString() + current_room.y.ToString() + "\n";
+        foreach (KeyValuePair<(int,int),Room> r in loaded_rooms)
+        {
+            Room room = r.Value;
+            all_rooms += room.x.ToString() + room.y.ToString() + " ";
+        }
+        Debug.Log(all_rooms);
+    }
 
 }

@@ -57,7 +57,7 @@ public class box_mover : MonoBehaviour
 		movement_direction = new Vector2(0, 0);
 		moving = 0;
 		coin_num = 0;
-		speed = 5;
+		speed = 5 ;
 		rb = GetComponent<Rigidbody2D>();
 	}
 	public void Update()
