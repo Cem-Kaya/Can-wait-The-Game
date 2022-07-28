@@ -142,10 +142,10 @@ public class Room_controller : MonoBehaviour
         loaded_rooms.Add((room.x, room.y), room);
         //Debug.Log("Deploy room one " + loaded_rooms[(room.x, room.y)]);
         //Debug.Log("nonexistent = " + ((loaded_rooms[(6,6)]) == null));
-        Room_deployed = true;
+        
     }
 
-    bool initial = true;
+    //bool initial = true;
     public bool does_room_exist(int in_x, int in_y)
     {
         if (loaded_rooms[(in_x, in_y)] != null )

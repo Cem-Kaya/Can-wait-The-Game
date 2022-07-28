@@ -29,8 +29,8 @@ public class Room : MonoBehaviour
             Debug.Log("Pressed play in wrong scene");
             return; 
         }
-        
-        
+        Room_controller.Room_deployed = true;
+
 
 
 
