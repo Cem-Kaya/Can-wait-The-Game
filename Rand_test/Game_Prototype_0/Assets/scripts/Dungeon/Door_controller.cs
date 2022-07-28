@@ -28,7 +28,7 @@ public class Door_controller : MonoBehaviour
     {
         while ( ! Room_controller.Room_deployed)
         {
-            yield return new WaitForFixedUpdate();
+            yield return new WaitForEndOfFrame();
         }
 
         GameObject player = GameObject.FindGameObjectWithTag("Player");
