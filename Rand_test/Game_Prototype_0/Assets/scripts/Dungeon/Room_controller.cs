@@ -102,6 +102,8 @@ public class Room_controller : MonoBehaviour
         AsyncOperation load_room = SceneManager.LoadSceneAsync(room_name, LoadSceneMode.Additive);
         Debug.Log("in rutine2 " + info.x+ ","+ info.y );
         //this makes courotine happy
+
+
         while (!load_room.isDone)
         {
             yield return new WaitForFixedUpdate();
