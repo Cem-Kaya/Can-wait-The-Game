@@ -67,9 +67,8 @@ public class Door_controller : MonoBehaviour
         Room_controller.instance.current_room = Room_controller.instance.loaded_rooms[(x, y)];
         //Room_controller.instance.current_room.x = x;  // CURSED COPY BY REFERENCE !!!!
         //Room_controller.instance.current_room.y = y; // CURSED COPY BY REFERENCE !!!!
-        Room_controller.instance.Debug_print_loaded_rooms();
+        
 
-        Debug.Log("in rutine " + new_room_dir + "---" + x + "," + y);
         Room_controller.instance.loaded_rooms[(x, y)].deploy_room(x,y,"w","r");
     }
     IEnumerator reset()
@@ -82,7 +81,6 @@ public class Door_controller : MonoBehaviour
     void OnTriggerEnter2D (Collider2D hitObject)        
     {
 
-        Debug.Log("Entered collusion !");
         if (hitObject.gameObject.layer == 3 )
         {
             if (is_colliding) return;
@@ -105,13 +103,12 @@ public class Door_controller : MonoBehaviour
 
             Vector2 new_room_dir = transform.position - transform.parent.parent.position;
             new_room_dir.Normalize();
-            //Debug.Log("Direction of the room is= " + new_room_dir);
+			
             int x = Mathf.RoundToInt(new_room_dir.x);
             x += (int)Room_controller.instance.current_room.x;
 
             int y = Mathf.RoundToInt(new_room_dir.y);
             y += (int)Room_controller.instance.current_room.y;
-            Debug.Log(new_room_dir + "---"+x + "," + y);
 
 
 

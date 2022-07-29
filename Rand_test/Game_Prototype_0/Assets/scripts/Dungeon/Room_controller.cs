@@ -99,11 +99,9 @@ public class Room_controller : MonoBehaviour
         //scenes won't load instantly, they'll take some time, depending on items so we want to load it up
         //before next scene starts so gameplay will be fluid.
         string room_name = info.name;
-        //Debug.Log(room_name);
 
         //setting additive makes scenes overlap and its important cuz we want all rooms in same scene       
         AsyncOperation load_room = SceneManager.LoadSceneAsync(room_name, LoadSceneMode.Additive);
-        Debug.Log("in rutine2 " + info.x+ ","+ info.y );
         //this makes courotine happy
 
 
@@ -114,7 +112,7 @@ public class Room_controller : MonoBehaviour
 
     }
 
-    int tmpiter = 0;
+    
     public void register_room(Room room)
     {
         //add room to loaded room
@@ -122,7 +120,7 @@ public class Room_controller : MonoBehaviour
 
 
         
-        Debug.Log(++tmpiter + ", added Room's x,y" + (room.x, room.y));
+        
         
         loaded_rooms.Add((room.x, room.y), room);
         //Debug.Log("Deploy room one " + loaded_rooms[(room.x, room.y)]);
