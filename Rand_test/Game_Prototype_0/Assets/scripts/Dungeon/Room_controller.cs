@@ -31,11 +31,11 @@ public class Room_controller : MonoBehaviour
 
     private bool is_loading_room = false;
 
-    private bool room_deployed = false;
-    public static bool Room_deployed
+    private bool room_registered = true;
+    public static bool Room_registered
     {
-        get{ return instance.room_deployed; }
-        set { instance.room_deployed = value; }
+        get{ return instance.room_registered; }
+        set { instance.room_registered = value; }
     }
 	
 		
@@ -48,6 +48,7 @@ public class Room_controller : MonoBehaviour
         {
             instance = this;
         }
+        Room_registered = true;
     }
     // Start is called before the first frame update
     void Start()
@@ -68,7 +69,6 @@ public class Room_controller : MonoBehaviour
 		
     }
 
-    
 
     public void load_room(string name, int in_x, int in_y)
     {
@@ -86,8 +86,7 @@ public class Room_controller : MonoBehaviour
         new_room_data.y = in_y;
 
         //we want to be able to enqueue up our room for the scene manager to load for us, so
-
-        current_loading_room_data = new_room_data;
+            
         StartCoroutine(load_room_routine(new_room_data));
 
 
@@ -101,7 +100,7 @@ public class Room_controller : MonoBehaviour
         //Debug.Log(room_name);
         //setting additive makes scenes overlap and its important cuz we want all rooms in same scene       
         AsyncOperation load_room = SceneManager.LoadSceneAsync(room_name, LoadSceneMode.Additive);
-
+        Debug.Log("in rutine2 " + info.x+ ","+ info.y );
         //this makes courotine happy
         while (!load_room.isDone)
         {
@@ -110,16 +109,10 @@ public class Room_controller : MonoBehaviour
 
     }
 
-    public void deploy_room(Room room)
+    public void register_room(Room room)
     {
-        //this will set our room within our scene in right coordinates
-        room.transform.position = new Vector3(current_loading_room_data.x * room.width, current_loading_room_data.y * room.height, 0);
-        room.x = current_loading_room_data.x;
-        room.y = current_loading_room_data.y;
-        room.name = current_world_name + "-" + current_loading_room_data.name + " " + room.x + ", " + room.y;
-        room.transform.parent = transform;
-
-        is_loading_room = false;
+        //add room to loaded room
+             
 
         //loaded_rooms.Add(room);
         //Debug.Log("Room's x,y" + (room.x, room.y));

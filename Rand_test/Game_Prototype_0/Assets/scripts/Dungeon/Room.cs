@@ -16,15 +16,25 @@ public class Room : MonoBehaviour
 
     private void Awake()
     {
-        Room_controller.instance.deploy_room(this);
+        Room_controller.instance.register_room(this);
        
+    }
+    public void deploy_room(int in_x , int in_y, string world_name , string room_name )
+	{
+        //transform.position = new Vector3(current_loading_room_data.x * room.width, current_loading_room_data.y * room.height, 0);
+        transform.position = new Vector3(in_x * width, in_y * height, 0);
+
+        x = in_x;
+        y = in_y;
+        name = world_name + "-" + room_name + " " + in_x + ", " + in_y;
+        transform.parent = transform;
 
     }
-
 
     // Start is called before the first frame update
     void Start()
     {
+        transform.position = new Vector2(-5*width , -5*height );
 
         //make sure we start in right scene
         if (Room_controller.instance == null) //then we pressed play in the wrong scene
@@ -33,7 +43,10 @@ public class Room : MonoBehaviour
             return; 
         }
 
-        Room_controller.Room_deployed = true; 
+        Room_controller.Room_registered = true;
+
+
+        Room_controller.instance.Debug_print_loaded_rooms();
 
 
     }

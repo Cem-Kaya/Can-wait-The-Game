@@ -16,7 +16,7 @@ public class Starting_room_init : MonoBehaviour
     }
 	void Start()
     {
-
+        gameObject.GetComponent<Room>().deploy_room(0, 0, "w", "r");
     }
 
     // Update is called once per frame
