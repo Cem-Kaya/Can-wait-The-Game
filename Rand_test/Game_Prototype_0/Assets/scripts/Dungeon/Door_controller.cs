@@ -70,6 +70,7 @@ public class Door_controller : MonoBehaviour
         
 
         Room_controller.instance.loaded_rooms[(x, y)].deploy_room(x,y,"w","r");
+        triger_guard = false;
     }
     IEnumerator reset()
     {
@@ -77,14 +78,22 @@ public class Door_controller : MonoBehaviour
         is_colliding = false;
     }
 
+	
+	private void OnTriggerExit2D(Collider2D collision)
+	{
+        Debug.Log("Exiting !!");
+	}
+
     bool is_colliding = false;
+    bool triger_guard = false;
     void OnTriggerEnter2D (Collider2D hitObject)        
     {
 
         if (hitObject.gameObject.layer == 3 )
         {
             if (is_colliding) return;
-
+            if (triger_guard) return;
+            triger_guard = true;
             is_colliding = true;
             StartCoroutine(reset());
         
@@ -99,7 +108,7 @@ public class Door_controller : MonoBehaviour
             }
 
 
-
+            Camera_controller.load_new_boundry(null);
 
             Vector2 new_room_dir = transform.position - transform.parent.parent.position;
             new_room_dir.Normalize();
@@ -110,7 +119,7 @@ public class Door_controller : MonoBehaviour
             int y = Mathf.RoundToInt(new_room_dir.y);
             y += (int)Room_controller.instance.current_room.y;
 
-
+            
 
 
 

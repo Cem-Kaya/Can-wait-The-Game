@@ -35,7 +35,7 @@ public class box_mover : MonoBehaviour
 	public void Awake()
 	{		
 		control = new Player_input_actions();
-		terminal_velocity = 20 ;
+		terminal_velocity = 50 ;
 		control.player.move.started += ctx => start_move(ctx.ReadValue<Vector2>());// gets input too early cant read multipress // register to the system with contect ctx 
 		control.player.move.performed += ctx => mid_move(ctx.ReadValue<Vector2>()); // register to the system with contect ctx 
 		control.player.move.canceled += ctx => end_move(ctx.ReadValue<Vector2>()); // register to the system with contect ctx 
@@ -57,7 +57,7 @@ public class box_mover : MonoBehaviour
 		movement_direction = new Vector2(0, 0);
 		moving = 0;
 		coin_num = 0;
-		speed = 15 ;
+		speed = 35 ;
 		rb = GetComponent<Rigidbody2D>();
 	}
 	public void Update()
