@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-class Room_info
+public class Room_info
 {
     public string name;
     public int x;
@@ -23,7 +23,7 @@ public class Room_controller : MonoBehaviour
 
     Room_info current_loading_room_data;
 
-    Queue<Room_info> load_room_queue = new Queue<Room_info>();
+    public Queue<Room_info> load_room_queue = new Queue<Room_info>();
 
     //public List<Room> loaded_rooms = new List<Room>();
     //public Hashtable  loaded_rooms = new Hashtable();
@@ -94,10 +94,13 @@ public class Room_controller : MonoBehaviour
 
     IEnumerator load_room_routine(Room_info info)
     {
+
+        load_room_queue.Enqueue(info); 
         //scenes won't load instantly, they'll take some time, depending on items so we want to load it up
         //before next scene starts so gameplay will be fluid.
         string room_name = info.name;
         //Debug.Log(room_name);
+
         //setting additive makes scenes overlap and its important cuz we want all rooms in same scene       
         AsyncOperation load_room = SceneManager.LoadSceneAsync(room_name, LoadSceneMode.Additive);
         Debug.Log("in rutine2 " + info.x+ ","+ info.y );
@@ -111,14 +114,16 @@ public class Room_controller : MonoBehaviour
 
     }
 
+    int tmpiter = 0;
     public void register_room(Room room)
     {
         //add room to loaded room
-             
 
-        //loaded_rooms.Add(room);
-        //Debug.Log("Room's x,y" + (room.x, room.y));
-        //Debug.Log("current_loading_room_data's x and y" + (current_loading_room_data.x, current_loading_room_data.y));
+
+
+        
+        Debug.Log(++tmpiter + ", added Room's x,y" + (room.x, room.y));
+        
         loaded_rooms.Add((room.x, room.y), room);
         //Debug.Log("Deploy room one " + loaded_rooms[(room.x, room.y)]);
         //Debug.Log("nonexistent = " + ((loaded_rooms[(6,6)]) == null));

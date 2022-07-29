@@ -38,7 +38,7 @@ public class Door_controller : MonoBehaviour
 
     IEnumerator wait_for_loading(int x, int y, Vector2 new_room_dir)
     {
-        Debug.Log("in rutine "+ new_room_dir + "---" + x + "," + y);
+        
         Room_controller.instance.load_room("Default_room", x, y);
         while (!Room_controller.Room_registered)
         {
@@ -68,17 +68,32 @@ public class Door_controller : MonoBehaviour
         //Room_controller.instance.current_room.x = x;  // CURSED COPY BY REFERENCE !!!!
         //Room_controller.instance.current_room.y = y; // CURSED COPY BY REFERENCE !!!!
         Room_controller.instance.Debug_print_loaded_rooms();
+
+        Debug.Log("in rutine " + new_room_dir + "---" + x + "," + y);
         Room_controller.instance.loaded_rooms[(x, y)].deploy_room(x,y,"w","r");
     }
+    IEnumerator reset()
+    {
+        yield return new WaitForEndOfFrame();
+        is_colliding = false;
+    }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    bool is_colliding = false;
+    void OnTriggerEnter2D (Collider2D hitObject)        
     {
 
         Debug.Log("Entered collusion !");
-        if (collision.gameObject.layer == 3 )
+        if (hitObject.gameObject.layer == 3 )
         {
-            
-            if (false) //door_cool_down
+            if (is_colliding) return;
+
+            is_colliding = true;
+            StartCoroutine(reset());
+        
+        
+
+
+        if (false) //door_cool_down
             {
                 door_cool_down = true;
                 StartCoroutine(cool_down());

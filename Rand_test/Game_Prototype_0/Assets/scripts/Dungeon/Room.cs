@@ -16,6 +16,11 @@ public class Room : MonoBehaviour
 
     private void Awake()
     {
+        Room_info inf = Room_controller.instance.load_room_queue.Dequeue();
+        room_name = inf.name;
+        x = inf.x;
+        y = inf.y;
+
         Room_controller.instance.register_room(this);
        
     }
@@ -46,7 +51,7 @@ public class Room : MonoBehaviour
         Room_controller.Room_registered = true;
 
 
-        Room_controller.instance.Debug_print_loaded_rooms();
+        //Room_controller.instance.Debug_print_loaded_rooms();
 
 
     }
