@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Unity.Netcode;
 using TMPro;
 
-public class box_mover : MonoBehaviour
+public class box_mover : NetworkBehaviour
 {
 	public GameObject bullet_prefab; 
     public float speed ;   
@@ -25,13 +26,14 @@ public class box_mover : MonoBehaviour
 	private int fireing ;
 	private Vector2 fire_direction;
 
-	public void teleport_to(Vector2 to )
-	{
-		rb.velocity = new Vector2 (0,0);
-		transform.position = to ;
+	[SerializeField] private Transform _spawner; // Netcode 
 
+	public override void OnNetworkSpawn()
+	{
+		//if (!IsOwner) Destroy(this);
 	}
-	
+
+
 	public void Awake()
 	{		
 		control = new Player_input_actions();
@@ -67,6 +69,12 @@ public class box_mover : MonoBehaviour
 	{
 		coin_text.text = " coin :" + coin_num;
 				
+	}
+	public void teleport_to(Vector2 to)
+	{
+		rb.velocity = new Vector2(0, 0);
+		transform.position = to;
+
 	}
 
 	public void FixedUpdate()
@@ -112,12 +120,37 @@ public class box_mover : MonoBehaviour
 		fireing--;
 		//Debug.Log("moveing: "+ moving);
 	}
-	private void fire()
+	[ServerRpc] // the function which runs on the server which will make some code run on the clients 
+	private void request_fire_ServerRpc(Vector3 fire_dir)
+	{
+		//Debug.Log("send server rpc ");
+		fire_ClientRpc(fire_dir);
+	}
+	[ClientRpc]
+	private void fire_ClientRpc(Vector3 fire_dir)
+	{
+		//Debug.Log("send client rpc ");
+		Execute_fire(fire_dir);
+	}
+	
+	private void Execute_fire(Vector2 fire_dir)
 	{
 		//Debug.Log("timer: " + timer + " last_firesd" + last_firesd);
+		GameObject bullet = Instantiate(bullet_prefab, _spawner.position + new Vector3(fire_dir.x, fire_dir.y, 0), Quaternion.identity);
+		bullet.GetComponent<Rigidbody2D>().velocity = fire_dir * Player_controller.bullet_speed;
+		last_firesd = timer;		
+
+	}
+	
+	private void fire()
+	{
+		
+		//Debug.Log("fireing"+ fireing.ToString() + "timer: " + timer + " last_firesd" + last_firesd);		
 		if (timer++ > last_firesd + fdelay  &&  fireing > 0 ) {
-			GameObject bullet = Instantiate(bullet_prefab, transform.position + new Vector3(fire_direction.x, fire_direction.y , 0) , Quaternion.identity);			
-			bullet.GetComponent<Rigidbody2D>().velocity = fire_direction * 10;
+			Debug.Log("should fire ? ");
+			request_fire_ServerRpc(fire_direction);
+			//GameObject bullet = Instantiate(bullet_prefab, transform.position + new Vector3(fire_direction.x, fire_direction.y , 0) , Quaternion.identity);			
+			//bullet.GetComponent<Rigidbody2D>().velocity = fire_direction * 10;
 			last_firesd = timer;
 		}
 		

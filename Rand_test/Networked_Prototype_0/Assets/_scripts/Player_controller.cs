@@ -10,6 +10,8 @@ public class Player_controller : MonoBehaviour
     public static Player_controller instance;
     public TextMeshProUGUI health_text;
 
+    public static float bullet_speed =10f;
+
     private static int health = 10 ;
     public static int Health
     {

@@ -22,8 +22,8 @@ public class Colection_script : MonoBehaviour
 		if(other.gameObject.tag == "Player")
 		{
             box_mover my_box_mover;
-            my_box_mover = other.gameObject.GetComponent<box_mover>();
-            my_box_mover.coin_num++;
+            //my_box_mover = other.gameObject.GetComponent<box_mover>();
+            //my_box_mover.coin_num++;
             Destroy(gameObject);
 		}
 	}
