@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-
+using Unity.Netcode;
 
 public enum Ai_state
 {
@@ -13,14 +13,16 @@ public enum Ai_state
 }
 
 
-public class Enemy_ai : MonoBehaviour
+public class Enemy_ai : NetworkBehaviour
 {
 	public GameObject amiba;
 	public Ai_state state = Ai_state.walk;
     public float vision_range = 5 ;
 	public float speed = 3 ;
     public GameObject player;
-	public float health = 5.0f;
+	
+	public NetworkVariable<float> health = new NetworkVariable<float>() ;
+	//network variable yaptim ya networkobject component ini koyunca boylece oldu.
 	
 
 	private Quaternion look_dir; 
@@ -28,18 +30,25 @@ public class Enemy_ai : MonoBehaviour
 	private Rigidbody2D rb;
 	private bool once ;
 
+   
+
 	// Start is called before the first frame update
 	private void Awake()
 	{
 		state = Ai_state.walk;
 		once = false;
-		health = 25.0f;
+		
 	}
+
+	
+
+
 	void Start()
     {
 		rb = GetComponent<Rigidbody2D>();
 		StartCoroutine(random_walk());
 		player = GameObject.FindGameObjectWithTag("Player");
+		health.Value = 25f;
 	}
 
 	// Update is called once per frame
@@ -102,18 +111,27 @@ public class Enemy_ai : MonoBehaviour
 		rb.velocity = Vector2.ClampMagnitude(walking_direction * speed , speed)  ;
 		
 	}
+
 	private void die()
+	{
+		die_ServerRpc();
+	}
+
+    [ServerRpc (RequireOwnership = false)]
+	private void die_ServerRpc()
 	{
 		if (once== false)
 		{			
 			once = true;
-			if ( !( transform.localScale.magnitude < (0.9 ))) // 3.50 is the defult magnatude 
+			if ( !( transform.localScale.magnitude < (0.9 )) && IsServer ) // 3.50 is the defult magnatude 
 			{
-			//Debug.Log(GetInstanceID());
+				//Debug.Log(GetInstanceID());
 				GameObject child_amiba = Instantiate(amiba, transform.position + new Vector3(Random.Range(-1, 1), Random.Range(-1, 1), 1), Quaternion.identity);
 				GameObject child_amiba2 = Instantiate(amiba, transform.position + new Vector3(Random.Range(-1, 1), Random.Range(-1, 1), 1), Quaternion.identity);
 				child_amiba.transform.localScale = new Vector3(transform.localScale.x * 0.7f, transform.localScale.y * 0.7f, transform.localScale.z  );
 				child_amiba2.transform.localScale = new Vector3(transform.localScale.x * 0.7f, transform.localScale.y * 0.7f, transform.localScale.z );
+				child_amiba.GetComponent<NetworkObject>().Spawn();
+				child_amiba2.GetComponent<NetworkObject>().Spawn();
 			}
 		}
 		StartCoroutine(delayed_death());
@@ -121,10 +139,10 @@ public class Enemy_ai : MonoBehaviour
 	}
 
 	private IEnumerator delayed_death()
-	{
-		
+	{		
 		yield return new WaitForFixedUpdate() ;
-		Destroy(gameObject);		
+		gameObject.GetComponent<NetworkObject>().Despawn();
+		//estroy(gameObject);		
 	}
 
 
@@ -146,7 +164,17 @@ public class Enemy_ai : MonoBehaviour
 		}
 	}
 
-	
+	[ServerRpc ( RequireOwnership =  false)]
+	public void take_damage_ServerRpc(float damage)
+	{
+		health.Value -= damage;
+		if (health.Value <= 0)
+		{
+			state = Ai_state.die;
+		}
+	}
+
+
 	private void OnCollisionEnter2D(Collision2D other)
 	{		
 		//Debug.Log("naem :" + other.gameObject.tag);
@@ -158,13 +186,9 @@ public class Enemy_ai : MonoBehaviour
 			}
 		}
 		else if (other.gameObject.tag == "Bullet")
-		{		
-			health -= other.gameObject.GetComponent<Bullet_controller>().damage;
-			//Debug.Log("health :" + health);
-			if (health <= 0)
-			{
-				state = Ai_state.die;
-			}
+		{
+			take_damage_ServerRpc(other.gameObject.GetComponent<Bullet_controller>().damage);
+			//Debug.Log("health :" + health);			
 		}
 		else if (other.gameObject.tag == "Player")
 		{

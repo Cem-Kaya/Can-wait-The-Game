@@ -837,6 +837,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: extra_weight
       objectReference: {fileID: 0}
+    - target: {fileID: 6722289833909611768, guid: 299b75fe50a1ad2468efafad58816e64, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2441243700
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 299b75fe50a1ad2468efafad58816e64, type: 3}
 --- !u!1 &1242512482
@@ -1240,7 +1244,12 @@ MonoBehaviour:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 1467055781}
     PlayerPrefab: {fileID: 2931956275494323235, guid: d671f7c276cbfe14580dae75a61972c0, type: 3}
-    NetworkPrefabs: []
+    NetworkPrefabs:
+    - Override: 0
+      Prefab: {fileID: 2528314809511988402, guid: 299b75fe50a1ad2468efafad58816e64, type: 3}
+      SourcePrefabToOverride: {fileID: 0}
+      SourceHashToOverride: 0
+      OverridingTargetPrefab: {fileID: 0}
     TickRate: 60
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0

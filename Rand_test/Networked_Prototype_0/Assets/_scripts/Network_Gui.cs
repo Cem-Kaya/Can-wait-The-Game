@@ -9,11 +9,10 @@ public class Network_Gui : MonoBehaviour
 {
     private void OnGUI()
     {
-        GUILayout.BeginArea(new Rect(500, 10,900 , 600));
+        GUILayout.BeginArea(new Rect(250, 10,900 , 600));
         if (!NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
         {
             if (GUILayout.Button("Host")) NetworkManager.Singleton.StartHost();
-            if (GUILayout.Button("Server")) NetworkManager.Singleton.StartServer();
             if (GUILayout.Button("Client")) NetworkManager.Singleton.StartClient();
         }
 

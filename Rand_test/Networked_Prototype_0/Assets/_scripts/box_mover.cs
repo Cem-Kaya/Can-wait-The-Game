@@ -139,13 +139,11 @@ public class box_mover : NetworkBehaviour
 	}
 	
 	private void fire()
-	{
-		
+	{		
 		//Debug.Log("fireing"+ fireing.ToString() + "timer: " + timer + " last_firesd" + last_firesd);		
 		if (timer++ > last_firesd + fdelay  &&  fireing > 0 ) {
 			request_fire_ServerRpc(fire_direction);
 						
-			
 			//GameObject bullet = Instantiate(bullet_prefab, transform.position + new Vector3(fire_direction.x, fire_direction.y , 0) , Quaternion.identity);			
 			//bullet.GetComponent<Rigidbody2D>().velocity = fire_direction * 10;
 			last_firesd = timer;
