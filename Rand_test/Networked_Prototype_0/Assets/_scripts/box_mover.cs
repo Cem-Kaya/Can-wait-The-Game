@@ -70,15 +70,10 @@ public class box_mover : NetworkBehaviour
 		coin_text.text = " coin :" + coin_num;
 				
 	}
-	public void teleport_to(Vector2 to)
-	{
-		rb.velocity = new Vector2(0, 0);
-		transform.position = to;
-
-	}
 
 	public void FixedUpdate()
 	{
+		if (!IsOwner) return;
 		rb.velocity = Vector3.ClampMagnitude(rb.velocity, terminal_velocity);
 		//Debug.Log("V : "+ rb.velocity);
 		fire();
@@ -120,20 +115,21 @@ public class box_mover : NetworkBehaviour
 		fireing--;
 		//Debug.Log("moveing: "+ moving);
 	}
-	[ServerRpc] // the function which runs on the server which will make some code run on the clients 
+	[ServerRpc(RequireOwnership = false) ]  //  (RequireOwnership = false) the function which runs on the server which will make some code run on the clients 
 	private void request_fire_ServerRpc(Vector3 fire_dir)
 	{
 		//Debug.Log("send server rpc ");
 		fire_ClientRpc(fire_dir);
+		
 	}
 	[ClientRpc]
 	private void fire_ClientRpc(Vector3 fire_dir)
 	{
 		//Debug.Log("send client rpc ");
-		Execute_fire(fire_dir);
+		execute_fire(fire_dir);
 	}
 	
-	private void Execute_fire(Vector2 fire_dir)
+	private void execute_fire(Vector2 fire_dir)
 	{
 		//Debug.Log("timer: " + timer + " last_firesd" + last_firesd);
 		GameObject bullet = Instantiate(bullet_prefab, _spawner.position + new Vector3(fire_dir.x, fire_dir.y, 0), Quaternion.identity);
@@ -147,14 +143,23 @@ public class box_mover : NetworkBehaviour
 		
 		//Debug.Log("fireing"+ fireing.ToString() + "timer: " + timer + " last_firesd" + last_firesd);		
 		if (timer++ > last_firesd + fdelay  &&  fireing > 0 ) {
-			Debug.Log("should fire ? ");
-			request_fire_ServerRpc(fire_direction);
+			if (IsClient) request_fire_ServerRpc(fire_direction);
+			else execute_fire(fire_direction);			
+			
 			//GameObject bullet = Instantiate(bullet_prefab, transform.position + new Vector3(fire_direction.x, fire_direction.y , 0) , Quaternion.identity);			
 			//bullet.GetComponent<Rigidbody2D>().velocity = fire_direction * 10;
 			last_firesd = timer;
 		}
 		
 	}
+
+	public void teleport_to(Vector2 to)
+	{
+		rb.velocity = new Vector2(0, 0);
+		transform.position = to;
+
+	}
+
 	private void OnEnable()
 	{
 		control.Enable();	

@@ -1241,13 +1241,13 @@ MonoBehaviour:
     NetworkTransport: {fileID: 1467055781}
     PlayerPrefab: {fileID: 2931956275494323235, guid: d671f7c276cbfe14580dae75a61972c0, type: 3}
     NetworkPrefabs: []
-    TickRate: 30
+    TickRate: 60
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0
     ConnectionData: 
     EnableTimeResync: 0
     TimeResyncInterval: 30
-    EnsureNetworkVariableLengthSafety: 1
+    EnsureNetworkVariableLengthSafety: 0
     EnableSceneManagement: 1
     ForceSamePrefabs: 1
     RecycleNetworkIds: 1
