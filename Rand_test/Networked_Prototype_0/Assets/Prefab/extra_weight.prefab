@@ -214,7 +214,8 @@ MonoBehaviour:
   vision_range: 6
   speed: 3
   player: {fileID: 0}
-  health: 100
+  health:
+    m_InternalValue: 0
 --- !u!50 &2528314809511988412
 Rigidbody2D:
   serializedVersion: 4

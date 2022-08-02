@@ -114,10 +114,10 @@ public class Enemy_ai : NetworkBehaviour
 
 	private void die()
 	{
-		die_ServerRpc();
+		if(IsServer) die_ServerRpc();
 	}
 
-    [ServerRpc (RequireOwnership = false)]
+    [ServerRpc ]
 	private void die_ServerRpc()
 	{
 		if (once== false)
@@ -126,12 +126,7 @@ public class Enemy_ai : NetworkBehaviour
 			if ( !( transform.localScale.magnitude < (0.9 )) && IsServer ) // 3.50 is the defult magnatude 
 			{
 				//Debug.Log(GetInstanceID());
-				GameObject child_amiba = Instantiate(amiba, transform.position + new Vector3(Random.Range(-1, 1), Random.Range(-1, 1), 1), Quaternion.identity);
-				GameObject child_amiba2 = Instantiate(amiba, transform.position + new Vector3(Random.Range(-1, 1), Random.Range(-1, 1), 1), Quaternion.identity);
-				child_amiba.transform.localScale = new Vector3(transform.localScale.x * 0.7f, transform.localScale.y * 0.7f, transform.localScale.z  );
-				child_amiba2.transform.localScale = new Vector3(transform.localScale.x * 0.7f, transform.localScale.y * 0.7f, transform.localScale.z );
-				child_amiba.GetComponent<NetworkObject>().Spawn();
-				child_amiba2.GetComponent<NetworkObject>().Spawn();
+				
 			}
 		}
 		StartCoroutine(delayed_death());

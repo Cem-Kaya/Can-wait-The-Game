@@ -29,7 +29,7 @@ public class Player_color : NetworkBehaviour
     [ClientRpc]
     private void reapply_color_ClientRpc()
 	{
-        _renderer.color = _colors[_index];
+        
     }
 
 
