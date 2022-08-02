@@ -115,7 +115,7 @@ public class box_mover : NetworkBehaviour
 		fireing--;
 		//Debug.Log("moveing: "+ moving);
 	}
-	[ServerRpc(RequireOwnership = false) ]  //  (RequireOwnership = false) the function which runs on the server which will make some code run on the clients 
+	[ServerRpc]  //  (RequireOwnership = false) the function which runs on the server which will make some code run on the clients 
 	private void request_fire_ServerRpc(Vector3 fire_dir)
 	{
 		//Debug.Log("send server rpc ");
@@ -143,8 +143,8 @@ public class box_mover : NetworkBehaviour
 		
 		//Debug.Log("fireing"+ fireing.ToString() + "timer: " + timer + " last_firesd" + last_firesd);		
 		if (timer++ > last_firesd + fdelay  &&  fireing > 0 ) {
-			if (IsClient) request_fire_ServerRpc(fire_direction);
-			else execute_fire(fire_direction);			
+			request_fire_ServerRpc(fire_direction);
+						
 			
 			//GameObject bullet = Instantiate(bullet_prefab, transform.position + new Vector3(fire_direction.x, fire_direction.y , 0) , Quaternion.identity);			
 			//bullet.GetComponent<Rigidbody2D>().velocity = fire_direction * 10;
