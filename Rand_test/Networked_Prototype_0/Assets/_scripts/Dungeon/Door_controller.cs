@@ -52,12 +52,10 @@ public class Door_controller : NetworkBehaviour
 
 
         //////////////////////////////////////////////////////////////
-        bool ret = false;
+        
         foreach (var a in NetworkManager.Singleton.ConnectedClients)
         {
-
             a.Value.PlayerObject.GetComponent<box_mover>().teleport_to(new Vector2(transform.position.x + new_room_dir.x * 5, transform.position.y + new_room_dir.y * 5));
-            
         }
 		
         //Debug.Log("x = " + x + " y = " + y);
