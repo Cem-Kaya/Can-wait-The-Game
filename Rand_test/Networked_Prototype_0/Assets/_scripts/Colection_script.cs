@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
-public class Colection_script : MonoBehaviour
+public class Colection_script : NetworkBehaviour
 {
     // Start is called before the first frame update
     void Start()
@@ -16,16 +17,21 @@ public class Colection_script : MonoBehaviour
         
     }
 
-	private void OnCollisionEnter2D(Collision2D other)
+    private void OnCollisionEnter2D(Collision2D other)
     {
         //Debug.Log("naem :" + collision.tag);
-		if(other.gameObject.tag == "Player")
-		{
-            box_mover my_box_mover;
-            //my_box_mover = other.gameObject.GetComponent<box_mover>();
-            //my_box_mover.coin_num++;
-            Destroy(gameObject);
-		}
-	}
+        if (other.gameObject.tag == "Player")
+        {
+            if (IsServer)
+            {
 
+                //my_box_mover = other.gameObject.GetComponent<box_mover>();
+                //my_box_mover.coin_num++;
+                //Destroy(gameObject);
+                gameObject.GetComponent<NetworkObject>().Despawn();
+            }
+
+        }
+    }
+    
 }
