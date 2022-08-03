@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Unity.Netcode;
 
 public class Room_info
 {
@@ -12,7 +13,7 @@ public class Room_info
 }
 // Jungle 
 
-public class Room_controller : MonoBehaviour
+public class Room_controller : NetworkBehaviour
 {
 
     public static Room_controller instance;
@@ -43,7 +44,9 @@ public class Room_controller : MonoBehaviour
 
 
 	private void Awake()
-    {      
+    {
+        if (IsClient) Destroy(this);
+		
 		if (instance == null)
         {
             instance = this;
@@ -53,8 +56,8 @@ public class Room_controller : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
         load_room("Start_room", 0, 0);
-
         //load_room("Default_room", 1,0);
         //load_room("Default_room", -1, 0);
         //load_room("Default_room", 0, 1);
@@ -74,6 +77,7 @@ public class Room_controller : MonoBehaviour
     {
         //check to make sure room exists before we load a room so we dont load rooms that overlap
         //Debug.Log("Load Room func: " + in_x + in_y);
+       
         if (does_room_exist(in_x, in_y))
         {
             return;

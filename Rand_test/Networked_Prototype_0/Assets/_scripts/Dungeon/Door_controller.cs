@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
-
-public class Door_controller : MonoBehaviour
+public class Door_controller : NetworkBehaviour
 {
     // Start is called before the first frame update
     static bool door_cool_down = false;
@@ -50,8 +50,16 @@ public class Door_controller : MonoBehaviour
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         //multi oldugunda objects diye al sonra for looptan teleportla bam bum done
 
-        player.GetComponent<box_mover>().teleport_to(new Vector2(transform.position.x + new_room_dir.x * 5, transform.position.y + new_room_dir.y * 5));
 
+        //////////////////////////////////////////////////////////////
+        bool ret = false;
+        foreach (var a in NetworkManager.Singleton.ConnectedClients)
+        {
+
+            a.Value.PlayerObject.GetComponent<box_mover>().teleport_to(new Vector2(transform.position.x + new_room_dir.x * 5, transform.position.y + new_room_dir.y * 5));
+            
+        }
+		
         //Debug.Log("x = " + x + " y = " + y);
         Room confiner_room = Room_controller.instance.loaded_rooms[(x, y)];
 
@@ -81,14 +89,15 @@ public class Door_controller : MonoBehaviour
 	
 	private void OnTriggerExit2D(Collider2D collision)
 	{
-        Debug.Log("Exiting !!");
+        //Debug.Log("Exiting !!");
 	}
 
     bool is_colliding = false;
     bool triger_guard = false;
     void OnTriggerEnter2D (Collider2D hitObject)        
     {
-
+        if (IsClient) return;
+		
         if (hitObject.gameObject.layer == 3 )
         {
             if (is_colliding) return;
@@ -100,7 +109,7 @@ public class Door_controller : MonoBehaviour
         
 
 
-        if (false) //door_cool_down
+        if (door_cool_down) //door_cool_down
             {
                 door_cool_down = true;
                 StartCoroutine(cool_down());
