@@ -62,12 +62,12 @@ public class box_mover : NetworkBehaviour
 		speed = 7 ;
 		rb = GetComponent<Rigidbody2D>();
 
-		coin_text =  GameObject.Find("Coin Text").GetComponent<TextMeshProUGUI>() ;
-		health_text = GameObject.Find("Health Text").GetComponent<TextMeshProUGUI>();
+		//coin_text =  GameObject.Find("Coin Text").GetComponent<TextMeshProUGUI>() ;
+		//health_text = GameObject.Find("Health Text").GetComponent<TextMeshProUGUI>();
 	}
 	public void Update()
 	{
-		coin_text.text = " coin :" + coin_num;
+		//coin_text.text = " coin :" + coin_num;
 				
 	}
 

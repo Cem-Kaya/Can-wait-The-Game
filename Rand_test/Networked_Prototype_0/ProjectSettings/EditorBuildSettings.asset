@@ -6,8 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: 
-    guid: eccbdd7ae1d702445bed2b850b6ebab1
+    path: Assets/Scenes/Dungeon/Start_Menu.unity
+    guid: 43e311e7aa5ebf84582483a7734bad34
   - enabled: 1
     path: Assets/Scenes/Dungeon/Default_room.unity
     guid: a9a09c02e7f1fe64caba54d5cf04dbe3
@@ -22,5 +22,5 @@ EditorBuildSettings:
     guid: 5ada69df109df474c87f6a8dd830af87
   - enabled: 1
     path: Assets/Scenes/Dungeon/Main_scene.unity
-    guid: 2759581d7c7a24a4592a799383e93a11
+    guid: 968b5ca00e399ce4f95c324a3642d3f6
   m_configObjects: {}

@@ -55,8 +55,8 @@ public class Room_controller : NetworkBehaviour
     }
     // Start is called before the first frame update
     void Start()
-    {        
-       
+    {
+        load_room("Start_room", 1, 0);
         //load_room("Default_room", 1,0);
         //load_room("Default_room", -1, 0);
         //load_room("Default_room", 0, 1);

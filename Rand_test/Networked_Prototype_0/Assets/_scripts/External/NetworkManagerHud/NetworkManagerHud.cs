@@ -77,7 +77,9 @@ public class NetworkManagerHud : MonoBehaviour
 
         if (GUILayout.Button("Host (Server + Client)"))
         {            
-            m_NetworkManager.StartHost();            
+            m_NetworkManager.StartHost();
+            //NetworkManager.Singleton.SceneManager.LoadScene("Main_scene no_network", LoadSceneMode.Single);
+
         }
 
         GUILayout.BeginHorizontal();
@@ -110,6 +112,20 @@ public class NetworkManagerHud : MonoBehaviour
             m_NetworkManager.Shutdown();
         }
     }
+
+    // from now on my additions until the methodImpl curses
+    public void start_game_as_host()
+    {
+        m_NetworkManager.StartHost();
+        NetworkManager.Singleton.SceneManager.LoadScene("Main_scene", LoadSceneMode.Single);
+    }
+
+    public void start_game_as_client()
+    {
+        m_NetworkManager.StartClient();
+        //NetworkManager.Singleton.SceneManager.LoadScene("Main_scene no_network", LoadSceneMode.Single);
+    }
+
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     bool IsRunning(NetworkManager networkManager) => networkManager.IsServer || networkManager.IsClient;
