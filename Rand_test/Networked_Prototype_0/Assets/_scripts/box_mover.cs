@@ -159,6 +159,7 @@ public class box_mover : NetworkBehaviour
 	}
 
 
+
 	[ClientRpc]
 	public void teleport_to_ClientRpc(Vector2 to)
 	{

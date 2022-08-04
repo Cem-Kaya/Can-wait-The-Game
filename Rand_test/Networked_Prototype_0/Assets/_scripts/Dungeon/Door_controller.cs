@@ -35,17 +35,17 @@ public class Door_controller : NetworkBehaviour
         door_cool_down = false;
     }
 
-    [ServerRpc]
-    private void to_teleport_ServerRpc(float posx, float posy)
-    {
-        teleport_to_ClientRpc(posx, posy);
-    }
+ //   [ServerRpc]
+ //   private void to_teleport_ServerRpc(float posx, float posy)
+ //   {
+ //       teleport_to_ClientRpc(posx, posy);
+ //   }
 
-    [ClientRpc]
-    private void teleport_to_ClientRpc(float posx, float posy)
-	{
+ //   [ClientRpc]
+ //   private void teleport_to_ClientRpc(float posx, float posy)
+	//{
         
-    }
+ //   }
 
     IEnumerator wait_for_loading(int x, int y, Vector2 new_room_dir)
     {  

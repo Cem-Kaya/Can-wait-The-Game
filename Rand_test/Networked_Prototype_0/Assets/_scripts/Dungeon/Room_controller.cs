@@ -55,19 +55,19 @@ public class Room_controller : NetworkBehaviour
     }
     // Start is called before the first frame update
     void Start()
-    {
-        
-        load_room("Start_room", 0, 0);
+    {        
+       
         //load_room("Default_room", 1,0);
         //load_room("Default_room", -1, 0);
         //load_room("Default_room", 0, 1);
         //load_room("Sample_room", 0, -1);
-
-
     }
+	
+	
 
-    // Update is called once per frame
-    void Update()
+
+	// Update is called once per frame
+	void Update()
     {
 		
     }
@@ -98,21 +98,23 @@ public class Room_controller : NetworkBehaviour
 
     IEnumerator load_room_routine(Room_info info)
     {
-
+        
         load_room_queue.Enqueue(info); 
         //scenes won't load instantly, they'll take some time, depending on items so we want to load it up
         //before next scene starts so gameplay will be fluid.
         string room_name = info.name;
 
         //setting additive makes scenes overlap and its important cuz we want all rooms in same scene       
-        AsyncOperation load_room = SceneManager.LoadSceneAsync(room_name, LoadSceneMode.Additive);
+        //var load_room = SceneManager.LoadSceneAsync(room_name, LoadSceneMode.Additive);
         //this makes courotine happy
-
-
-        while (!load_room.isDone)
+        if (IsServer)
         {
-            yield return new WaitForFixedUpdate();
+            Debug.Log("trying to load scene " + room_name);
+            var load_room = NetworkManager.Singleton.SceneManager.LoadScene(room_name, LoadSceneMode.Additive);
+            Debug.Log("done to load scene " + room_name);
         }
+
+        yield return null;
 
     }
 
@@ -132,7 +134,7 @@ public class Room_controller : NetworkBehaviour
         
     }
 
-  
+     
     public bool does_room_exist(int in_x, int in_y)
     {
 

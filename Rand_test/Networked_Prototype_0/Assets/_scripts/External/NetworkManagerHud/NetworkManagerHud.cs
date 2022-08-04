@@ -4,6 +4,7 @@ using Unity.Netcode;
 using Unity.Netcode.Transports.UNET;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(NetworkManager))]
 [DisallowMultipleComponent]
@@ -75,19 +76,14 @@ public class NetworkManagerHud : MonoBehaviour
         GUILayout.EndHorizontal();
 
         if (GUILayout.Button("Host (Server + Client)"))
-        {
-            m_NetworkManager.StartHost();
+        {            
+            m_NetworkManager.StartHost();            
         }
 
         GUILayout.BeginHorizontal();
-
-        if (GUILayout.Button("Server"))
-        {
-            m_NetworkManager.StartServer();
-        }
-
+                
         if (GUILayout.Button("Client"))
-        {
+        {            
             m_NetworkManager.StartClient();
         }
 
