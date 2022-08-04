@@ -42,7 +42,7 @@ public class StartMenuController : MonoBehaviour
 
     public void Start_game()
     {
-        SceneManager.LoadScene("Main_scene", LoadSceneMode.Single);
+        SceneManager.LoadScene("Start_room", LoadSceneMode.Single);
     }
 
     void Activate_menu()

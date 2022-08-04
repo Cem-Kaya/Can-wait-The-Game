@@ -117,7 +117,7 @@ public class NetworkManagerHud : MonoBehaviour
     public void start_game_as_host()
     {
         m_NetworkManager.StartHost();
-        NetworkManager.Singleton.SceneManager.LoadScene("Main_scene", LoadSceneMode.Single);
+        NetworkManager.Singleton.SceneManager.LoadScene("Start_room", LoadSceneMode.Single);
     }
 
     public void start_game_as_client()
