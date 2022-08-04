@@ -35,27 +35,37 @@ public class Door_controller : NetworkBehaviour
         door_cool_down = false;
     }
 
+    [ServerRpc]
+    private void to_teleport_ServerRpc(float posx, float posy)
+    {
+        teleport_to_ClientRpc(posx, posy);
+    }
+
+    [ClientRpc]
+    private void teleport_to_ClientRpc(float posx, float posy)
+	{
+        
+    }
 
     IEnumerator wait_for_loading(int x, int y, Vector2 new_room_dir)
-    {
-        
+    {  
         Room_controller.instance.load_room("Default_room", x, y);
         while (!Room_controller.Room_registered)
         {
             yield return new WaitForEndOfFrame();
         }
 
-
-
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
         //multi oldugunda objects diye al sonra for looptan teleportla bam bum done
 
 
-        //////////////////////////////////////////////////////////////
-        
+
+        //to_teleport_ServerRpc( (transform.position.x + new_room_dir.x * 5), (transform.position.y + new_room_dir.y * 5) );
+
         foreach (var a in NetworkManager.Singleton.ConnectedClients)
         {
-            a.Value.PlayerObject.GetComponent<box_mover>().teleport_to(new Vector2(transform.position.x + new_room_dir.x * 5, transform.position.y + new_room_dir.y * 5));
+            
+            a.Value.PlayerObject.GetComponent<box_mover>().teleport_to_ClientRpc(new Vector2(transform.position.x + new_room_dir.x * 5, transform.position.y + new_room_dir.y * 5));
+            //Debug.Log("teleported player " + a.Value.PlayerObject.NetworkObjectId +"  Y: "+ a.Value.PlayerObject.transform.position.y );
         }
 		
         //Debug.Log("x = " + x + " y = " + y);

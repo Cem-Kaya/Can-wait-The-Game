@@ -158,6 +158,17 @@ public class box_mover : NetworkBehaviour
 
 	}
 
+
+	[ClientRpc]
+	public void teleport_to_ClientRpc(Vector2 to)
+	{
+		if (IsOwner)
+		{
+			rb.velocity = new Vector2(0, 0);
+			transform.position = to;
+		}
+	}
+
 	private void OnEnable()
 	{
 		control.Enable();	
