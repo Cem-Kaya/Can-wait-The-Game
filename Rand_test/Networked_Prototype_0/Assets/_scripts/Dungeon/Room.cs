@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
-
-public class Room : MonoBehaviour
+using Unity.Netcode;
+public class Room : NetworkBehaviour
 {
     public string room_name;
     public int x;
@@ -39,7 +39,7 @@ public class Room : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        transform.position = new Vector2(-999*width , -999*height );
+        transform.position = new Vector2(-10 *width , -10 *height );
 
         //make sure we start in right scene
         if (Room_controller.instance == null) //then we pressed play in the wrong scene
