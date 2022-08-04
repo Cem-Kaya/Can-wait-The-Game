@@ -79,13 +79,10 @@ public class Door_controller : NetworkBehaviour
         //Debug.Log(confiner_collider);
         Camera_controller.load_new_boundry(confiner_collider);
 
-
         Room_controller.instance.current_room = Room_controller.instance.loaded_rooms[(x, y)];
         //Room_controller.instance.current_room.x = x;  // CURSED COPY BY REFERENCE !!!!
-        //Room_controller.instance.current_room.y = y; // CURSED COPY BY REFERENCE !!!!
+        //Room_controller.instance.current_room.y = y; // CURSED COPY BY REFERENCE !!!! 
         
-
-        Room_controller.instance.loaded_rooms[(x, y)].deploy_room(x,y,"w","r");
         triger_guard = false;
     }
     IEnumerator reset()

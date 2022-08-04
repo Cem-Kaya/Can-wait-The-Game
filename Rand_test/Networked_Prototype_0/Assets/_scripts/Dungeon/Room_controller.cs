@@ -6,9 +6,11 @@ using Unity.Netcode;
 
 public class Room_info
 {
-    public string name;
+    public string room_name;
+    public string world_name;
     public int x;
     public int y;
+
 
 }
 // Jungle 
@@ -29,6 +31,7 @@ public class Room_controller : NetworkBehaviour
     //public List<Room> loaded_rooms = new List<Room>();
     //public Hashtable  loaded_rooms = new Hashtable();
     public Dictionary<(int,int), Room> loaded_rooms = new Dictionary<(int, int), Room>();
+    public Dictionary <(int, int), bool> cleared_rooms = new Dictionary<(int, int), bool>();
 
     private bool is_loading_room = false;
 
@@ -51,12 +54,13 @@ public class Room_controller : NetworkBehaviour
         {
             instance = this;
         }
+		
         Room_registered = true;
     }
     // Start is called before the first frame update
     void Start()
     {
-        load_room("Start_room", 1, 0);
+        //load_room("Start_room", 1, 0);
         //load_room("Default_room", 1,0);
         //load_room("Default_room", -1, 0);
         //load_room("Default_room", 0, 1);
@@ -85,28 +89,16 @@ public class Room_controller : NetworkBehaviour
 
         //we want to grab our room info and we will assign it to new room info
         Room_info new_room_data = new Room_info();
-        new_room_data.name = name;
+        new_room_data.room_name = name;
         new_room_data.x = in_x;
         new_room_data.y = in_y;
+		new_room_data.world_name = current_world_name;
+		//we want to be able to enqueue up our room for the scene manager to load for us, so
 
-        //we want to be able to enqueue up our room for the scene manager to load for us, so
-            
-        StartCoroutine(load_room_routine(new_room_data));
-
-
-    }
-
-    IEnumerator load_room_routine(Room_info info)
-    {
-        
-        load_room_queue.Enqueue(info); 
-        //scenes won't load instantly, they'll take some time, depending on items so we want to load it up
-        //before next scene starts so gameplay will be fluid.
-        string room_name = info.name;
-
-        //setting additive makes scenes overlap and its important cuz we want all rooms in same scene       
-        //var load_room = SceneManager.LoadSceneAsync(room_name, LoadSceneMode.Additive);
-        //this makes courotine happy
+		//StartCoroutine(load_room_routine(new_room_data));
+		//my changes are from here /////////////////////////
+		load_room_queue.Enqueue(new_room_data);
+        string room_name = new_room_data.room_name;
         if (IsServer)
         {
             Debug.Log("trying to load scene " + room_name);
@@ -114,24 +106,19 @@ public class Room_controller : NetworkBehaviour
             Debug.Log("done to load scene " + room_name);
         }
 
-        yield return null;
-
     }
+
+   
 
     
     public void register_room(Room room)
     {
         //add room to loaded room
 
-
-
-        
-        
-        
+                
         loaded_rooms.Add((room.x, room.y), room);
         //Debug.Log("Deploy room one " + loaded_rooms[(room.x, room.y)]);
-        //Debug.Log("nonexistent = " + ((loaded_rooms[(6,6)]) == null));
-        
+        //Debug.Log("nonexistent = " + ((loaded_rooms[(6,6)]) == null));        
     }
 
      
@@ -140,7 +127,7 @@ public class Room_controller : NetworkBehaviour
 
         if (loaded_rooms.ContainsKey((in_x, in_y)) == true)
         {
-                    return true;
+           return true;
         }
 
         return false;

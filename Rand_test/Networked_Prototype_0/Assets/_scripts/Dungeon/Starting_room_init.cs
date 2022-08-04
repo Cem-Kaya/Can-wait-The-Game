@@ -16,9 +16,9 @@ public class Starting_room_init : NetworkBehaviour
         Camera_controller.load_new_boundry(confiner_collider);
         Room_controller.instance.current_room =  gameObject.GetComponent<Room>() ;  // Room_controller.instance.loaded_rooms[0];
     }
-	void Start()
+    void Start()
     {
-        gameObject.GetComponent<Room>().deploy_room(0, 0, "w", "r");
+
     }
 
     // Update is called once per frame
