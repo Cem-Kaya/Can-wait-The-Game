@@ -127,6 +127,7 @@ public class Room_controller : NetworkBehaviour
 		//my changes are from here /////////////////////////
 		load_room_queue.Enqueue(new_room_data);
         string room_name = new_room_data.room_name;
+        
 		Debug.Log("isServer : " + IsServer.ToString() + " is client : " + IsClient.ToString() + " is host : " + IsHost.ToString() + " is localplayer : " + IsLocalPlayer.ToString() + " is owner : " +  IsOwner.ToString() + " is spawned : " + IsSpawned.ToString());
         		
         var load_room = NetworkManager.Singleton.SceneManager.LoadScene(room_name, LoadSceneMode.Single);
