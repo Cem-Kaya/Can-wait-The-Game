@@ -33,6 +33,7 @@ public class Room : NetworkBehaviour
         }
         Room_info inf = Room_controller.instance.load_room_queue.Dequeue();
         room_name = inf.room_name;
+		name = inf.room_name;
         x = inf.x;
         y = inf.y;
         name = inf.world_name + "-" + inf.room_name + " " + inf.x + ", " + inf.y;

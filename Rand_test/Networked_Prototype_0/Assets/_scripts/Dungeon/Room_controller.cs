@@ -20,6 +20,15 @@ public class Room_info
         x = in_x;
         y = in_y;
     }
+
+    public Room_info(Room room_in )
+    {
+        room_name = room_in.room_name;
+        world_name = Room_controller.instance.current_world_name;
+        x = room_in.x;
+        y = room_in.y;
+    }
+
     public Room_info()
     {
         room_name = "default constructor ? ";
@@ -38,19 +47,15 @@ public class Room_controller : NetworkBehaviour
 
     public string current_world_name = "Jungle";
 
-    public Room current_room;
-
-    public Room_info current_loading_room_data;
+    public Room_info current_room_info ;
 
     public Queue<Room_info> load_room_queue = new Queue<Room_info>();
 
     //public List<Room> loaded_rooms = new List<Room>();
     //public Hashtable  loaded_rooms = new Hashtable();
-    public Dictionary<(int,int), Room> loaded_rooms = new Dictionary<(int, int), Room>();
+    public Dictionary<(int,int), Room_info> loaded_rooms = new Dictionary<(int, int), Room_info>();
     public Dictionary <(int, int), bool> cleared_rooms = new Dictionary<(int, int), bool>();
-
-    private bool is_loading_room = false;
-
+       
     private bool room_registered = true;
 
     public bool start_room_initialized = false;
@@ -71,11 +76,13 @@ public class Room_controller : NetworkBehaviour
 		
 		if (instance == null)
         {
-            Debug.Log("creating room controller ");
+            //Debug.Log("creating room controller ");
             instance = this;
+            DontDestroyOnLoad(this.gameObject);
+            Room_registered = true;
         }
 		
-        Room_registered = true;
+        
     }
     // Start is called before the first frame update
     void Start()
@@ -97,19 +104,20 @@ public class Room_controller : NetworkBehaviour
     }
 
 
-    public void load_room(string name, int in_x, int in_y)
+    public void load_room(string in_name, int in_x, int in_y)
     {
         //check to make sure room exists before we load a room so we dont load rooms that overlap
-        //Debug.Log("Load Room func: " + in_x + in_y);
-       
+        Debug.Log("Load Room func: " + in_x + in_y);
+        
         if (does_room_exist(in_x, in_y))
         {
+            Debug.Log("the room that you are trying to load already exists ! ");
             return;
         }
-
+        
         //we want to grab our room info and we will assign it to new room info
         Room_info new_room_data = new Room_info();
-        new_room_data.room_name = name;
+        new_room_data.room_name = in_name;
         new_room_data.x = in_x;
         new_room_data.y = in_y;
 		new_room_data.world_name = current_world_name;
@@ -119,16 +127,12 @@ public class Room_controller : NetworkBehaviour
 		//my changes are from here /////////////////////////
 		load_room_queue.Enqueue(new_room_data);
         string room_name = new_room_data.room_name;
-        if (IsServer)
-        {
-            Debug.Log("trying to load scene " + room_name);
-            var load_room = NetworkManager.Singleton.SceneManager.LoadScene(room_name, LoadSceneMode.Single);
-            Debug.Log("done to load scene " + room_name);
-        }
-
+		Debug.Log("isServer : " + IsServer.ToString() + " is client : " + IsClient.ToString() + " is host : " + IsHost.ToString() + " is localplayer : " + IsLocalPlayer.ToString() + " is owner : " +  IsOwner.ToString() + " is spawned : " + IsSpawned.ToString());
+        		
+        var load_room = NetworkManager.Singleton.SceneManager.LoadScene(room_name, LoadSceneMode.Single);
+        
     }
 
-   
 
     
     public void register_room(Room room)
@@ -136,31 +140,28 @@ public class Room_controller : NetworkBehaviour
         //add room to loaded room
 
                 
-        loaded_rooms.Add((room.x, room.y), room);
+        loaded_rooms.Add((room.x, room.y), new  Room_info(room.room_name, Room_controller.instance.current_world_name , room.x, room.y) );
         //Debug.Log("Deploy room one " + loaded_rooms[(room.x, room.y)]);
         //Debug.Log("nonexistent = " + ((loaded_rooms[(6,6)]) == null));        
     }
 
      
     public bool does_room_exist(int in_x, int in_y)
-    {
-
+    {        
         if (loaded_rooms.ContainsKey((in_x, in_y)) == true)
         {
            return true;
         }
-
-        return false;
-        
+        return false;        
     }
 
     public void Debug_print_loaded_rooms()
     {
 
-        string all_rooms = "All loaded rooms in " + current_room.x.ToString() + current_room.y.ToString() + "\n";
-        foreach (KeyValuePair<(int,int),Room> r in loaded_rooms)
+        string all_rooms = "All loaded rooms in " + current_room_info.x.ToString() + current_room_info.y.ToString() + "\n";
+        foreach (KeyValuePair<(int,int),Room_info> r in loaded_rooms)
         {
-            Room room = r.Value;
+            Room_info room = r.Value;
             all_rooms += room.x.ToString() + room.y.ToString() + " ";
         }
         Debug.Log(all_rooms);

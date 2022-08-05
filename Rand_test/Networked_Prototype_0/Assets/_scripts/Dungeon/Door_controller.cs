@@ -47,44 +47,7 @@ public class Door_controller : NetworkBehaviour
         
  //   }
 
-    IEnumerator wait_for_loading(int x, int y, Vector2 new_room_dir)
-    {  
-        Room_controller.instance.load_room("Default_room", x, y);
-        while (!Room_controller.Room_registered)
-        {
-            yield return new WaitForEndOfFrame();
-        }
-
-        //multi oldugunda objects diye al sonra for looptan teleportla bam bum done
-
-
-
-        //to_teleport_ServerRpc( (transform.position.x + new_room_dir.x * 5), (transform.position.y + new_room_dir.y * 5) );
-
-        foreach (var a in NetworkManager.Singleton.ConnectedClients)
-        {
-            
-            a.Value.PlayerObject.GetComponent<box_mover>().teleport_to_ClientRpc(new Vector2(transform.position.x + new_room_dir.x * 5, transform.position.y + new_room_dir.y * 5));
-            //Debug.Log("teleported player " + a.Value.PlayerObject.NetworkObjectId +"  Y: "+ a.Value.PlayerObject.transform.position.y );
-        }
-		
-        //Debug.Log("x = " + x + " y = " + y);
-        Room confiner_room = Room_controller.instance.loaded_rooms[(x, y)];
-
-        //Debug.Log("exist :"+ (confiner_room !=null).ToString() +" ,"  + confiner_room);
-
-        GameObject room_object = confiner_room.gameObject;
-        GameObject confiner_object = room_object.transform.Find("Cam_collider").gameObject;
-        PolygonCollider2D confiner_collider = confiner_object.GetComponent<PolygonCollider2D>();
-        //Debug.Log(confiner_collider);
-        Camera_controller.load_new_boundry(confiner_collider);
-
-        Room_controller.instance.current_room = Room_controller.instance.loaded_rooms[(x, y)];
-        //Room_controller.instance.current_room.x = x;  // CURSED COPY BY REFERENCE !!!!
-        //Room_controller.instance.current_room.y = y; // CURSED COPY BY REFERENCE !!!! 
-        
-        triger_guard = false;
-    }
+ 
     IEnumerator reset()
     {
         yield return new WaitForEndOfFrame();
@@ -102,18 +65,20 @@ public class Door_controller : NetworkBehaviour
 
     void OnTriggerEnter2D (Collider2D hitObject)        
     {
-        if (! IsServer) return;
+        Debug.Log(" current room is: " + Room_controller.instance.current_room_info.x + " " +Room_controller.instance.current_room_info.y);
+		// Debug.Log("IsServer" + IsServer.ToString() + " IsClient" + IsClient.ToString());
+		if (! IsServer) return;
 		
         if (hitObject.gameObject.layer == 3 )
         {
-            if (is_colliding) return;
+			if (is_colliding) return;
+            
             if (triger_guard) return;
+           
+            
             triger_guard = true;
-            is_colliding = true;
+            is_colliding = true;            
             StartCoroutine(reset());
-        
-        
-
 
         if (door_cool_down) //door_cool_down
             {
@@ -129,23 +94,54 @@ public class Door_controller : NetworkBehaviour
             new_room_dir.Normalize();
 			
             int x = Mathf.RoundToInt(new_room_dir.x);
-            x += (int)Room_controller.instance.current_room.x;
+            x += (int)Room_controller.instance.current_room_info.x;
 
             int y = Mathf.RoundToInt(new_room_dir.y);
-            y += (int)Room_controller.instance.current_room.y;
+            y += (int)Room_controller.instance.current_room_info.y;
 
-            
-
-
-
-
+            /*
             if (!Room_controller.instance.does_room_exist(x, y))
             {
                 Room_controller.Room_registered = false;
             }
+            */
 
-            StartCoroutine(wait_for_loading(x, y, new_room_dir));
+
+            //to_teleport_ServerRpc((transform.position.x + new_room_dir.x * 5), (transform.position.y + new_room_dir.y * 5));
+
+            foreach (var a in NetworkManager.Singleton.ConnectedClients)
+            {
+
+                a.Value.PlayerObject.GetComponent<box_mover>().teleport_to_ClientRpc(new Vector2(-transform.position.x + new_room_dir.x * 3.5f , -transform.position.y + new_room_dir.y * 3.5f ));
+                // Debug.Log("teleported player " + a.Value.PlayerObject.NetworkObjectId + "  Y: " + a.Value.PlayerObject.transform.position.y);
+            }
             
+            Debug.Log("x = " + x + " y = " + y);
+
+
+
+            //Debug.Log("exist :"+ (confiner_room !=null).ToString() +" ,"  + confiner_room);
+
+            //GameObject room_object = confiner_room.gameObject;
+            //GameObject confiner_object = room_object.transform.Find("Cam_collider").gameObject;
+            //PolygonCollider2D confiner_collider = confiner_object.GetComponent<PolygonCollider2D>();
+            //Debug.Log(confiner_collider);
+            //Camera_controller.load_new_boundry(confiner_collider);
+
+            //artik asencron degil ki ?
+            //Room_controller.instance.current_room_info = Room_controller.instance.loaded_rooms[(x, y)];
+            //Room_controller.instance.current_room_info =
+            Room_controller.instance.current_room_info.x = x;
+            Room_controller.instance.current_room_info.y = y;
+            Room_controller.instance.current_room_info.room_name = "Defult_room";
+			Room_controller.instance.current_room_info.room_name = Room_controller.instance.current_world_name;
+			
+			//Room_controller.instance.current_room.x = x;  // CURSED COPY BY REFERENCE !!!!
+			//Room_controller.instance.current_room.y = y; // CURSED COPY BY REFERENCE !!!! 
+
+			triger_guard = false;
+			
+            Room_controller.instance.load_room("Default_room", x, y);
         }
     }
 }

@@ -19,7 +19,7 @@ public class Starting_room_init : NetworkBehaviour
     
     void Start()
     {
-        Room_controller.instance.current_room = gameObject.GetComponent<Room>();  // Room_controller.instance.loaded_rooms[0];
+        Room_controller.instance.current_room_info = new Room_info( gameObject.GetComponent<Room>()) ;  // Room_controller.instance.loaded_rooms[0];
 
     }
 
