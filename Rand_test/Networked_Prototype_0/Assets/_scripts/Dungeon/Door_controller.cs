@@ -99,6 +99,7 @@ public class Door_controller : NetworkBehaviour
 
     bool is_colliding = false;
     bool triger_guard = false;
+
     void OnTriggerEnter2D (Collider2D hitObject)        
     {
         if (! IsServer) return;
@@ -122,9 +123,9 @@ public class Door_controller : NetworkBehaviour
             }
 
 
-            Camera_controller.load_new_boundry(null);
-
-            Vector2 new_room_dir = transform.position - transform.parent.parent.position;
+            Camera_controller.load_new_boundry(null); //TODO: BUG
+        
+            Vector2 new_room_dir = transform.position - transform.parent.position;
             new_room_dir.Normalize();
 			
             int x = Mathf.RoundToInt(new_room_dir.x);

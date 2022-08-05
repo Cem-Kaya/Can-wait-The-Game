@@ -25,9 +25,12 @@ public class Room : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
-        Starting_room_init starting_room = GetComponent<Starting_room_init>();
-        starting_room.init_start();
+        if (!Room_controller.instance.start_room_initialized )
+        {
+            Room_controller.instance.start_room_initialized = true;
+            Starting_room_init starting_room = GetComponent<Starting_room_init>();
+            starting_room.init_start();
+        }
         Room_info inf = Room_controller.instance.load_room_queue.Dequeue();
         room_name = inf.room_name;
         x = inf.x;

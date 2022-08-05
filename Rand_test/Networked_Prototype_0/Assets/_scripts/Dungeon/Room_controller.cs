@@ -52,6 +52,9 @@ public class Room_controller : NetworkBehaviour
     private bool is_loading_room = false;
 
     private bool room_registered = true;
+
+    public bool start_room_initialized = false;
+
     public static bool Room_registered
     {
         get{ return instance.room_registered; }
@@ -64,10 +67,11 @@ public class Room_controller : NetworkBehaviour
 
 	private void Awake()
     {
-        if (IsClient) Destroy(this);
+        if (! IsServer) Destroy(this);
 		
 		if (instance == null)
         {
+            Debug.Log("creating room controller ");
             instance = this;
         }
 		
@@ -118,7 +122,7 @@ public class Room_controller : NetworkBehaviour
         if (IsServer)
         {
             Debug.Log("trying to load scene " + room_name);
-            var load_room = NetworkManager.Singleton.SceneManager.LoadScene(room_name, LoadSceneMode.Additive);
+            var load_room = NetworkManager.Singleton.SceneManager.LoadScene(room_name, LoadSceneMode.Single);
             Debug.Log("done to load scene " + room_name);
         }
 
