@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7371588465076059789}
   - component: {fileID: 385945535381263313}
   - component: {fileID: 5436673885065468652}
-  - component: {fileID: -4224304477029066181}
+  - component: {fileID: -5362754755302194979}
   m_Layer: 9
   m_Name: Door
   m_TagString: Untagged
@@ -128,7 +128,7 @@ PolygonCollider2D:
       - {x: 0.44951195, y: -0.16114882}
       - {x: 0.31008044, y: 0.2508372}
       - {x: -0.2860803, y: 0.25508446}
---- !u!114 &-4224304477029066181
+--- !u!114 &-5362754755302194979
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
