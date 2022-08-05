@@ -10,20 +10,32 @@ public class Starting_room_init : NetworkBehaviour
     public PolygonCollider2D confiner_collider;
     private void Awake()
 	{
+        once = true;
         if (IsClient) Destroy(this);
         confiner_object = GameObject.Find("Cam_collider");
         confiner_collider = confiner_object.GetComponent<PolygonCollider2D>();
         Camera_controller.load_new_boundry(confiner_collider);
-        Room_controller.instance.current_room =  gameObject.GetComponent<Room>() ;  // Room_controller.instance.loaded_rooms[0];
     }
+    
     void Start()
     {
+        Room_controller.instance.current_room = gameObject.GetComponent<Room>();  // Room_controller.instance.loaded_rooms[0];
 
     }
 
-    // Update is called once per frame
-    void Update()
+    bool once = true;
+    public void init_start()
     {
-        
+        if (Room_controller.instance.load_room_queue.Count == 0 && once) 
+        { 			
+            once = false;
+            Room_info tmp_inf = new Room_info("Starting room", Room_controller.instance.current_world_name, 0, 0);
+            Room_controller.instance.load_room_queue.Enqueue(tmp_inf);
+        }
     }
+	// Update is called once per frame
+	void Update()
+	{
+
+	}
 }

@@ -12,6 +12,22 @@ public class Room_info
     public int y;
 
 
+
+    public Room_info(string in_room_name, string in_world_name, int in_x, int in_y)
+    {
+        room_name = in_room_name;
+        world_name = in_world_name;
+        x = in_x;
+        y = in_y;
+    }
+    public Room_info()
+    {
+        room_name = "default constructor ? ";
+        world_name = "default constructer ? ";
+        x = 0;
+        y = 0;
+    }
+
 }
 // Jungle 
 
@@ -20,11 +36,11 @@ public class Room_controller : NetworkBehaviour
 
     public static Room_controller instance;
 
-    string current_world_name = "Jungle";
+    public string current_world_name = "Jungle";
 
     public Room current_room;
 
-    Room_info current_loading_room_data;
+    public Room_info current_loading_room_data;
 
     public Queue<Room_info> load_room_queue = new Queue<Room_info>();
 

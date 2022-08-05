@@ -101,7 +101,7 @@ public class Door_controller : NetworkBehaviour
     bool triger_guard = false;
     void OnTriggerEnter2D (Collider2D hitObject)        
     {
-        if (IsClient) return;
+        if (! IsServer) return;
 		
         if (hitObject.gameObject.layer == 3 )
         {

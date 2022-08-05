@@ -13,24 +13,33 @@ public class Room : NetworkBehaviour
     public int width; 
     public int height;
 
-  
+
 
     private void Awake()
     {
+
+        
+    }
+
+
+    // Start is called before the first frame update
+    void Start()
+    {
+
+        Starting_room_init starting_room = GetComponent<Starting_room_init>();
+        starting_room.init_start();
         Room_info inf = Room_controller.instance.load_room_queue.Dequeue();
         room_name = inf.room_name;
         x = inf.x;
         y = inf.y;
         name = inf.world_name + "-" + inf.room_name + " " + inf.x + ", " + inf.y;
 
-        Room_controller.instance.register_room(this);
-       
-    }
-  
 
-    // Start is called before the first frame update
-    void Start()
-    {
+
+        Room_controller.instance.register_room(this);
+
+
+
         //make sure we start in right scene
         if (Room_controller.instance == null) 
         {
