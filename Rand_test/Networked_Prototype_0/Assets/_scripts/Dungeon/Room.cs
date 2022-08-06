@@ -19,6 +19,7 @@ public class Room : NetworkBehaviour
     {
 
         
+
     }
 
 
@@ -37,8 +38,6 @@ public class Room : NetworkBehaviour
         x = inf.x;
         y = inf.y;
         name = inf.world_name + "-" + inf.room_name + " " + inf.x + ", " + inf.y;
-
-
 
         Room_controller.instance.register_room(this);
 
