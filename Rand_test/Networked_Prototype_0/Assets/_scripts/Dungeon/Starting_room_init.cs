@@ -5,12 +5,15 @@ using Cinemachine;
 using Unity.Netcode;
 public class Starting_room_init : NetworkBehaviour
 {
+    static bool first = true;
     public GameObject confiner_object;
 
     public PolygonCollider2D confiner_collider;
     private void Awake()
 	{
-        Room_controller.instance.GetComponent<NetworkObject>().Spawn();
+
+        //Room_controller.instance.GetComponent<NetworkObject>().Spawn();
+        
         once = true;
         if (IsClient) Destroy(this);
         confiner_object = GameObject.Find("Cam_collider");

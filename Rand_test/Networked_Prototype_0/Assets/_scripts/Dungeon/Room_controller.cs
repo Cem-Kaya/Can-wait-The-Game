@@ -74,11 +74,13 @@ public class Room_controller : NetworkBehaviour
     {
         if (! IsServer) Destroy(this);
 		
+        
 		if (instance == null)
         {
             //Debug.Log("creating room controller ");
             instance = this;
-            DontDestroyOnLoad(this.gameObject);
+            
+            //DontDestroyOnLoad(this.gameObject);
             Room_registered = true;
         }
 		
@@ -129,7 +131,7 @@ public class Room_controller : NetworkBehaviour
         string room_name = new_room_data.room_name;
         
 		Debug.Log("isServer : " + IsServer.ToString() + " is client : " + IsClient.ToString() + " is host : " + IsHost.ToString() + " is localplayer : " + IsLocalPlayer.ToString() + " is owner : " +  IsOwner.ToString() + " is spawned : " + IsSpawned.ToString());
-        if (true)
+        if (IsServer)
         {
             var load_room = NetworkManager.Singleton.SceneManager.LoadScene(room_name, LoadSceneMode.Single);
 
