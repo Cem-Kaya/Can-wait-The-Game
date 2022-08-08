@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using Unity.Netcode;
 
 public class StartMenuController : MonoBehaviour
 {
@@ -30,6 +31,7 @@ public class StartMenuController : MonoBehaviour
 
     }
 
+
     private void OnEnable()
     {
 
@@ -40,9 +42,18 @@ public class StartMenuController : MonoBehaviour
         //menu.Disable();
     }
 
-    public void Start_game()
+    public void Start_game_as_host()
     {
-        SceneManager.LoadScene("Start_room", LoadSceneMode.Single);
+        //m_NetworkManager.StartHost();
+        NetworkManager.Singleton.StartHost();
+        NetworkManager.Singleton.SceneManager.LoadScene("Start_room", LoadSceneMode.Single);
+    }
+
+    public void Start_game_as_client()
+    {
+        //m_NetworkManager.StartHost();
+        NetworkManager.Singleton.StartClient();
+        //NetworkManager.Singleton.SceneManager.LoadScene("Start_room", LoadSceneMode.Single);
     }
 
     void Activate_menu()

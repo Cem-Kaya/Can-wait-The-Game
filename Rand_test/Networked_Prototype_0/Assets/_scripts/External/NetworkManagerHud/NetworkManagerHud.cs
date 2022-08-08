@@ -76,7 +76,8 @@ public class NetworkManagerHud : MonoBehaviour
         GUILayout.EndHorizontal();
 
         if (GUILayout.Button("Host (Server + Client)"))
-        {            
+        {
+            //m_NetworkManager.Start();
             m_NetworkManager.StartHost();
             //NetworkManager.Singleton.SceneManager.LoadScene("Main_scene no_network", LoadSceneMode.Single);
 

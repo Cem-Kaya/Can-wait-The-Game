@@ -1028,9 +1028,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 840733879}
-        m_TargetAssemblyTypeName: NetworkManagerHud, Assembly-CSharp
-        m_MethodName: start_game_as_client
+      - m_Target: {fileID: 1941724466}
+        m_TargetAssemblyTypeName: StartMenuController, Assembly-CSharp
+        m_MethodName: Start_game_as_client
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1804,9 +1804,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 840733879}
-        m_TargetAssemblyTypeName: NetworkManagerHud, Assembly-CSharp
-        m_MethodName: start_game_as_host
+      - m_Target: {fileID: 1941724466}
+        m_TargetAssemblyTypeName: StartMenuController, Assembly-CSharp
+        m_MethodName: Start_game_as_host
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using Unity.Netcode;
 
 // Singleton
-public class Player_controller : MonoBehaviour
+public class Player_controller : NetworkBehaviour
 {
     public static Player_controller instance;
     public TextMeshProUGUI health_text;
@@ -110,11 +111,44 @@ public class Player_controller : MonoBehaviour
             return true;
         }
 	}
+
+	[ClientRpc]
+	public void death_ClientRpc()
+	{
+        
+        NetworkManager.Singleton.Shutdown();
+        Destroy(NetworkManager.Singleton.gameObject);
+        Destroy(Room_controller.instance.gameObject);
+
+        SceneManager.LoadScene("Start_menu", LoadSceneMode.Single);
+    }
+
     public static void death()
     {
         //Scene$$anonymous$$anager.LoadScene(GetActiveScene().name);
         health = 10;
-        SceneManager.LoadScene("Start_room");
-    }
+        /*
+        foreach (var a in NetworkManager.Singleton.ConnectedClients)
+        {
+            
+            if ( ( a.Value.PlayerObject.GetComponent<NetworkObject>().IsOwner == true )&& ! NetworkManager.Singleton.IsServer)
+            {
+                NetworkManager.Singleton.DisconnectClient(a.Value.ClientId);
+                //a.Value.PlayerObject.transform.position = new Vector3(999, 999, 0);
+            }
+        }*/
+        //Debug.Log(a.Value.PlayerObject.transform.position);
+        /*
+        NetworkManager.Singleton.Shutdown();
+        Destroy(NetworkManager.Singleton.gameObject);
+        Destroy(Room_controller.instance.gameObject);
+        
+        NetworkManager.Singleton.SceneManager.LoadScene("Start_menu", LoadSceneMode.Single);
+		*/
+		//SceneManager.LoadScene("Start_room");
+		
+        if(IsServer) death_ClientRpc();
+		
+	}
 }
 
