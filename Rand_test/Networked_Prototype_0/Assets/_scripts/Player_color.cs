@@ -6,7 +6,7 @@ public class Player_color : NetworkBehaviour
 {
     private readonly NetworkVariable<Color> _netColor = new();
     private readonly Color[] _colors = { Color.red, Color.blue, Color.green, Color.yellow, Color.black, Color.white, Color.magenta, Color.gray };
-    private int _index;
+    private int _index; 
 
     [SerializeField] private SpriteRenderer _renderer;
 
@@ -17,22 +17,7 @@ public class Player_color : NetworkBehaviour
         _netColor.OnValueChanged += OnValueChanged;
         _renderer = GetComponent<SpriteRenderer>();
     }
-
-
-    [ServerRpc (RequireOwnership = false)]
-    private void reapply_color_ServerRpc()
-    {
-        reapply_color_ClientRpc();
-    }
-
-
-    [ClientRpc]
-    private void reapply_color_ClientRpc()
-	{
-        
-    }
-
-
+    
    public override void OnDestroy()
     {
         _netColor.OnValueChanged -= OnValueChanged;
@@ -54,9 +39,10 @@ public class Player_color : NetworkBehaviour
         }
         else
         {
-            _renderer.material.color = _netColor.Value;
+            //_renderer.material.color = _netColor.Value;
+            _renderer.color = _netColor.Value;
         }
-        reapply_color_ServerRpc();
+        
     }
 
     [ServerRpc]

@@ -80,16 +80,16 @@ public class Enemy_manager : NetworkBehaviour
     }
 
     public void Start()
-    {
-
-        
+    {       
+             
+              
         //StartCoroutine(timed_spawner());
-    }
-
+    }         
+              
     public override void OnNetworkDespawn()
-    {
+    {       
         foreach (GameObject spawned_object in spawned_enemies)
-        {
+        {   
             //Debug.Log("Got in OnNetworkDespawn");
             
             if (IsServer && DestroyWithSpawner && spawned_object.GetComponent<NetworkObject>() != null && spawned_object.GetComponent<NetworkObject>().IsSpawned)
@@ -98,8 +98,7 @@ public class Enemy_manager : NetworkBehaviour
                 spawned_object.GetComponent<NetworkObject>().Despawn();
             }
             base.OnNetworkDespawn();
-           
-
+            
         }   
     }
 }
