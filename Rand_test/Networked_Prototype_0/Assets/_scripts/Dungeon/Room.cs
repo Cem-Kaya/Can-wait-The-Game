@@ -13,6 +13,8 @@ public class Room : NetworkBehaviour
     public int width; 
     public int height;
 
+    public Room_info rooms_info;
+
 
 
     private void Awake()
@@ -34,7 +36,6 @@ public class Room : NetworkBehaviour
 
         if (!Room_controller.instance.start_room_initialized )
         {
-
             Room_controller.instance.start_room_initialized = true;
             Starting_room_init starting_room = GetComponent<Starting_room_init>();
             starting_room.init_start();
@@ -44,13 +45,14 @@ public class Room : NetworkBehaviour
         if (IsServer)
         {
 
-            Room_info inf = Room_controller.instance.load_room_queue.Dequeue();
+            rooms_info = Room_controller.instance.load_room_queue.Dequeue();
 
-            room_name = inf.room_name;
-            name = inf.room_name;
-            x = inf.x;
-            y = inf.y;
-            name = inf.world_name + "-" + inf.room_name + " " + inf.x + ", " + inf.y;
+		    
+            room_name = rooms_info.room_name;
+            name = rooms_info.room_name;
+            x = rooms_info.x;
+            y = rooms_info.y;
+            name = rooms_info.world_name + "-" + rooms_info.room_name + " " + rooms_info.x + ", " + rooms_info.y;
 
 
             Room_controller.instance.register_room(this);
