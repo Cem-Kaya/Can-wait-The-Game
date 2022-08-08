@@ -106,12 +106,12 @@ public class Room_controller : NetworkBehaviour
             //Debug.Log("creating room controller ");
             instance = this;
 
-            //DontDestroyOnLoad(this.gameObject);
+            DontDestroyOnLoad(this.gameObject);
 
             Room_registered = true;
         }
-        DontDestroyOnLoad(this.gameObject);
-        Room_controller.instance.GetComponent<NetworkObject>().Spawn();
+        //DontDestroyOnLoad(this.gameObject);
+        //Room_controller.instance.GetComponent<NetworkObject>().Spawn();
     }
 	
 	
