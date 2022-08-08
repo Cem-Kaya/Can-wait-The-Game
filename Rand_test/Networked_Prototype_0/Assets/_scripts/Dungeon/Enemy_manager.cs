@@ -7,7 +7,7 @@ public class Enemy_manager : NetworkBehaviour
 {
     public List<GameObject> spawnable_prefabs = new List<GameObject>();    
 
-    public bool DestroyWithSpawner;
+    public bool DestroyWithSpawner = true ;
 
     private List<GameObject> spawned_enemies = new List<GameObject>();
     
@@ -26,7 +26,8 @@ public class Enemy_manager : NetworkBehaviour
             foreach (GameObject spawn in spawnable_prefabs)
             {
                 GameObject prefab_inst = Instantiate(spawn);
-                prefab_inst.transform.position = transform.position;
+                prefab_inst.transform.position = new Vector3 ( Random.Range(-12,12), Random.Range(-5, 5), 0);
+				
                 prefab_inst.transform.rotation = transform.rotation;
                 prefab_inst.GetComponent<NetworkObject>().Spawn();
                 spawned_enemies.Add(prefab_inst);
@@ -89,20 +90,16 @@ public class Enemy_manager : NetworkBehaviour
     {
         foreach (GameObject spawned_object in spawned_enemies)
         {
+            //Debug.Log("Got in OnNetworkDespawn");
             
             if (IsServer && DestroyWithSpawner && spawned_object.GetComponent<NetworkObject>() != null && spawned_object.GetComponent<NetworkObject>().IsSpawned)
             {
+                //Debug.Log("Got in OnNetworkDespawn's if clause");
                 spawned_object.GetComponent<NetworkObject>().Despawn();
             }
             base.OnNetworkDespawn();
            
 
-        }
-
-        //if (IsServer && DestroyWithSpawner && m_SpawnedNetworkObject != null && m_SpawnedNetworkObject.IsSpawned)
-        //{
-        //    m_SpawnedNetworkObject.Despawn();
-        //}
-        //base.OnNetworkDespawn();
+        }   
     }
 }
