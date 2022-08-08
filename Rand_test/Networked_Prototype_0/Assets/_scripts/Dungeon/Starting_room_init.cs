@@ -14,6 +14,7 @@ public class Starting_room_init : NetworkBehaviour
 
         //Room_controller.instance.GetComponent<NetworkObject>().Spawn();
         
+        
         once = true;
         if (IsClient) Destroy(this);
         confiner_object = GameObject.Find("Cam_collider");

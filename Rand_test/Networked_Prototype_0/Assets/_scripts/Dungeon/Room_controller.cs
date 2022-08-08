@@ -72,28 +72,46 @@ public class Room_controller : NetworkBehaviour
 
 	private void Awake()
     {
-        if (! IsServer) Destroy(this);
-		
-        
-		if (instance == null)
-        {
-            //Debug.Log("creating room controller ");
-            instance = this;
+        //if (! IsServer) Destroy(this);
+        ////if (IsServer) Room_controller.instance.GetComponent<NetworkObject>().Spawn();
+
+        //if (instance == null)
+        //{
+        //    //Debug.Log("creating room controller ");
+        //    instance = this;
             
-            //DontDestroyOnLoad(this.gameObject);
-            Room_registered = true;
-        }
-		
-        
+        //    //DontDestroyOnLoad(this.gameObject);
+
+        //    Room_registered = true;
+        //}
+        //DontDestroyOnLoad(this.gameObject);
+        //if (IsServer) Room_controller.instance.GetComponent<NetworkObject>().Spawn();
+
     }
     // Start is called before the first frame update
     void Start()
     {
+        //if (! IsServer) Destroy(this);
         //load_room("Start_room", 1, 0);
         //load_room("Default_room", 1,0);
         //load_room("Default_room", -1, 0);
         //load_room("Default_room", 0, 1);
         //load_room("Sample_room", 0, -1);
+        //if (IsServer) Room_controller.instance.GetComponent<NetworkObject>().Spawn();
+        if (!IsServer) Destroy(this);
+        //if (IsServer) Room_controller.instance.GetComponent<NetworkObject>().Spawn();
+
+        if (instance == null)
+        {
+            //Debug.Log("creating room controller ");
+            instance = this;
+
+            //DontDestroyOnLoad(this.gameObject);
+
+            Room_registered = true;
+        }
+        DontDestroyOnLoad(this.gameObject);
+        Room_controller.instance.GetComponent<NetworkObject>().Spawn();
     }
 	
 	
