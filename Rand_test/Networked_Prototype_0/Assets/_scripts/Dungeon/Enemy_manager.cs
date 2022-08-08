@@ -20,9 +20,15 @@ public class Enemy_manager : NetworkBehaviour
 
             //// Instantiate the GameObject Instance
             //m_PrefabInstance = Instantiate(PrefabToSpawn);
-            foreach (var spawn in spawnable_prefabs)
+            
+           
+            foreach (GameObject spawn in spawnable_prefabs)
             {
-                Instantiate(spawn);
+                GameObject inst = Instantiate(spawn);
+                spawned_enemies.Add(inst);
+                inst.transform.position = transform.position;
+                inst.transform.rotation = transform.rotation;
+                inst.GetComponent<NetworkObject>().Spawn();
             }
 
 
@@ -53,20 +59,48 @@ public class Enemy_manager : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         // Only the server spawns, clients will disable this component on their side
+        
+        
         enabled = IsServer;
-        if (!enabled || PrefabToSpawn == null)
+        foreach (var spawn in spawnable_prefabs)
         {
-            return;
+            if (!enabled || spawn == null)
+            {
+                Debug.Log("For somre reason prefabs are null");
+                return;
+            }
+
         }
+
+        
+        StartCoroutine(timed_spawner());
+    }
+
+    public void Start()
+    {
+
+        
         //StartCoroutine(timed_spawner());
     }
 
     public override void OnNetworkDespawn()
     {
-        if (IsServer && DestroyWithSpawner && m_SpawnedNetworkObject != null && m_SpawnedNetworkObject.IsSpawned)
+        foreach (var spawned_object in spawned_enemies)
         {
-            m_SpawnedNetworkObject.Despawn();
+            
+            if (IsServer && DestroyWithSpawner && spawned_object != null && spawned_object.GetComponent<NetworkObject>().IsSpawned)
+            {
+                spawned_object.GetComponent<NetworkObject>().Despawn();
+            }
+            base.OnNetworkDespawn();
+           
+
         }
-        base.OnNetworkDespawn();
+
+        //if (IsServer && DestroyWithSpawner && m_SpawnedNetworkObject != null && m_SpawnedNetworkObject.IsSpawned)
+        //{
+        //    m_SpawnedNetworkObject.Despawn();
+        //}
+        //base.OnNetworkDespawn();
     }
 }

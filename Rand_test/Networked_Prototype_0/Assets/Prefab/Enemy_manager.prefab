@@ -61,5 +61,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b685d1b41f0e1640a70be3a633ff7ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PrefabToSpawn: {fileID: 0}
+  PrefabToSpawn: {fileID: 2528314809511988402, guid: 299b75fe50a1ad2468efafad58816e64, type: 3}
   DestroyWithSpawner: 0

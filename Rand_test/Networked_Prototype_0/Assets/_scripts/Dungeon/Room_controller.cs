@@ -137,7 +137,7 @@ public class Room_controller : NetworkBehaviour
     public void load_room(string in_name, int in_x, int in_y)
     {
         //Debug.Log("Load Room func: " + in_x + in_y);
-             
+        
         //we want to grab our room info and we will assign it to new room info
         Room_info new_room_data = new Room_info();
         new_room_data.room_name = in_name;
