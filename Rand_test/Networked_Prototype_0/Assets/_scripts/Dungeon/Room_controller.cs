@@ -4,29 +4,45 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Unity.Netcode;
 
-public class Room_info
+public class Room_info:INetworkSerializable
 {
     public string room_name;
     public string world_name;
     public int x;
     public int y;
+	public bool cleared;
+	public bool visited;
+
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        serializer.SerializeValue(ref room_name);
+        serializer.SerializeValue(ref world_name);
+        serializer.SerializeValue(ref x);
+		serializer.SerializeValue(ref y);
+        serializer.SerializeValue(ref cleared);
+        serializer.SerializeValue(ref visited);
+
+    }
 
 
-
-    public Room_info(string in_room_name, string in_world_name, int in_x, int in_y)
+    public Room_info(string in_room_name, string in_world_name, int in_x, int in_y , bool in_cleared = false , bool in_visited = true )
     {
         room_name = in_room_name;
         world_name = in_world_name;
         x = in_x;
         y = in_y;
+        cleared = in_cleared;
+        visited = in_visited;
     }
 
-    public Room_info(Room room_in )
+    public Room_info(Room room_in, bool in_cleared = false, bool in_visited = true )
     {
         room_name = room_in.room_name;
         world_name = Room_controller.instance.current_world_name;
         x = room_in.x;
         y = room_in.y;
+        cleared = in_cleared;
+        visited = in_visited;
     }
 
     public Room_info()
@@ -35,6 +51,8 @@ public class Room_info
         world_name = "default constructer ? ";
         x = 0;
         y = 0;
+        cleared = false;
+        visited = true;
     }
 
 }
@@ -54,7 +72,6 @@ public class Room_controller : NetworkBehaviour
     //public List<Room> loaded_rooms = new List<Room>();
     //public Hashtable  loaded_rooms = new Hashtable();
     public Dictionary<(int,int), Room_info> loaded_rooms = new Dictionary<(int, int), Room_info>();
-    public Dictionary <(int, int), bool> cleared_rooms = new Dictionary<(int, int), bool>();
        
     private bool room_registered = true;
 
@@ -72,20 +89,7 @@ public class Room_controller : NetworkBehaviour
 
 	private void Awake()
     {
-        //if (! IsServer) Destroy(this);
-        ////if (IsServer) Room_controller.instance.GetComponent<NetworkObject>().Spawn();
-
-        //if (instance == null)
-        //{
-        //    //Debug.Log("creating room controller ");
-        //    instance = this;
-            
-        //    //DontDestroyOnLoad(this.gameObject);
-
-        //    Room_registered = true;
-        //}
-        //DontDestroyOnLoad(this.gameObject);
-        //if (IsServer) Room_controller.instance.GetComponent<NetworkObject>().Spawn();
+        
 
     }
     // Start is called before the first frame update
@@ -124,17 +128,16 @@ public class Room_controller : NetworkBehaviour
     }
 
 
+	[ClientRpc]
+	public void load_room_enqueue_ClientRpc(Room_info new_room_data)
+	{
+        load_room_queue.Enqueue(new_room_data);
+    }
+
     public void load_room(string in_name, int in_x, int in_y)
     {
-        //check to make sure room exists before we load a room so we dont load rooms that overlap
-        Debug.Log("Load Room func: " + in_x + in_y);
-        
-        if (does_room_exist(in_x, in_y))
-        {
-            Debug.Log("the room that you are trying to load already exists ! ");
-            return;
-        }
-        
+        //Debug.Log("Load Room func: " + in_x + in_y);
+             
         //we want to grab our room info and we will assign it to new room info
         Room_info new_room_data = new Room_info();
         new_room_data.room_name = in_name;
@@ -144,31 +147,33 @@ public class Room_controller : NetworkBehaviour
 		//we want to be able to enqueue up our room for the scene manager to load for us, so
 
 		//StartCoroutine(load_room_routine(new_room_data));
-		//my changes are from here /////////////////////////
+		//my changes are from here 
 		load_room_queue.Enqueue(new_room_data);
+		
         string room_name = new_room_data.room_name;
         
-		Debug.Log("isServer : " + IsServer.ToString() + " is client : " + IsClient.ToString() + " is host : " + IsHost.ToString() + " is localplayer : " + IsLocalPlayer.ToString() + " is owner : " +  IsOwner.ToString() + " is spawned : " + IsSpawned.ToString());
         if (IsServer)
         {
             var load_room = NetworkManager.Singleton.SceneManager.LoadScene(room_name, LoadSceneMode.Single);
-
         }
 
     }
 
 
-    
+
     public void register_room(Room room)
     {
         //add room to loaded room
 
-                
-        loaded_rooms.Add((room.x, room.y), new  Room_info(room.room_name, Room_controller.instance.current_world_name , room.x, room.y) );
-        //Debug.Log("Deploy room one " + loaded_rooms[(room.x, room.y)]);
-        //Debug.Log("nonexistent = " + ((loaded_rooms[(6,6)]) == null));        
+        if (does_room_exist(room.x, room.y))
+        {
+            return;
+        }
+        else
+        {
+            loaded_rooms.Add((room.x, room.y), new Room_info(room.room_name, Room_controller.instance.current_world_name, room.x, room.y));
+        }
     }
-
      
     public bool does_room_exist(int in_x, int in_y)
     {        

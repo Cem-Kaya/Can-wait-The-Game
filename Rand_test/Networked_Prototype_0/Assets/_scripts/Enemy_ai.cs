@@ -39,16 +39,18 @@ public class Enemy_ai : NetworkBehaviour
 		once = false;
 		player_position = new Vector3(-999, -999, -999);
 	}
+	
 
-
-
+	
+	
 
 	void Start()
 	{
+		//may need to destroy the script in the future keep this in mind
 		rb = GetComponent<Rigidbody2D>();
 		StartCoroutine(random_walk());
 
-		health.Value = 25f;
+		if(IsServer) health.Value = 25f;
 	}
 
 	// Update is called once per frame

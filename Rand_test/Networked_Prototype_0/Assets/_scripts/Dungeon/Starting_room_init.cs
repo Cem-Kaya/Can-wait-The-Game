@@ -36,6 +36,7 @@ public class Starting_room_init : NetworkBehaviour
         { 			
             once = false;
             Room_info tmp_inf = new Room_info("Starting room", Room_controller.instance.current_world_name, 0, 0);
+			
             Room_controller.instance.load_room_queue.Enqueue(tmp_inf);
         }
     }

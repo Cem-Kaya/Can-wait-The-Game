@@ -24,23 +24,37 @@ public class Room : NetworkBehaviour
 
 
     // Start is called before the first frame update
+
+  
+
     void Start()
     {
+
+
+
         if (!Room_controller.instance.start_room_initialized )
         {
+
             Room_controller.instance.start_room_initialized = true;
             Starting_room_init starting_room = GetComponent<Starting_room_init>();
             starting_room.init_start();
         }
-        Room_info inf = Room_controller.instance.load_room_queue.Dequeue();
-        room_name = inf.room_name;
-		name = inf.room_name;
-        x = inf.x;
-        y = inf.y;
-        name = inf.world_name + "-" + inf.room_name + " " + inf.x + ", " + inf.y;
+        //client's room info will not be up to date keep this in mind
 
-        Room_controller.instance.register_room(this);
+        if (IsServer)
+        {
 
+            Room_info inf = Room_controller.instance.load_room_queue.Dequeue();
+
+            room_name = inf.room_name;
+            name = inf.room_name;
+            x = inf.x;
+            y = inf.y;
+            name = inf.world_name + "-" + inf.room_name + " " + inf.x + ", " + inf.y;
+
+
+            Room_controller.instance.register_room(this);
+        }
 
 
         //make sure we start in right scene
@@ -51,8 +65,15 @@ public class Room : NetworkBehaviour
         }
 
         Room_controller.Room_registered = true;
-        
+
         //Room_controller.instance.Debug_print_loaded_rooms();
+
+        Camera_controller.load_new_boundry(null); //TODO: BUG
+        //GameObject room_object = confiner_room.gameObject;
+        //GameObject confiner_object = room_object.transform.Find("Cam_collider").gameObject;
+        //PolygonCollider2D confiner_collider = confiner_object.GetComponent<PolygonCollider2D>();
+        //Debug.Log(confiner_collider);
+        //Camera_controller.load_new_boundry(confiner_collider);
     }
 
     // Update is called once per frame
