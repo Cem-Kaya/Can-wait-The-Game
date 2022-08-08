@@ -24,11 +24,11 @@ public class Enemy_manager : NetworkBehaviour
            
             foreach (GameObject spawn in spawnable_prefabs)
             {
-                GameObject inst = Instantiate(spawn);
+                GameObject prefab_inst = Instantiate(spawn);
                 spawned_enemies.Add(inst);
-                inst.transform.position = transform.position;
-                inst.transform.rotation = transform.rotation;
-                inst.GetComponent<NetworkObject>().Spawn();
+                prefab_inst.transform.position = transform.position;
+                prefab_inst.transform.rotation = transform.rotation;
+                prefab_inst.GetComponent<NetworkObject>().Spawn();
             }
 
 
