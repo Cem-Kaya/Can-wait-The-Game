@@ -5,11 +5,12 @@ using Unity.Netcode;
 
 public class Enemy_manager : NetworkBehaviour
 {
-    public List<GameObject> spawnable_prefabs;    
+    public List<GameObject> spawnable_prefabs = new List<GameObject>();    
 
     public bool DestroyWithSpawner;
 
-    private List<GameObject> spawned_enemies;
+    private List<GameObject> spawned_enemies = new List<GameObject>();
+    
        
     private IEnumerator timed_spawner()
     {
@@ -86,10 +87,10 @@ public class Enemy_manager : NetworkBehaviour
 
     public override void OnNetworkDespawn()
     {
-        foreach (var spawned_object in spawned_enemies)
+        foreach (GameObject spawned_object in spawned_enemies)
         {
             
-            if (IsServer && DestroyWithSpawner && spawned_object != null && spawned_object.GetComponent<NetworkObject>().IsSpawned)
+            if (IsServer && DestroyWithSpawner && spawned_object.GetComponent<NetworkObject>() != null && spawned_object.GetComponent<NetworkObject>().IsSpawned)
             {
                 spawned_object.GetComponent<NetworkObject>().Despawn();
             }
