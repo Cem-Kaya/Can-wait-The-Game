@@ -24,7 +24,7 @@ public class Colection_script : NetworkBehaviour
         {
             if (IsServer)
             {
-
+                Player_controller.instance.increase_coin_num(1);
                 //my_box_mover = other.gameObject.GetComponent<box_mover>();
                 //my_box_mover.coin_num++;
                 //Destroy(gameObject);

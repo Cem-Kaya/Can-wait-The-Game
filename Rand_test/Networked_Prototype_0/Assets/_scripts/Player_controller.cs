@@ -9,17 +9,19 @@ using Unity.Netcode;
 public class Player_controller : NetworkBehaviour
 {   
     public static  Player_controller instance;
-    public TextMeshProUGUI health_text;
-
+    
     public   float bullet_speed =10f;
-    public int health = 10 ;
+    public int health = 10 ;   
     public int max_health = 10 ; // max health of the player    
     public int fire_delay = 2 ;
     public float move_speed;
     public bool alive;
     public bool i_frame ;
     public float i_frame_sec;
-	
+
+    public NetworkVariable<int> coin_num;
+
+
     void Awake()
     {
         i_frame = false;
@@ -32,17 +34,20 @@ public class Player_controller : NetworkBehaviour
         {
             Destroy(gameObject);
         }
+        coin_num.OnValueChanged += update_coin_text_on_change;
     }
     void Start()
     {
         DontDestroyOnLoad(this.gameObject);
-        health_text.text = "Health : " + health;
+        coin_num.Value = 0;
+        
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        health_text.text = "Health : " + health;
+		
     }
     private  IEnumerator i_frame_delay()
     {
@@ -64,23 +69,27 @@ public class Player_controller : NetworkBehaviour
                 death();
             }
         }
-		
-		
+
+		UI_Controller.current_instance.update_health_text();
+        UI_Controller.current_instance.update_gear_health();
     }
 	
     public   bool take_health_up(int health_up)
     {
         if (health >= max_health )
         {
+            UI_Controller.current_instance.update_health_text();
+            UI_Controller.current_instance.update_gear_health();
             return false;
 		}
 		else
 		{
-			health= Mathf.Min(max_health,health_up + health ) ;//clamp
-          
+		    health= Mathf.Min(max_health,health_up + health ) ;//clamp
+            UI_Controller.current_instance.update_health_text();
+            UI_Controller.current_instance.update_gear_health();
             return true;
-        }
-	}
+        }       
+    }
 
 	[ClientRpc]
 	public void death_ClientRpc()
@@ -94,7 +103,6 @@ public class Player_controller : NetworkBehaviour
 
     public   void death()
     {
-        //Scene$$anonymous$$anager.LoadScene(GetActiveScene().name);
         health = 10;
         /*
         foreach (var a in NetworkManager.Singleton.ConnectedClients)
@@ -119,5 +127,24 @@ public class Player_controller : NetworkBehaviour
         if(IsServer) death_ClientRpc();
 		
 	}
+
+   
+    private void update_coin_text_on_change(int prev, int next)
+    {
+        UI_Controller.current_instance.update_coin_text();
+    }
+
+
+    public void increase_coin_num(int i)
+    {
+        coin_num.Value += i;
+    }
+
+    public void decrease_coin_num(int i)
+    {
+        coin_num.Value -= i;
+    }
+
+
 }
 
