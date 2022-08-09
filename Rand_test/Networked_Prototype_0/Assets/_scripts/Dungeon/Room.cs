@@ -68,14 +68,24 @@ public class Room : NetworkBehaviour
 
         Room_controller.Room_registered = true;
 
-        //Room_controller.instance.Debug_print_loaded_rooms();
+        GameObject lplayer ;
+        
+        foreach (var a in NetworkManager.Singleton.ConnectedClients)        {
+            if ( a.Value.PlayerObject.IsLocalPlayer )
+			{
+                lplayer = a.Value.PlayerObject.gameObject;                
+                CinemachineVirtualCamera vcam = GameObject.Find("CM_vcam").GetComponent<CinemachineVirtualCamera>();
+                vcam.Follow = lplayer.transform;
+                break;
+            }             
+        }
+       
 
-        Camera_controller.load_new_boundry(null); //TODO: BUG
-        //GameObject room_object = confiner_room.gameObject;
-        //GameObject confiner_object = room_object.transform.Find("Cam_collider").gameObject;
-        //PolygonCollider2D confiner_collider = confiner_object.GetComponent<PolygonCollider2D>();
+        GameObject room_object = gameObject;
+        GameObject confiner_object = room_object.transform.Find("Cam_collider").gameObject;
+        PolygonCollider2D confiner_collider = confiner_object.GetComponent<PolygonCollider2D>();
         //Debug.Log(confiner_collider);
-        //Camera_controller.load_new_boundry(confiner_collider);
+        Camera_controller.load_new_boundry(confiner_collider);
     }
 
     // Update is called once per frame

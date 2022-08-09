@@ -11,8 +11,8 @@ public class Player_controller : NetworkBehaviour
     public static  Player_controller instance;
     
     public   float bullet_speed =10f;
-    public int health = 10 ;   
-    public int max_health = 10 ; // max health of the player    
+    public int health = 200 ;   
+    public int max_health = 200 ; // max health of the player    
     public int fire_delay = 2 ;
     public float move_speed;
     public bool alive;
