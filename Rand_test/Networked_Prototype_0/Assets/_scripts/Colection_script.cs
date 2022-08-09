@@ -17,10 +17,10 @@ public class Colection_script : NetworkBehaviour
         
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         //Debug.Log("naem :" + collision.tag);
-        if (other.gameObject.tag == "Player")
+        if (other.tag == "Player")
         {
             if (IsServer)
             {
