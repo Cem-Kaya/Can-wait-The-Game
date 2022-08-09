@@ -200,7 +200,7 @@ public class Enemy_ai : NetworkBehaviour
 		else if (other.gameObject.tag == "Player")
 		{
 			//Debug.Log("Player hit");
-			Player_controller.take_damage(1);
+			Player_controller.instance.take_damage(1);
 		}
 	}
 }

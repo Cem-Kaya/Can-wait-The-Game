@@ -52,7 +52,7 @@ public class Death_menu_controller : MonoBehaviour
     public void Main_menu()
     {
         SceneManager.LoadScene("Start_menu", LoadSceneMode.Single);
-        Player_controller.Health = 10; //farkli bir yolu vardir belki birde save game olayini halletmeliyiz
+        Player_controller.instance.health = 10; //farkli bir yolu vardir belki birde save game olayini halletmeliyiz
     }
 
     public void End_game()
@@ -63,6 +63,6 @@ public class Death_menu_controller : MonoBehaviour
     public void Restart_game()
     {
         SceneManager.LoadScene("Main_scene", LoadSceneMode.Single);
-        Player_controller.Health = 10; //farkli bir yolu vardir belki birde save game olayini halletmeliyiz
+        Player_controller.instance.health = 10; //farkli bir yolu vardir belki birde save game olayini halletmeliyiz
     }
 }

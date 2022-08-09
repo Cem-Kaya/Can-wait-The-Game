@@ -17,8 +17,8 @@ public class UI_Controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-            fill = (float)Player_controller.Health;
-            fill = fill / Player_controller.Max_health;
+            fill = (float)Player_controller.instance.health;
+            fill = fill / Player_controller.instance.max_health;
             gear_helth_0.GetComponent<Image>().fillAmount = fill;
         
     }

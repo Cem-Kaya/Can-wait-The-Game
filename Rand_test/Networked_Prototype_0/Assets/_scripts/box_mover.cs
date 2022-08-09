@@ -133,7 +133,7 @@ public class box_mover : NetworkBehaviour
 	{
 		//Debug.Log("timer: " + timer + " last_firesd" + last_firesd);
 		GameObject bullet = Instantiate(bullet_prefab, _spawner.position + new Vector3(fire_dir.x, fire_dir.y, 0), Quaternion.identity);
-		bullet.GetComponent<Rigidbody2D>().velocity = fire_dir * Player_controller.bullet_speed;
+		bullet.GetComponent<Rigidbody2D>().velocity = fire_dir * Player_controller.instance.bullet_speed;
 		last_firesd = timer;		
 
 	}

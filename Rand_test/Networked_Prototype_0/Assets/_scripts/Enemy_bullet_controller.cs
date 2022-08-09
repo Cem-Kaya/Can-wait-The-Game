@@ -48,7 +48,7 @@ public class Enemy_bullet_controller : MonoBehaviour
         {
             if (other.gameObject.tag == "Player")
 			{
-                Player_controller.take_damage(1);
+                Player_controller.instance.take_damage(1);
                 Destroy(gameObject);
             }
             if (--max_bounce == 0)

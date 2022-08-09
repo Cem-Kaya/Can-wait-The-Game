@@ -7,49 +7,18 @@ using Unity.Netcode;
 
 // Singleton
 public class Player_controller : NetworkBehaviour
-{
-    public static Player_controller instance;
+{   
+    public static  Player_controller instance;
     public TextMeshProUGUI health_text;
 
-    public static float bullet_speed =10f;
-
-    private static int health = 10 ;
-    public static int Health
-    {
-        get { return health; }
-        set { health = value; }
-    }
-	
-    private static int max_health = 10 ; // max health of the player
-    public static int Max_health
-    {
-        get { return max_health; }
-        set { max_health = value; }
-    }
-    private static int fire_delay = 2 ;
-    private static int Fire_delay
-    {
-        get { return fire_delay ; }
-        set { fire_delay = value; }
-    }
-
-    private static float move_speed;
-    public static float Move_speed
-    {
-        get { return move_speed; }
-        set { move_speed = value; }
-    }
-
-
-    
-    private static bool alive;
-    private static bool Alive
-    {
-        get { return alive; }
-        set { alive = value; }
-    }
-	private static bool i_frame ;
-    private static float i_frame_sec;
+    public   float bullet_speed =10f;
+    public int health = 10 ;
+    public int max_health = 10 ; // max health of the player    
+    public int fire_delay = 2 ;
+    public float move_speed;
+    public bool alive;
+    public bool i_frame ;
+    public float i_frame_sec;
 	
     void Awake()
     {
@@ -66,6 +35,7 @@ public class Player_controller : NetworkBehaviour
     }
     void Start()
     {
+        DontDestroyOnLoad(this.gameObject);
         health_text.text = "Health : " + health;
     }
 
@@ -80,7 +50,7 @@ public class Player_controller : NetworkBehaviour
         yield return new WaitForSeconds(i_frame_sec);
 		i_frame = false;
 	}
-    public static void take_damage(int damage ) {
+    public   void take_damage(int damage ) {
         if (!i_frame)
         {
             i_frame = true;
@@ -98,7 +68,7 @@ public class Player_controller : NetworkBehaviour
 		
     }
 	
-    public static bool take_health_up(int health_up)
+    public   bool take_health_up(int health_up)
     {
         if (health >= max_health )
         {
@@ -114,8 +84,7 @@ public class Player_controller : NetworkBehaviour
 
 	[ClientRpc]
 	public void death_ClientRpc()
-	{
-        
+	{        
         NetworkManager.Singleton.Shutdown();
         Destroy(NetworkManager.Singleton.gameObject);
         Destroy(Room_controller.instance.gameObject);
@@ -123,7 +92,7 @@ public class Player_controller : NetworkBehaviour
         SceneManager.LoadScene("Start_menu", LoadSceneMode.Single);
     }
 
-    public static void death()
+    public   void death()
     {
         //Scene$$anonymous$$anager.LoadScene(GetActiveScene().name);
         health = 10;

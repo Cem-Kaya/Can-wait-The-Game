@@ -76,7 +76,7 @@ public class PauseMenuController : MonoBehaviour
         pause_ui.SetActive(false);
         is_paused = false;
         SceneManager.LoadScene("Start_menu", LoadSceneMode.Single);
-        Player_controller.Health = 10; //farkli bir yolu vardir belki birde save game olayini halletmeliyiz
+        Player_controller.instance.health = 10; //farkli bir yolu vardir belki birde save game olayini halletmeliyiz
     }
 
     public void End_game()
