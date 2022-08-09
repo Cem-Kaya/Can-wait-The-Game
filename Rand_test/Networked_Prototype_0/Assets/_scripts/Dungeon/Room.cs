@@ -67,18 +67,12 @@ public class Room : NetworkBehaviour
         }
 
         Room_controller.Room_registered = true;
-
-        GameObject lplayer ;
         
-        foreach (var a in NetworkManager.Singleton.ConnectedClients)        {
-            if ( a.Value.PlayerObject.IsLocalPlayer )
-			{
-                lplayer = a.Value.PlayerObject.gameObject;                
-                CinemachineVirtualCamera vcam = GameObject.Find("CM_vcam").GetComponent<CinemachineVirtualCamera>();
-                vcam.Follow = lplayer.transform;
-                break;
-            }             
-        }
+        var lplayer = NetworkManager.Singleton.LocalClient.PlayerObject;
+        CinemachineVirtualCamera vcam = GameObject.Find("CM_vcam").GetComponent<CinemachineVirtualCamera>();
+        vcam.Follow = lplayer.transform;
+      
+
        
 
         GameObject room_object = gameObject;
