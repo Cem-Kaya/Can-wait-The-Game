@@ -44,7 +44,7 @@ public class Camera_controller : MonoBehaviour
         float as_ratio = screen_w / screen_h;
         if (as_ratio > 16.0f/9.0f )
         {
-            float new_ortho = Mathf.Floor((screen_h * 16) / screen_w);
+            float new_ortho = Mathf.Floor((screen_h * 20f ) / screen_w);
             vcam.m_Lens.OrthographicSize = new_ortho;
         }
         
