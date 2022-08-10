@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 using Unity.Netcode;
 using TMPro;
 
+
 public class box_mover : NetworkBehaviour
 {
 	public GameObject bullet_prefab; 
