@@ -73,7 +73,7 @@ public class Enemy_manager : NetworkBehaviour
         {   
             //Debug.Log("Got in OnNetworkDespawn");
             
-            if (IsServer && DestroyWithSpawner && spawned_object.GetComponent<NetworkObject>() != null && spawned_object.GetComponent<NetworkObject>().IsSpawned)
+            if (IsServer && DestroyWithSpawner &&(spawned_object != null ) && spawned_object.GetComponent<NetworkObject>() != null && spawned_object.GetComponent<NetworkObject>().IsSpawned)
             {
                 //Debug.Log("Got in OnNetworkDespawn's if clause");
                 spawned_object.GetComponent<NetworkObject>().Despawn();
