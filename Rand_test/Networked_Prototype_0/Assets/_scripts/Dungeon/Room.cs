@@ -27,14 +27,15 @@ public class Room : NetworkBehaviour
 
     // Start is called before the first frame update
 
-  
-
-    void Start()
+    IEnumerator wait_untill_rc_not_null()
     {
-
-
-
-        if (!Room_controller.instance.start_room_initialized )
+        while (Room_controller.instance == null)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+		
+        //Debug.Log("room 36" + (Room_controller.instance == null).ToString());
+        if (!Room_controller.instance.start_room_initialized) // runtime error 
         {
             Room_controller.instance.start_room_initialized = true;
             Starting_room_init starting_room = GetComponent<Starting_room_init>();
@@ -44,42 +45,40 @@ public class Room : NetworkBehaviour
 
         if (IsServer)
         {
-
             rooms_info = Room_controller.instance.load_room_queue.Dequeue();
 
-		    
             room_name = rooms_info.room_name;
             name = rooms_info.room_name;
             x = rooms_info.x;
             y = rooms_info.y;
             name = rooms_info.world_name + "-" + rooms_info.room_name + " " + rooms_info.x + ", " + rooms_info.y;
 
-
             Room_controller.instance.register_room(this);
         }
 
 
         //make sure we start in right scene
-        if (Room_controller.instance == null) 
+        if (Room_controller.instance == null)
         {
             Debug.Log("Pressed play in wrong scene");
-            return; 
+            yield break;// return 
         }
-
         Room_controller.Room_registered = true;
-        
+
         var lplayer = NetworkManager.Singleton.LocalClient.PlayerObject;
         CinemachineVirtualCamera vcam = GameObject.Find("CM_vcam").GetComponent<CinemachineVirtualCamera>();
         vcam.Follow = lplayer.transform;
-      
-
-       
 
         GameObject room_object = gameObject;
         GameObject confiner_object = room_object.transform.Find("Cam_collider").gameObject;
         PolygonCollider2D confiner_collider = confiner_object.GetComponent<PolygonCollider2D>();
         //Debug.Log(confiner_collider);
         Camera_controller.load_new_boundry(confiner_collider);
+    }
+
+    void Start()
+    {
+        StartCoroutine(wait_untill_rc_not_null() );
     }
 
     // Update is called once per frame

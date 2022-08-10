@@ -22,10 +22,20 @@ public class Starting_room_init : NetworkBehaviour
         Camera_controller.load_new_boundry(confiner_collider);
         
     }
-    
-    void Start()
+
+    IEnumerator wait_untill_rc_not_null()
     {
-        Room_controller.instance.current_room_info = new Room_info( gameObject.GetComponent<Room>()) ;  // Room_controller.instance.loaded_rooms[0];
+        while (Room_controller.instance == null)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        //Debug.Log("room 36" + (Room_controller.instance == null).ToString());
+        Room_controller.instance.current_room_info = new Room_info(gameObject.GetComponent<Room>());  //runtime error     Room_controller.instance.loaded_rooms[0];
+    }
+
+        void Start()
+    {
+        StartCoroutine(wait_untill_rc_not_null());
 
     }
 
