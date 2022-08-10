@@ -306,7 +306,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7777778, y: 1}
+    m_SensorSize: {x: 2.2766838, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -1149,7 +1149,7 @@ MonoBehaviour:
   m_Port: 7777
   m_UniqueApplicationId: -2885404086867634984
   m_StartWithServer: 1
-  ServerName: BC
+  ServerName: BC_baha
   OnServerFound:
     m_PersistentCalls:
       m_Calls:
@@ -1200,7 +1200,7 @@ MonoBehaviour:
   m_MaxConnectAttempts: 60
   m_DisconnectTimeoutMS: 30000
   ConnectionData:
-    Address: 127.0.0.1
+    Address: 25.43.47.234
     Port: 7777
     ServerListenAddress: 0.0.0.0
   DebugSimulator:

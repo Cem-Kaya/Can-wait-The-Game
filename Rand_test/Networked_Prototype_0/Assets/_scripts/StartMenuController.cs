@@ -49,6 +49,7 @@ public class StartMenuController : MonoBehaviour
     public void Start_game_as_host()
     {
         //m_NetworkManager.StartHost();
+        
         NetworkManager.Singleton.StartHost();
         NetworkManager.Singleton.SceneManager.LoadScene("Start_room", LoadSceneMode.Single);
     }
