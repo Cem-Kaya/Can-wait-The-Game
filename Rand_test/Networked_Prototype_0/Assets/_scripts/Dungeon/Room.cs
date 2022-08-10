@@ -70,7 +70,16 @@ public class Room : NetworkBehaviour
         vcam.Follow = lplayer.transform;
 
         GameObject room_object = gameObject;
+        float screen_w = Screen.width;
+        float screen_h = Screen.height;
+        float as_ratio = screen_w / screen_h;
         GameObject confiner_object = room_object.transform.Find("Cam_collider").gameObject;
+        if (as_ratio > 16.0f / 9.0f + 0.02f)
+        {
+            confiner_object = room_object.transform.Find("Cam_collider_ultrawide(0.875)").gameObject;
+        }
+        
+        
         PolygonCollider2D confiner_collider = confiner_object.GetComponent<PolygonCollider2D>();
         //Debug.Log(confiner_collider);
         Camera_controller.load_new_boundry(confiner_collider);
