@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using UnityEngine.Rendering;
 using Unity.Netcode;
+
+using UnityEngine.Rendering;
+
 
 public class StartMenuController : MonoBehaviour
 {
@@ -17,6 +19,7 @@ public class StartMenuController : MonoBehaviour
 
     private void Awake()
     {
+        DebugManager.instance.enableRuntimeUI = false;
         player_input_actions = new Player_input_actions();
     }
 
