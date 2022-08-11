@@ -50,7 +50,7 @@ public class Enemy_manager : NetworkBehaviour
         {
             if (!enabled || spawn == null)
             {
-                Debug.Log("For somre reason prefabs are null");
+                if (IsServer) Debug.Log("For somre reason prefabs are null");
                 return;
             }
 

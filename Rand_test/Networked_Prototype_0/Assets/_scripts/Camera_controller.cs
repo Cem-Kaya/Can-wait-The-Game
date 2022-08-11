@@ -39,6 +39,7 @@ public class Camera_controller : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
         float screen_w = Screen.width;
         float screen_h = Screen.height;
         float as_ratio = screen_w / screen_h;
