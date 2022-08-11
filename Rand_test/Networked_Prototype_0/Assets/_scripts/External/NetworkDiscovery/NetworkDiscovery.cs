@@ -20,7 +20,7 @@ public abstract class NetworkDiscovery<TBroadCast, TResponse> : MonoBehaviour
 
     UdpClient m_Client;
 
-    [SerializeField] ushort m_Port = 47777;
+    [SerializeField] ushort m_Port = 26990;
 
     // This is long because unity inspector does not like ulong.
     [SerializeField]

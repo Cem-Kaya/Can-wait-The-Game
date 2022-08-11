@@ -15,7 +15,11 @@ public class StartMenuController : MonoBehaviour
     private InputAction menu;
 
     [SerializeField] private GameObject pause_ui;
+    [SerializeField] private GameObject main_menu_layout;
+    [SerializeField] private GameObject client_menu;
     [SerializeField] private bool is_paused;
+
+    private ExampleNetworkDiscoveryHud my_hud;
 
     private void Awake()
     {
@@ -26,7 +30,7 @@ public class StartMenuController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        my_hud = NetworkManager.Singleton.GetComponent<ExampleNetworkDiscoveryHud>();
     }
 
     // Update is called once per frame
@@ -57,7 +61,19 @@ public class StartMenuController : MonoBehaviour
     public void Start_game_as_client()
     {
         //m_NetworkManager.StartHost();
-        NetworkManager.Singleton.StartClient();
+
+        //NetworkManager.Singleton.StartClient();
+        if (client_menu.active)
+        {
+            my_hud.enabled = false;
+        }
+        else
+        {
+            main_menu_layout.SetActive(false);
+            my_hud.enabled = true;
+            client_menu.SetActive(true);
+
+        }
         //NetworkManager.Singleton.SceneManager.LoadScene("Start_room", LoadSceneMode.Single);
     }
 
@@ -68,6 +84,13 @@ public class StartMenuController : MonoBehaviour
     public void Deactivate_menu()
     {
 
+    }
+
+    public void Return_to_menu_from_client_menu()
+    {
+        main_menu_layout.SetActive(true);
+        my_hud.enabled = false;
+        client_menu.SetActive(false);
     }
 
     public void End_game()

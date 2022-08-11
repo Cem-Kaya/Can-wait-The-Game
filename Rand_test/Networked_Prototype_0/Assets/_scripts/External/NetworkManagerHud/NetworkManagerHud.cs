@@ -17,9 +17,9 @@ public class NetworkManagerHud : MonoBehaviour
     GUIStyle m_LabelTextStyle;
 
     // This is needed to make the port field more convenient. GUILayout.TextField is very limited and we want to be able to clear the field entirely so we can't cache this as ushort.
-    string m_PortString = "7777";
+    string m_PortString = "26990";
     string m_ConnectAddress = "25.43.47.234";
-
+    
     
     public Vector2 DrawOffset = new Vector2(10, 10);
 
