@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using Unity.Netcode;
+using UnityEngine.SceneManagement;
 
 public class Room : NetworkBehaviour
 {
@@ -68,13 +69,32 @@ public class Room : NetworkBehaviour
        
     }
 
+    IEnumerator wait_until_lplayer_not_null()
+    {
+        while (NetworkManager.Singleton.LocalClient.PlayerObject == null)
+        {
+            yield return new WaitForEndOfFrame();     
+        }
+
+        var lplayer = NetworkManager.Singleton.LocalClient.PlayerObject;
+        CinemachineVirtualCamera vcam = GameObject.Find("CM_vcam").GetComponent<CinemachineVirtualCamera>();
+        //Debug.Log("Is my lplayer null?: " + (lplayer == null).ToString() + "  " + "Is my vcam null? " + (vcam == null).ToString());
+        vcam.Follow = lplayer.transform;
+    }
+
+	private void vcam_appointment_on_event(ulong clientId, string sceneName, LoadSceneMode loadSceneMode)
+	//NetworkManager.Singleton.SceneManager.OnLoadComplete += vcam_appointment_on_event;// to sub to below
+	{
+
+	}
+
+
     void Start()
     {
         StartCoroutine(wait_untill_rc_not_null() );
 
-		var lplayer = NetworkManager.Singleton.LocalClient.PlayerObject;
-		CinemachineVirtualCamera vcam = GameObject.Find("CM_vcam").GetComponent<CinemachineVirtualCamera>();
-		vcam.Follow = lplayer.transform;
+		
+		StartCoroutine(wait_until_lplayer_not_null());
 
 		GameObject room_object = gameObject;
 		float screen_w = Screen.width;
