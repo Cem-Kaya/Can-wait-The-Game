@@ -5,11 +5,16 @@ using Unity.Netcode.Transports.UNET;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using Object = UnityEngine.Object;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.Events;
 #endif
+
+
+
 
 [RequireComponent(typeof(ExampleNetworkDiscovery))]
 [RequireComponent(typeof(NetworkManager))]
@@ -24,11 +29,20 @@ public class ExampleNetworkDiscoveryHud : MonoBehaviour
 
     public Vector2 DrawOffset = new Vector2(10, 210);
 
+    
+
+
     void Awake()
     {
         m_Discovery = GetComponent<ExampleNetworkDiscovery>();
         m_NetworkManager = GetComponent<NetworkManager>();
     }
+    private void Start()
+    {
+
+	}
+
+   
 
 #if UNITY_EDITOR
     void OnValidate()

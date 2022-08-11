@@ -1,4 +1,7 @@
 using System;
+using System.Net.Sockets;
+using System.Net.NetworkInformation;
+using System.Net;
 using System.Runtime.CompilerServices;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UNET;
@@ -18,10 +21,27 @@ public class NetworkManagerHud : MonoBehaviour
 
     // This is needed to make the port field more convenient. GUILayout.TextField is very limited and we want to be able to clear the field entirely so we can't cache this as ushort.
     string m_PortString = "26990";
-    string m_ConnectAddress = "25.43.47.234";
-    
-    
-    public Vector2 DrawOffset = new Vector2(10, 10);
+	string m_ConnectAddress = "127.0.0.1";
+
+	public string GetLocalIPAddress()
+	{
+		var host = Dns.GetHostEntry(Dns.GetHostName());
+		foreach (var ip in host.AddressList)
+		{
+			if (ip.AddressFamily == AddressFamily.InterNetwork)
+			{
+				string txt = ip.ToString();
+				return txt;
+			}
+		}
+		throw new System.Exception("No network adapters with an IPv4 address in the system!");
+	}
+
+
+
+	
+
+	public Vector2 DrawOffset = new Vector2(10, 10);
 
     public Color LabelColor = Color.black;
 
@@ -52,6 +72,11 @@ public class NetworkManagerHud : MonoBehaviour
         GUILayout.EndArea();
     }
 
+    private void Start()
+    {
+        m_ConnectAddress = GetLocalIPAddress();
+
+	}
     void DrawConnectGUI()
     {
         GUILayout.BeginHorizontal();
