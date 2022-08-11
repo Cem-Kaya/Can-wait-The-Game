@@ -416,7 +416,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.3345795, y: 1}
+    m_SensorSize: {x: 2.3353293, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -1358,6 +1358,7 @@ GameObject:
   - component: {fileID: 840733879}
   - component: {fileID: 840733878}
   - component: {fileID: 840733877}
+  - component: {fileID: 840733883}
   m_Layer: 0
   m_Name: Network_Manager
   m_TagString: Untagged
@@ -1445,13 +1446,13 @@ MonoBehaviour:
   m_MaxConnectAttempts: 60
   m_DisconnectTimeoutMS: 30000
   ConnectionData:
-    Address: 25.43.47.234
+    Address: 127.0.0.1
     Port: 7777
     ServerListenAddress: 0.0.0.0
   DebugSimulator:
-    PacketDelayMS: 50
-    PacketJitterMS: 10
-    PacketDropRate: 3
+    PacketDelayMS: 0
+    PacketJitterMS: 0
+    PacketDropRate: 0
 --- !u!114 &840733881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1531,6 +1532,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &840733883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 840733876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9ba7fbd00313574196bff9c214f0df4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ConnectAddress: 
 --- !u!1 &1013976345
 GameObject:
   m_ObjectHideFlags: 0
