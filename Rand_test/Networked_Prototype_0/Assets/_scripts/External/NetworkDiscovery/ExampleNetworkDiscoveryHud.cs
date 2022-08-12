@@ -58,8 +58,14 @@ public class ExampleNetworkDiscoveryHud : MonoBehaviour
 
     void OnServerFound(IPEndPoint sender, DiscoveryResponseData response)
     {
-        discoveredServers[sender.Address] = response;
-    }
+		foreach (string ip_add in response.all_ips_respons.Split("/")) {
+			DiscoveryResponseData tmp = new DiscoveryResponseData() ;
+			tmp.Port = response.Port;
+			tmp.ServerName = response.ServerName;
+            Debug.Log(ip_add);
+			discoveredServers[ IPAddress.Parse( ip_add )] = tmp;
+		}
+	}
 
     void OnGUI()
     {
@@ -103,8 +109,11 @@ public class ExampleNetworkDiscoveryHud : MonoBehaviour
                 if (GUILayout.Button($"{discoveredServer.Value.ServerName}[{discoveredServer.Key.ToString()}]"))
                 {
                     UnityTransport transport = (UnityTransport)m_NetworkManager.NetworkConfig.NetworkTransport;
+					
                     transport.SetConnectionData(discoveredServer.Key.ToString(), discoveredServer.Value.Port);
+					
                     Debug.Log(discoveredServer.Key.ToString());
+					
                     m_NetworkManager.StartClient();
                 }
             }

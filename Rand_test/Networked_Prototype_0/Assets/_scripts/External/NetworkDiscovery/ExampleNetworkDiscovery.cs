@@ -1,13 +1,42 @@
 ﻿using System;
 using System.Net;
+using System.Net.Sockets;
+using System.Net.NetworkInformation;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.Events;
+using System.Collections.Generic;
+
 
 [RequireComponent(typeof(NetworkManager))]
 public class ExampleNetworkDiscovery : NetworkDiscovery<DiscoveryBroadcastData, DiscoveryResponseData>
 {
+
+
+    public string GetLocalIPAddress_string()
+    {
+        string ips ="";
+        var host = Dns.GetHostEntry(Dns.GetHostName());
+        foreach (var ip in host.AddressList)
+        {
+            if (ip.AddressFamily == AddressFamily.InterNetwork)
+            {
+                ips +=  ip.ToString() + "/";
+            }
+        }
+        ips = ips.Remove(ips.Length - 1);
+        if (ips.Length == 0)
+        {
+            throw new System.Exception("No network adapters with an IPv4 address in the system!");
+        }
+        else
+        {
+            return ips;
+        }
+    }
+
+
     [Serializable]
     public class ServerFoundEvent : UnityEvent<IPEndPoint, DiscoveryResponseData>
     {
@@ -47,8 +76,9 @@ public class ExampleNetworkDiscovery : NetworkDiscovery<DiscoveryBroadcastData, 
         response = new DiscoveryResponseData()
         {
             ServerName = ServerName,
-            Port = ((UnityTransport) m_NetworkManager.NetworkConfig.NetworkTransport).ConnectionData.Port,
-        };
+            Port = ((UnityTransport)m_NetworkManager.NetworkConfig.NetworkTransport).ConnectionData.Port,
+			all_ips_respons = GetLocalIPAddress_string() ,
+		};
         return true;
     }
 
