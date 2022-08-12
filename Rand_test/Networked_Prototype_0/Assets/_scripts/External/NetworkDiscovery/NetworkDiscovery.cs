@@ -75,8 +75,9 @@ public abstract class NetworkDiscovery<TBroadCast, TResponse> : MonoBehaviour
 
             try
             {
-                // This works because PooledBitStream.Get resets the position to 0 so the array segment will always start from 0.
-                m_Client.SendAsync(data, data.Length, endPoint);
+				Debug.Log("sent message from client "); 
+				// This works because PooledBitStream.Get resets the position to 0 so the array segment will always start from 0.
+				m_Client.SendAsync(data, data.Length, endPoint);
             }
             catch (Exception e)
             {

@@ -77,7 +77,7 @@ public class ExampleNetworkDiscovery : NetworkDiscovery<DiscoveryBroadcastData, 
         {
             ServerName = ServerName,
             Port = ((UnityTransport)m_NetworkManager.NetworkConfig.NetworkTransport).ConnectionData.Port,
-			all_ips_respons = GetLocalIPAddress_string() ,
+			all_ips_respons = GetLocalIPAddress_string(),
 		};
         return true;
     }
