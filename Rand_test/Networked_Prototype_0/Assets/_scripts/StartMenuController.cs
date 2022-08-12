@@ -17,9 +17,11 @@ public class StartMenuController : MonoBehaviour
     [SerializeField] private GameObject pause_ui;
     [SerializeField] private GameObject main_menu_layout;
     [SerializeField] private GameObject client_menu;
+    [SerializeField] private GameObject host_menu;
     [SerializeField] private bool is_paused;
 
     private ExampleNetworkDiscoveryHud my_hud;
+    private Network_manager_config my_config;
 
     private void Awake()
     {
@@ -31,6 +33,7 @@ public class StartMenuController : MonoBehaviour
     void Start()
     {
         my_hud = NetworkManager.Singleton.GetComponent<ExampleNetworkDiscoveryHud>();
+        my_config = NetworkManager.Singleton.GetComponent<Network_manager_config>();
     }
 
     // Update is called once per frame
@@ -53,9 +56,20 @@ public class StartMenuController : MonoBehaviour
     public void Start_game_as_host()
     {
         //m_NetworkManager.StartHost();
+        main_menu_layout.SetActive(false);
+        host_menu.SetActive(true);
+        my_config.enabled = true;
         
+        
+    }
+
+    public void Start_game_as_host_button()
+    {
+       
+
         NetworkManager.Singleton.StartHost();
         NetworkManager.Singleton.SceneManager.LoadScene("Start_room", LoadSceneMode.Single);
+        my_config.enabled = false;
     }
 
     public void Start_game_as_client()
@@ -91,6 +105,13 @@ public class StartMenuController : MonoBehaviour
         main_menu_layout.SetActive(true);
         my_hud.enabled = false;
         client_menu.SetActive(false);
+    }
+
+    public void Return_to_menu_from_host_menu()
+    {
+        main_menu_layout.SetActive(true);
+        host_menu.SetActive(false);
+        my_config.enabled = false;
     }
 
     public void End_game()

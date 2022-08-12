@@ -92,11 +92,11 @@ public class NetworkManagerHud : MonoBehaviour
         m_PortString = GUILayout.TextField(m_PortString);
         if (ushort.TryParse(m_PortString, out ushort port))
         {
-            m_Transport.SetConnectionData(m_ConnectAddress, port);
+            //m_Transport.SetConnectionData(m_ConnectAddress, port);
         }
         else
         {
-            m_Transport.SetConnectionData(m_ConnectAddress, 7777);
+            //m_Transport.SetConnectionData(m_ConnectAddress, 7777);
         }
 
         GUILayout.EndHorizontal();
@@ -125,12 +125,14 @@ public class NetworkManagerHud : MonoBehaviour
         {
             var mode = m_NetworkManager.IsHost ? "Host" : "Server";
             GUILayout.Label($"{mode} active on port: {m_Transport.ConnectionData.Port.ToString()}", m_LabelTextStyle);
+            GUILayout.Label($"conection ip   {m_Transport.ConnectionData.Address}", m_LabelTextStyle);
         }
         else
         {
             if (m_NetworkManager.IsConnectedClient)
             {
-                GUILayout.Label($"Client connected {m_Transport.ConnectionData.Address}:{m_Transport.ConnectionData.Port.ToString()}", m_LabelTextStyle);
+                GUILayout.Label($"Client connected port {m_Transport.ConnectionData.Port.ToString()}", m_LabelTextStyle);
+                GUILayout.Label($"Client connected ip   {m_Transport.ConnectionData.Address} ", m_LabelTextStyle);
             }
         }
 

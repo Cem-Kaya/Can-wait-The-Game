@@ -104,6 +104,7 @@ public class ExampleNetworkDiscoveryHud : MonoBehaviour
                 {
                     UnityTransport transport = (UnityTransport)m_NetworkManager.NetworkConfig.NetworkTransport;
                     transport.SetConnectionData(discoveredServer.Key.ToString(), discoveredServer.Value.Port);
+                    Debug.Log(discoveredServer.Key.ToString());
                     m_NetworkManager.StartClient();
                 }
             }
