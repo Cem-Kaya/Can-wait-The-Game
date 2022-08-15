@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
@@ -11,10 +13,10 @@ public class tmp_texture : MonoBehaviour
 	Color dark = new Color( 0.05f, 0.05f, 0.05f, 1f);
 
 
-
+	[SerializeField] Texture2D texture_atlas ;
 	float grid_size;
 	int line_thickness;
-	[SerializeField] Texture2D texture;
+	Texture2D texture;
 
 	private void Awake()
 	{
@@ -48,11 +50,17 @@ public class tmp_texture : MonoBehaviour
 				}
 				else
 				{
-					texture.SetPixel(x, y, dark ); 
+					texture.SetPixel(x, y, dark );
 				}
 			}
 		}
+		texture_atlas.Reinitialize((int)Mathf.Floor( texture.width / grid_size)*4 , (int)Mathf.Floor(texture.height / grid_size) * 4);
 		
+		//Graphics.CopyTexture(texture_atlas,  0,  0,(int)(texture.width / grid_size) * 2 , (int) ( (texture.height / grid_size) * 2) , (int)texture_atlas.width, (int)texture_atlas.height , texture,  0,  0, 50 , 50); ;
+		 Graphics.CopyTexture(texture_atlas, 0, 0, 50, 50, 50,50, texture, 0, 0, 50, 50); 
+
+
+
 		// Apply all SetPixel calls
 		texture.Apply();
 
