@@ -73,6 +73,7 @@ public class ExampleNetworkDiscovery : NetworkDiscovery<DiscoveryBroadcastData, 
 
     protected override bool ProcessBroadcast(IPEndPoint sender, DiscoveryBroadcastData broadCast, out DiscoveryResponseData response)
     {
+        Debug.Log("server got the messege ");
         response = new DiscoveryResponseData()
         {
             ServerName = ServerName,
