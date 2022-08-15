@@ -12,14 +12,28 @@ public class tmp_texture : MonoBehaviour
 	void Start()
 	{
 		// Create a new 2x2 texture ARGB32 (32 bit with alpha) and no mipmaps
-		Texture2D texture = new Texture2D(50, 50, TextureFormat.ARGB32, false);		
+		Texture2D texture = new Texture2D(1080, 1080, TextureFormat.ARGB32, false);
 
-        // set the pixel values
-        texture.SetPixel(0, 0, new Color(1.0f, 1.0f, 1.0f, 0.5f));
-		texture.SetPixel(50, 0, Color.clear);
-		texture.SetPixel(0, 50, Color.white);
-		texture.SetPixel(50, 50, Color.black);
-
+		// set the pixel values
+		for(int x = 0;x < texture.width; x++)
+		{
+			for (int y = 0; y < texture.height; y++)
+			{
+				if (x % 30 <3 )
+				{
+					texture.SetPixel(x, y, new Color(0.0f, 0.0f, 0.0f, 1f));
+				}
+				else if(y % 30 < 3)
+				{
+					texture.SetPixel(x, y, new Color(0.0f, 0.0f, 0.0f, 1f));
+				}
+				else
+				{
+					texture.SetPixel(x, y, new Color(1.0f, 1.0f, 1.0f, 1f));
+				}
+			}
+		}
+		
 		// Apply all SetPixel calls
 		texture.Apply();
 
