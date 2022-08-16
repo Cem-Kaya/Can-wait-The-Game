@@ -20,44 +20,42 @@ public class tmp_texture : MonoBehaviour
 
 	private void Awake()
 	{
-		texture = new Texture2D(1000, 1000, TextureFormat.ARGB32, false);
+		texture = new Texture2D(972, 972, TextureFormat.ARGB32, false);
 		line_thickness = 6;
 	}
 	// Start is called before the first frame update
 	void Start()
 	{
-		grid_size= 10;
-
-		for (int x = 0;x < texture.width; x++)
+		int dim_int = 81;
+		Debug.Log(texture_atlas.width + " " + texture_atlas.height);
+        Debug.Log(texture.width + " " + texture.height);
+        for (int x = 0;x < texture_atlas.width; x++)
 		{
-			for (int y = 0; y < texture.height; y++)
+			for (int y = 0; y < texture_atlas.height; y++)
 			{
-				if (x % (texture.width / grid_size)  < 1 * line_thickness)
+				Color[] src_colors = new Color[6561];
+				for(int i = 0; i < 6561; i++)
 				{
-					texture.SetPixel(x, y, light_grey);
-				}		
-				else if (y % (texture.height / grid_size)  < 1 * line_thickness)
-				{
-					texture.SetPixel(x, y, light_grey);
-				}
-				else if (x > texture.width - line_thickness)
-				{
-					texture.SetPixel(x, y, light_grey);
-				}
-				else if (y > texture.height - line_thickness)
-				{
-					texture.SetPixel(x, y, light_grey);
-				}
-				else
-				{
-					texture.SetPixel(x, y, dark );
-				}
+                    src_colors[i] = texture_atlas.GetPixel(x, y);
+                }
+                Debug.Log(src_colors.Length);
+
+
+                var strt_x = x * 81;
+                var strt_y = y * 81;
+
+				Debug.Log(strt_x + " " + strt_y);
+                Debug.Log((strt_x + 81) + " " + (strt_y + 81));
+
+
+                texture.SetPixels(strt_x, strt_y, 81, 81, src_colors);
+
 			}
 		}
-		texture_atlas.Reinitialize((int)Mathf.Floor( texture.width / grid_size)*4 , (int)Mathf.Floor(texture.height / grid_size) * 4);
+		//texture_atlas.Reinitialize((int)Mathf.Floor( texture.width / grid_size)*4 , (int)Mathf.Floor(texture.height / grid_size) * 4);
 		
 		//Graphics.CopyTexture(texture_atlas,  0,  0,(int)(texture.width / grid_size) * 2 , (int) ( (texture.height / grid_size) * 2) , (int)texture_atlas.width, (int)texture_atlas.height , texture,  0,  0, 50 , 50); ;
-		 Graphics.CopyTexture(texture_atlas, 0, 0, 50, 50, 50,50, texture, 0, 0, 50, 50); 
+		 //Graphics.CopyTexture(texture_atlas, 0, 0, 50, 50, 50,50, texture, 0, 0, 50, 50); 
 
 
 
