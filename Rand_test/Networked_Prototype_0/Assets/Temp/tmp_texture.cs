@@ -25,31 +25,59 @@ public class tmp_texture : MonoBehaviour
 	}
 	// Start is called before the first frame update
 	void Start()
-	{
-		int dim_int = 81;
+	{	
+		grid_size = 10;
+		for (int x = 0; x < texture.width; x++)
+		{
+			for (int y = 0; y < texture.height; y++)
+			{
+				if (x % (texture.width / grid_size) < 1 * line_thickness)
+				{
+					texture.SetPixel(x, y, light_grey);
+				}
+				else if (y % (texture.height / grid_size) < 1 * line_thickness)
+				{
+					texture.SetPixel(x, y, light_grey);
+				}
+				else if (x > texture.width - line_thickness)
+				{
+					texture.SetPixel(x, y, light_grey);
+				}
+				else if (y > texture.height - line_thickness)
+				{
+					texture.SetPixel(x, y, light_grey);
+				}
+				else
+				{
+					texture.SetPixel(x, y, dark);
+				}
+			}
+		}
+
+		//block_len corresponds to one pixel in 12x12 texture atlas
+		int block_len = (int)((texture.width / grid_size)-line_thickness )/3 ;
 		Debug.Log(texture_atlas.width + " " + texture_atlas.height);
         Debug.Log(texture.width + " " + texture.height);
-        for (int x = 0;x < texture_atlas.width; x++)
+
+
+		int room_x = 1; 
+		int room_y = 1;
+        for (int x = 0; x < texture_atlas.width/4; x++)
 		{
-			for (int y = 0; y < texture_atlas.height; y++)
+			for (int y = 0 ; y < texture_atlas.height/4; y++)
 			{
-				Color[] src_colors = new Color[6561];
-				for(int i = 0; i < 6561; i++)
-				{
-                    src_colors[i] = texture_atlas.GetPixel(x, y);
+				Color[] src_colors = new Color[block_len* block_len];
+				for(int i = 0; i < block_len*block_len; i++)
+				{					
+                    src_colors[i] = texture_atlas.GetPixel(room_x*3 + x, room_y*3+ y);
                 }
-                Debug.Log(src_colors.Length);
+                //Debug.Log(src_colors.Length);
+                var strt_x = x * block_len;
+                var strt_y = y * block_len;
+				//Debug.Log(strt_x + " " + strt_y);
+				//Debug.Log((strt_x + block_len) + " " + (strt_y + block_len));
 
-
-                var strt_x = x * 81;
-                var strt_y = y * 81;
-
-				Debug.Log(strt_x + " " + strt_y);
-                Debug.Log((strt_x + 81) + " " + (strt_y + 81));
-
-
-                texture.SetPixels(strt_x, strt_y, 81, 81, src_colors);
-
+				texture.SetPixels(strt_x, strt_y, block_len, block_len, src_colors);
 			}
 		}
 		//texture_atlas.Reinitialize((int)Mathf.Floor( texture.width / grid_size)*4 , (int)Mathf.Floor(texture.height / grid_size) * 4);
