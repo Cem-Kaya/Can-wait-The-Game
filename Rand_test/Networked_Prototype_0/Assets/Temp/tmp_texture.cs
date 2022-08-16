@@ -6,9 +6,19 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 
+public class Tile {
+	bool collapsed = false;
+	List<int> possibles = new List<int>{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };	
+	public int possible_num{
+		get{ return possibles.Count; }
+	}
+}
 
 public class tmp_texture : MonoBehaviour    
 {
+	Dictionary<(int, int), Tile> floor = new Dictionary<(int,int), Tile>();
+
+
 	Color light_grey = new Color(0.7f, 0.7f, 0.7f, 1f);
 	Color dark = new Color( 0.05f, 0.05f, 0.05f, 1f);
 
