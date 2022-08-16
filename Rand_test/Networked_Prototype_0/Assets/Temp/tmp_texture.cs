@@ -72,8 +72,8 @@ public class tmp_texture : MonoBehaviour
                     src_colors[i] = texture_atlas.GetPixel(room_x*3 + x, room_y*3+ y);
                 }
                 //Debug.Log(src_colors.Length);
-                var strt_x = x * block_len;
-                var strt_y = y * block_len;
+                var strt_x = x * block_len+line_thickness;
+                var strt_y = y * block_len+line_thickness;
 				//Debug.Log(strt_x + " " + strt_y);
 				//Debug.Log((strt_x + block_len) + " " + (strt_y + block_len));
 
