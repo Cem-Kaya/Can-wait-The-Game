@@ -56,42 +56,53 @@ public class tmp_texture : MonoBehaviour
 
 		//block_len corresponds to one pixel in 12x12 texture atlas
 		int block_len = (int)((texture.width / grid_size)-line_thickness )/3 ;
-		Debug.Log(texture_atlas.width + " " + texture_atlas.height);
-        Debug.Log(texture.width + " " + texture.height);
+	
+		// Apply all SetPixel calls
+		texture.Apply();
 
+		// connect texture to material of GameObject this script is attached to
+		GetComponent<RawImage>().material.mainTexture = texture;
+		
+	}
 
-		int room_x = 1; 
-		int room_y = 1;
-        for (int x = 0; x < texture_atlas.width/4; x++)
+	void draw_room(int room_x , int room_y, int room_no_x, int room_no_y)
+	{
+		int block_len = (int)((texture.width / grid_size) - line_thickness) / 3;
+
+		for (int x = 0; x < texture_atlas.width / 4; x++)
 		{
-			for (int y = 0 ; y < texture_atlas.height/4; y++)
+			for (int y = 0; y < texture_atlas.height / 4; y++)
 			{
-				Color[] src_colors = new Color[block_len* block_len];
-				for(int i = 0; i < block_len*block_len; i++)
-				{					
-                    src_colors[i] = texture_atlas.GetPixel(room_x*3 + x, room_y*3+ y);
-                }
-                //Debug.Log(src_colors.Length);
-                var strt_x = x * block_len+line_thickness;
-                var strt_y = y * block_len+line_thickness;
+				Color[] src_colors = new Color[block_len * block_len];
+				for (int i = 0; i < block_len * block_len; i++)
+				{
+					src_colors[i] = texture_atlas.GetPixel(room_x * 3 + x, room_y * 3 + y);
+				}
+				//Debug.Log(src_colors.Length);
+				int strt_x = x * block_len + line_thickness + (int)(room_no_x * (texture.width / grid_size));
+				int strt_y = y * block_len + line_thickness + (int)(room_no_y * (texture.height / grid_size));
 				//Debug.Log(strt_x + " " + strt_y);
 				//Debug.Log((strt_x + block_len) + " " + (strt_y + block_len));
 
 				texture.SetPixels(strt_x, strt_y, block_len, block_len, src_colors);
 			}
 		}
-		//texture_atlas.Reinitialize((int)Mathf.Floor( texture.width / grid_size)*4 , (int)Mathf.Floor(texture.height / grid_size) * 4);
 		
-		//Graphics.CopyTexture(texture_atlas,  0,  0,(int)(texture.width / grid_size) * 2 , (int) ( (texture.height / grid_size) * 2) , (int)texture_atlas.width, (int)texture_atlas.height , texture,  0,  0, 50 , 50); ;
-		 //Graphics.CopyTexture(texture_atlas, 0, 0, 50, 50, 50,50, texture, 0, 0, 50, 50); 
-
-
-
-		// Apply all SetPixel calls
 		texture.Apply();
 
 		// connect texture to material of GameObject this script is attached to
-		GetComponent<RawImage>().material.mainTexture = texture;
+		
+	}
+
+	IEnumerator waitfd()
+	{
+		while (true)
+		{
+			draw_room(Random.Range(0, 3), Random.Range(0, 3), Random.Range(0, 10), Random.Range(0, 10));
+			yield return new WaitForSeconds(0.5f);
+
+		}
+	
 	}
 
 	// Update is called once per frame
