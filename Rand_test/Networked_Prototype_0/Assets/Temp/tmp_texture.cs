@@ -27,7 +27,7 @@ public enum door_dir
 }
 
 public class Tile {
-	public Tile() {
+	public Tile( int x , int y ) {
 		collapsed = false;
 		possibles  = new List<door_dir> { door_dir.blank,
 													door_dir.u,
@@ -46,7 +46,10 @@ public class Tile {
 													door_dir.lur,
 													door_dir.urdl };
 		value = door_dir.blank;
+		x_cord = x;
+		y_cord = y;
 	}
+	public int x_cord , y_cord ;
 	public bool collapsed ;
 	List<door_dir> possibles;
     public int possible_num {get{ return possibles.Count; }	}
@@ -80,14 +83,68 @@ public class Floor
 	Dictionary<(door_dir , string), List<door_dir>> rules = new Dictionary<(door_dir, string), List<door_dir>> (); 
 	public void fill_tables()
 	{
+        
 		rules.Add((door_dir.blank, "u"), new List<door_dir> {door_dir.d, door_dir.urdl, door_dir.rdl, door_dir.dl, door_dir.ud, door_dir.dlu, door_dir.rd, door_dir.urd } );
         rules.Add((door_dir.blank, "r"), new List<door_dir> { door_dir.l, door_dir.urdl, door_dir.rdl, door_dir.dl, door_dir.lu, door_dir.dlu, door_dir.rl, door_dir.lur });
-        rules.Add((door_dir.blank, "d"), new List<door_dir> { door_dir.u, door_dir.urdl, door_dir.url, door_dir.lu, door_dir.ud, door_dir.dlu, door_dir.ur, door_dir.urd });
+        rules.Add((door_dir.blank, "d"), new List<door_dir> { door_dir.u, door_dir.urdl, door_dir.lur, door_dir.lu, door_dir.ud, door_dir.dlu, door_dir.ur, door_dir.urd });
         rules.Add((door_dir.blank, "l"), new List<door_dir> { door_dir.r, door_dir.urdl, door_dir.rdl, door_dir.rl, door_dir.ur, door_dir.lur, door_dir.rd, door_dir.urd });
 
+        //ones without a d in them
         rules.Add((door_dir.u, "u"), new List<door_dir> { door_dir.r, door_dir.u, door_dir.l, door_dir.ur, door_dir.rl, door_dir.blank, door_dir.lu, door_dir.lur });
-        rules.Add((door_dir.u, "r"), new List<door_dir> { door_dir.r, door_dir.u, door_dir.l, door_dir.ur, door_dir.rl, door_dir.blank, door_dir.lu, door_dir.lur });
+        rules.Add((door_dir.u, "r"), new List<door_dir> { door_dir.l, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rl });
+        rules.Add((door_dir.u, "d"), new List<door_dir> { door_dir.u, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.ud, door_dir.dlu, door_dir.lur, door_dir.ur });
+        rules.Add((door_dir.u, "l"), new List<door_dir> { door_dir.r, door_dir.ur, door_dir.lur, door_dir.urdl, door_dir.rd, door_dir.urd, door_dir.rdl, door_dir.rl });
 
+        //ones with a d in them
+        rules.Add((door_dir.d, "u"), new List<door_dir> { door_dir.d, door_dir.ud, door_dir.urd, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rd });
+        //ones with a l in them
+		rules.Add((door_dir.d, "r"), new List<door_dir> { door_dir.l, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rl });
+		//ones without u in them
+		rules.Add((door_dir.d, "d"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.l, door_dir.rd, door_dir.rl, door_dir.blank, door_dir.dl, door_dir.rdl });
+        //ones with a r in them
+		rules.Add((door_dir.d, "l"), new List<door_dir> { door_dir.r, door_dir.ur, door_dir.lur, door_dir.urdl, door_dir.rd, door_dir.urd, door_dir.rdl, door_dir.rl });
+
+
+        //ones with a d in them
+        rules.Add((door_dir.r, "u"), new List<door_dir> { door_dir.d, door_dir.ud, door_dir.urd, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rd });
+        //ones without a l in them
+        rules.Add((door_dir.r, "r"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.u, door_dir.rd, door_dir.ur, door_dir.blank, door_dir.ud, door_dir.urd });
+        //ones with u in them
+        rules.Add((door_dir.r, "d"), new List<door_dir> { door_dir.u, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.ud, door_dir.dlu, door_dir.lur, door_dir.ur });
+        //ones with a r in them
+        rules.Add((door_dir.r, "l"), new List<door_dir> { door_dir.r, door_dir.ur, door_dir.lur, door_dir.urdl, door_dir.rd, door_dir.urd, door_dir.rdl, door_dir.rl });
+
+        //ones with a d in them
+        rules.Add((door_dir.l, "u"), new List<door_dir> { door_dir.d, door_dir.ud, door_dir.urd, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rd });
+        //ones with a l in them
+        rules.Add((door_dir.l, "r"), new List<door_dir> { door_dir.l, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rl });
+        //ones with u in them
+        rules.Add((door_dir.l, "d"), new List<door_dir> { door_dir.u, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.ud, door_dir.dlu, door_dir.lur, door_dir.ur });
+        //ones without a r in them
+        rules.Add((door_dir.l, "l"), new List<door_dir> { door_dir.l, door_dir.d, door_dir.u, door_dir.dl, door_dir.lu, door_dir.blank, door_dir.ud, door_dir.dlu });
+
+
+        //ones without a d in them
+        rules.Add((door_dir.ur, "u"), new List<door_dir> { door_dir.r, door_dir.u, door_dir.l, door_dir.ur, door_dir.rl, door_dir.blank, door_dir.lu, door_dir.lur });
+        //ones without a l in them
+        rules.Add((door_dir.ur, "r"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.u, door_dir.rd, door_dir.ur, door_dir.blank, door_dir.ud, door_dir.urd });
+        //ones with u in them
+        rules.Add((door_dir.ur, "d"), new List<door_dir> { door_dir.u, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.ud, door_dir.dlu, door_dir.lur, door_dir.ur });
+        //ones with a r in them
+        rules.Add((door_dir.ur, "l"), new List<door_dir> { door_dir.r, door_dir.ur, door_dir.lur, door_dir.urdl, door_dir.rd, door_dir.urd, door_dir.rdl, door_dir.rl });
+
+        //ones without a d in them
+        rules.Add((door_dir.ud, "u"), new List<door_dir> { door_dir.r, door_dir.u, door_dir.l, door_dir.ur, door_dir.rl, door_dir.blank, door_dir.lu, door_dir.lur });
+        //ones with a l in them
+        rules.Add((door_dir.ud, "r"), new List<door_dir> { door_dir.l, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rl });
+        //ones without a u in them
+        rules.Add((door_dir.ud, "d"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.l, door_dir.rd, door_dir.rl, door_dir.blank, door_dir.dl, door_dir.rdl });
+        //ones with a r in them
+        rules.Add((door_dir.ud, "l"), new List<door_dir> { door_dir.r, door_dir.ur, door_dir.lur, door_dir.urdl, door_dir.rd, door_dir.urd, door_dir.rdl, door_dir.rl });
+
+
+        
+        
         //initialize tile_map_coord
         tile_map_coord.Add(door_dir.blank, (3, 0));
 		tile_map_coord.Add(door_dir.u, (3, 1));
@@ -119,7 +176,7 @@ public class Floor
 		{
 			for (int j = 0; j < max_y; j++)
 			{
-				floor_data[(i, j)] = new Tile();
+				floor_data[(i, j)] = new Tile(i,j);
 			}
 		}
 	}
@@ -127,20 +184,40 @@ public class Floor
 
 	public Tile get_min_enthropy()
 	{
-		Tile ret = null ;
+		Tile ret = null ;		
 		int current_min = int.MaxValue ;
 		foreach (var item in floor_data)
 		{
 			if(! item.Value.collapsed && item.Value.possible_num < current_min)
 			{
-				ret = item.Value;
+				ret = item.Value;				
 			}
 		}
 		return ret;
 	}
-	public Start_collapse()
+	public void adjust_corners()
 	{
-
+		for (int i = 0; i < max_x; i++)
+		{
+			floor_data[(i, max_y -1 ) ].propogate(new List<door_dir> { door_dir.u, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.ud, door_dir.dlu, door_dir.lur, door_dir.ur });
+		}
+		for (int i = 0; i < max_x; i++)
+		{
+			floor_data[(i, 0)].propogate(new List<door_dir> { door_dir.d, door_dir.ud, door_dir.urd, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rd  });
+		}
+		for (int j = 0; j < max_y ; j++)
+		{
+			floor_data[(max_x-1, j)].propogate(new List<door_dir> { door_dir.r, door_dir.ur, door_dir.lur, door_dir.urdl, door_dir.rd, door_dir.urd, door_dir.rdl, door_dir.rl });
+		}
+		for (int j = 0; j < max_y; j++)
+		{
+			floor_data[( 0, j)].propogate(new List<door_dir> { door_dir.r, door_dir.ur, door_dir.lur, door_dir.urdl, door_dir.rd, door_dir.urd, door_dir.rdl, door_dir.rl });
+		}
+	}
+	public void Start_collapse()
+	{
+		adjust_corners();
+		Tile one = get_min_enthropy();
 	}
 }
 
