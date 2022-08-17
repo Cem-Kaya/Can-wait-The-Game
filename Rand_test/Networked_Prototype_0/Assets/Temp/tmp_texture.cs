@@ -99,6 +99,11 @@ public class Tile
 			collapsed = true;
 			return true;
 		}
+		foreach(var pos in possibles)
+		{
+			Debug.Log("one of the tiles: " + pos.ToString());
+		}
+		Debug.Log("try collopse returned ");
 		return false;
 	}
 
@@ -182,10 +187,10 @@ public class Floor
 		rules.Add((door_dir.ud, "l"), new List<door_dir> { door_dir.r, door_dir.ur, door_dir.lur, door_dir.urdl, door_dir.rd, door_dir.urd, door_dir.rdl, door_dir.rl });
 
 
-		//ones with u in them
-		rules.Add((door_dir.rd, "u"), new List<door_dir> { door_dir.u, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.ud, door_dir.dlu, door_dir.lur, door_dir.ur, door_dir.urd });
-		//ones without l in them
-		rules.Add((door_dir.rd, "r"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.u, door_dir.rd, door_dir.ur, door_dir.blank, door_dir.ud, door_dir.urd });
+		//ones with d in them
+		rules.Add((door_dir.rd, "u"), new List<door_dir> { door_dir.d, door_dir.ud, door_dir.urd, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rd });
+        //ones without l in them
+        rules.Add((door_dir.rd, "r"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.u, door_dir.rd, door_dir.ur, door_dir.blank, door_dir.ud, door_dir.urd });
 		//ones without u in them
 		rules.Add((door_dir.rd, "d"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.l, door_dir.rd, door_dir.rl, door_dir.blank, door_dir.dl, door_dir.rdl });
 		//ones with r in them
@@ -288,8 +293,7 @@ public class Floor
 	}
 	public Floor()
 	{
-		fill_tables();
-		
+		fill_tables();		
 		max_x = 10;
 		max_y = 10;
 		to_be_collapsed = max_x * max_y;
@@ -305,19 +309,21 @@ public class Floor
 
 	public Tile get_min_enthropy()
 	{
-		Tile ret = null, min = null ;
+		Tile min = null ;
         int current_min = int.MaxValue;
 		foreach (var item in floor_data)
 		{
-			if (!item.Value.collapsed && item.Value.possible_num < current_min)
+			if ((!item.Value.collapsed )&& (item.Value.possible_num> 0) && (item.Value.possible_num < current_min) )
 			{
-				min = item.Value as Tile ;
+				min = item.Value ;
 			}
 		}
-
+		Debug.Log("the min enthropy is : " + min.value);
         List<KeyValuePair<(int,int), Tile>> subList = floor_data.Where( item  => (item.Value.possible_num == min.possible_num)).ToList();
 
-        return subList[UnityEngine.Random.Range(0,subList.Count)].Value ;
+        var ret = subList[UnityEngine.Random.Range(0,subList.Count)].Value ;
+		Debug.Log( "the tile with min enthropy has " + ret.possible_num + "and is " + ret.x_cord + " , " + ret.y_cord);
+		return ret;
 	}
 
 	public void adjust_corners()
@@ -555,7 +561,7 @@ public class tmp_texture : MonoBehaviour
         while (floor.next_collapse())
         {
             draw_current_floor();
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.01f);
         }
     }
 
