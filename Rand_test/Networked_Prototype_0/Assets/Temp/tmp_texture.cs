@@ -125,7 +125,15 @@ public class Floor
 	int max_x, max_y;
 	int to_be_collapsed;
 
-	public Dictionary<door_dir, (int, int)> tile_map_coord = new Dictionary<door_dir, (int, int)>();
+	List<door_dir> up_connection = new List<door_dir>();
+    List<door_dir> down_connection = new List<door_dir>();
+    List<door_dir> left_connection = new List<door_dir>();
+    List<door_dir> right_connection = new List<door_dir>();
+
+	public int max_tree_size;
+    public Tile any_node_from_max_tree;
+
+    public Dictionary<door_dir, (int, int)> tile_map_coord = new Dictionary<door_dir, (int, int)>();
 
 	public Dictionary<(int, int), Tile> floor_data = new Dictionary<(int, int), Tile>();
 
@@ -225,7 +233,7 @@ public class Floor
 		//ones without l in them
 		rules.Add((door_dir.rl, "r"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.u, door_dir.rd, door_dir.ur, door_dir.blank, door_dir.ud, door_dir.urd });
 		//ones with u in them
-		rules.Add((door_dir.rl, "d"), new List<door_dir> { door_dir.u, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.ud, door_dir.dlu, door_dir.lur, door_dir.ur, door_dir.urd });
+		rules.Add((door_dir.rl, "d"), new List<door_dir> { door_dir.u, door_dir.lu, door_dir.urdl, door_dir.ud, door_dir.dlu, door_dir.lur, door_dir.ur, door_dir.urd });
 		//ones without r in them
 		rules.Add((door_dir.rl, "l"), new List<door_dir> { door_dir.l, door_dir.d, door_dir.u, door_dir.dl, door_dir.lu, door_dir.blank, door_dir.ud, door_dir.dlu });
 
@@ -292,16 +300,20 @@ public class Floor
 		tile_map_coord.Add(door_dir.dlu, (0, 2));
 		tile_map_coord.Add(door_dir.lur, (1, 3));
 		tile_map_coord.Add(door_dir.urdl, (0, 3));
-
-
-
+		//////////////////////////////////////////////
+		//up connection initialization
+		up_connection = new List<door_dir> { door_dir.u, door_dir.lu, door_dir.urdl, door_dir.ud, door_dir.dlu, door_dir.lur, door_dir.ur, door_dir.urd };
+		//down connection initialization
+		down_connection = new List<door_dir> { door_dir.d, door_dir.ud, door_dir.urd, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rd };
+		right_connection = new List<door_dir> { door_dir.r, door_dir.ur, door_dir.lur, door_dir.urdl, door_dir.rd, door_dir.urd, door_dir.rdl, door_dir.rl };
+		left_connection = new List<door_dir>  { door_dir.l, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rl };
 	}
 	public Floor()
 	{
 		fill_tables();		
 		max_x = GLOBAL.GRID_SIZE;
 		max_y = GLOBAL.GRID_SIZE;
-		to_be_collapsed = max_x * max_y;
+        to_be_collapsed = max_x * max_y;
 		for (int i = 0; i < max_x; i++)
 		{
 			for (int j = 0; j < max_y; j++)
@@ -309,7 +321,8 @@ public class Floor
 				floor_data[(i, j)] = new Tile(i, j);
 			}
 		}
-	}
+        max_tree_size = -1;
+    }
 
 
 	public Tile get_min_enthropy()
@@ -450,7 +463,89 @@ public class Floor
 
 	}
 
+	//this function is utilized to get the biggest map out of all generated maps
+	public bool validate()
+	{
+		Dictionary<(int, int), bool> visited  = new Dictionary<(int, int), bool>();
+		for (int j = max_y - 1; j >= 0; j--)
+		{
+			for (int i = 0; i < max_x; i++)
+			{
+				visited[(i, j)] = false;
+			}
+		}
 
+		//		
+		foreach(var tile in floor_data)
+		{
+			Tile node = tile.Value;
+			Stack<Tile> stack = new Stack<Tile>();
+			if (!visited[(node.x_cord, node.y_cord)])
+			{
+				stack.Push(node);
+			}		
+			
+			int this_tree_size=0;
+			while (stack.Count > 0)
+			{
+				
+				Tile this_node = stack.Pop();
+				visited[(this_node.x_cord, this_node.y_cord)] = true;
+
+				this_tree_size++;
+				if (this_tree_size > max_tree_size)
+				{
+					max_tree_size = this_tree_size;
+					any_node_from_max_tree = this_node;
+				}
+
+				if (up_connection.Contains(this_node.value))
+				{
+					Tile next_node = floor_data[(this_node.x_cord, this_node.y_cord + 1)];
+					if (!visited[(next_node.x_cord, next_node.y_cord)])
+					{
+						stack.Push(next_node);
+					}
+					
+				}
+                if (right_connection.Contains(this_node.value))
+                {
+                    Tile next_node = floor_data[(this_node.x_cord+1, this_node.y_cord)];
+                    if (!visited[(next_node.x_cord, next_node.y_cord)])
+                    {
+                        stack.Push(next_node);
+                    }
+
+                }
+                if (left_connection.Contains(this_node.value))
+                {
+                    Tile next_node = floor_data[(this_node.x_cord - 1, this_node.y_cord)];
+                    if (!visited[(next_node.x_cord, next_node.y_cord)])
+                    {
+                        stack.Push(next_node);
+                    }
+
+                }
+                if (down_connection.Contains(this_node.value))
+                {
+                    Tile next_node = floor_data[(this_node.x_cord, this_node.y_cord-1)];
+                    if (!visited[(next_node.x_cord, next_node.y_cord)])
+                    {
+                        stack.Push(next_node);
+                    }
+
+                }
+            }
+		}
+		Debug.Log("max tree size:" + max_tree_size);
+		if (max_tree_size > GLOBAL.GRID_SIZE_X* GLOBAL.GRID_SIZE_Y /2)
+		{
+			
+			
+			return true;
+		} 
+		return false;
+	}
 
 }
 
@@ -520,8 +615,8 @@ public class tmp_texture : MonoBehaviour
 
 		floor.start_collapse();
 		draw_current_floor();
-		StartCoroutine(gen_map());		
-
+		StartCoroutine(gen_map());
+		floor.validate();
 	}
 
 	void draw_room(int room_x, int room_y, int room_no_x, int room_no_y)
