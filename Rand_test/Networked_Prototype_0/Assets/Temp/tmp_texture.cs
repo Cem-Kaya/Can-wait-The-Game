@@ -1,10 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public enum door_dir
@@ -51,7 +49,33 @@ public class Tile
 		value = door_dir.blank;
 		x_cord = x;
 		y_cord = y;
+		fill_table();
 	}
+
+	private static Dictionary<door_dir, int> prob_weights = new Dictionary<door_dir, int>();
+	private void fill_table()
+	{
+		if (!(prob_weights.Count > 0))
+		{
+			prob_weights.Add(door_dir.blank, 6);
+			prob_weights.Add(door_dir.u, 4);
+			prob_weights.Add(door_dir.r, 4);
+			prob_weights.Add(door_dir.d, 4);
+			prob_weights.Add(door_dir.l, 4);
+			prob_weights.Add(door_dir.ur, 8);
+			prob_weights.Add(door_dir.rd, 8);
+			prob_weights.Add(door_dir.dl, 8);
+			prob_weights.Add(door_dir.lu, 8);
+			prob_weights.Add(door_dir.rl, 10);
+			prob_weights.Add(door_dir.ud, 8);
+			prob_weights.Add(door_dir.urd, 12);
+			prob_weights.Add(door_dir.rdl, 12);
+			prob_weights.Add(door_dir.dlu, 12);
+			prob_weights.Add(door_dir.lur, 12);
+			prob_weights.Add(door_dir.urdl, 16);
+		}
+	}
+
 	public int x_cord, y_cord;
 	public bool collapsed;
 	public List<door_dir> possibles;
@@ -61,7 +85,16 @@ public class Tile
 	{
 		if (possible_num > 0)
 		{
-			value = possibles[Random.Range(0, possible_num)];
+			List<door_dir> select_from = new List<door_dir>();
+			foreach(door_dir dd in possibles)
+			{
+				for (int i = 0; i < prob_weights[dd] ; i++)
+				{
+					select_from.Add(dd);
+				}
+			}
+			
+			value = select_from[UnityEngine.Random.Range(0, select_from.Count)];
 			possibles.Clear();
 			collapsed = true;
 			return true;
@@ -256,9 +289,10 @@ public class Floor
 	public Floor()
 	{
 		fill_tables();
-		to_be_collapsed = 100;
+		
 		max_x = 10;
 		max_y = 10;
+		to_be_collapsed = max_x * max_y;
 		for (int i = 0; i < max_x; i++)
 		{
 			for (int j = 0; j < max_y; j++)
@@ -283,7 +317,7 @@ public class Floor
 
         List<KeyValuePair<(int,int), Tile>> subList = floor_data.Where( item  => (item.Value.possible_num == min.possible_num)).ToList();
 
-        return subList[Random.Range(0,subList.Count)].Value ;
+        return subList[UnityEngine.Random.Range(0,subList.Count)].Value ;
 	}
 
 	public void adjust_corners()
