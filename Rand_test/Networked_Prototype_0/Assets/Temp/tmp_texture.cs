@@ -26,10 +26,12 @@ public enum door_dir
 	urdl
 }
 
-public class Tile {
-	public Tile( int x , int y ) {
+public class Tile
+{
+	public Tile(int x, int y)
+	{
 		collapsed = false;
-		possibles  = new List<door_dir> { door_dir.blank,
+		possibles = new List<door_dir> { door_dir.blank,
 													door_dir.u,
 													door_dir.r,
 													door_dir.d,
@@ -49,185 +51,188 @@ public class Tile {
 		x_cord = x;
 		y_cord = y;
 	}
-	public int x_cord , y_cord ;
-	public bool collapsed ;
-	List<door_dir> possibles;
-    public int possible_num {get{ return possibles.Count; }	}
-	door_dir value;
+	public int x_cord, y_cord;
+	public bool collapsed;
+	public List<door_dir> possibles;
+	public int possible_num { get { return possibles.Count; } }
+	public door_dir value;
 	public bool try_collapse()
 	{
 		if (possible_num > 0)
 		{
-			value = possibles [ Random.Range(0, possible_num ) ];
+			value = possibles[Random.Range(0, possible_num)];
+			possibles.Clear();
 			collapsed = true;
+			return true;
 		}
 		return false;
 	}
-	
-	public void propogate ( List<door_dir> removables )
+
+	public void propogate(List<door_dir> removables)
 	{
-		foreach(door_dir d in removables)
+		foreach (door_dir d in removables)
 		{
 			possibles.Remove(d);
 		}
-    }
+	}
 }
 public class Floor
 {
 	int max_x, max_y;
+	int to_be_collapsed;
 
-	Dictionary<door_dir, (int, int)> tile_map_coord = new Dictionary<door_dir, (int, int)>();
-	
-	Dictionary<(int, int), Tile> floor_data = new Dictionary<(int, int), Tile>();
+	public Dictionary<door_dir, (int, int)> tile_map_coord = new Dictionary<door_dir, (int, int)>();
 
-	Dictionary<(door_dir , string), List<door_dir>> rules = new Dictionary<(door_dir, string), List<door_dir>> (); 
+	public Dictionary<(int, int), Tile> floor_data = new Dictionary<(int, int), Tile>();
+
+	Dictionary<(door_dir, string), List<door_dir>> rules = new Dictionary<(door_dir, string), List<door_dir>>();
 	public void fill_tables()
 	{
-        
-		rules.Add((door_dir.blank, "u"), new List<door_dir> {door_dir.d, door_dir.urdl, door_dir.rdl, door_dir.dl, door_dir.ud, door_dir.dlu, door_dir.rd, door_dir.urd } );
-        rules.Add((door_dir.blank, "r"), new List<door_dir> { door_dir.l, door_dir.urdl, door_dir.rdl, door_dir.dl, door_dir.lu, door_dir.dlu, door_dir.rl, door_dir.lur });
-        rules.Add((door_dir.blank, "d"), new List<door_dir> { door_dir.u, door_dir.urdl, door_dir.lur, door_dir.lu, door_dir.ud, door_dir.dlu, door_dir.ur, door_dir.urd });
-        rules.Add((door_dir.blank, "l"), new List<door_dir> { door_dir.r, door_dir.urdl, door_dir.rdl, door_dir.rl, door_dir.ur, door_dir.lur, door_dir.rd, door_dir.urd });
 
-        //ones without a d in them
-        rules.Add((door_dir.u, "u"), new List<door_dir> { door_dir.r, door_dir.u, door_dir.l, door_dir.ur, door_dir.rl, door_dir.blank, door_dir.lu, door_dir.lur });
-        rules.Add((door_dir.u, "r"), new List<door_dir> { door_dir.l, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rl });
-        rules.Add((door_dir.u, "d"), new List<door_dir> { door_dir.u, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.ud, door_dir.dlu, door_dir.lur, door_dir.ur });
-        rules.Add((door_dir.u, "l"), new List<door_dir> { door_dir.r, door_dir.ur, door_dir.lur, door_dir.urdl, door_dir.rd, door_dir.urd, door_dir.rdl, door_dir.rl });
+		rules.Add((door_dir.blank, "u"), new List<door_dir> { door_dir.d, door_dir.urdl, door_dir.rdl, door_dir.dl, door_dir.ud, door_dir.dlu, door_dir.rd, door_dir.urd });
+		rules.Add((door_dir.blank, "r"), new List<door_dir> { door_dir.l, door_dir.urdl, door_dir.rdl, door_dir.dl, door_dir.lu, door_dir.dlu, door_dir.rl, door_dir.lur });
+		rules.Add((door_dir.blank, "d"), new List<door_dir> { door_dir.u, door_dir.urdl, door_dir.lur, door_dir.lu, door_dir.ud, door_dir.dlu, door_dir.ur, door_dir.urd });
+		rules.Add((door_dir.blank, "l"), new List<door_dir> { door_dir.r, door_dir.urdl, door_dir.rdl, door_dir.rl, door_dir.ur, door_dir.lur, door_dir.rd, door_dir.urd });
 
-        //ones with a d in them
-        rules.Add((door_dir.d, "u"), new List<door_dir> { door_dir.d, door_dir.ud, door_dir.urd, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rd });
-        //ones with a l in them
+		//ones without a d in them
+		rules.Add((door_dir.u, "u"), new List<door_dir> { door_dir.r, door_dir.u, door_dir.l, door_dir.ur, door_dir.rl, door_dir.blank, door_dir.lu, door_dir.lur });
+		rules.Add((door_dir.u, "r"), new List<door_dir> { door_dir.l, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rl });
+		rules.Add((door_dir.u, "d"), new List<door_dir> { door_dir.u, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.ud, door_dir.dlu, door_dir.lur, door_dir.ur, door_dir.urd });
+		rules.Add((door_dir.u, "l"), new List<door_dir> { door_dir.r, door_dir.ur, door_dir.lur, door_dir.urdl, door_dir.rd, door_dir.urd, door_dir.rdl, door_dir.rl });
+
+		//ones with a d in them
+		rules.Add((door_dir.d, "u"), new List<door_dir> { door_dir.d, door_dir.ud, door_dir.urd, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rd });
+		//ones with a l in them
 		rules.Add((door_dir.d, "r"), new List<door_dir> { door_dir.l, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rl });
 		//ones without u in them
 		rules.Add((door_dir.d, "d"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.l, door_dir.rd, door_dir.rl, door_dir.blank, door_dir.dl, door_dir.rdl });
-        //ones with a r in them
+		//ones with a r in them
 		rules.Add((door_dir.d, "l"), new List<door_dir> { door_dir.r, door_dir.ur, door_dir.lur, door_dir.urdl, door_dir.rd, door_dir.urd, door_dir.rdl, door_dir.rl });
 
 
-        //ones with a d in them
-        rules.Add((door_dir.r, "u"), new List<door_dir> { door_dir.d, door_dir.ud, door_dir.urd, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rd });
-        //ones without l in them
-        rules.Add((door_dir.r, "r"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.u, door_dir.rd, door_dir.ur, door_dir.blank, door_dir.ud, door_dir.urd });
-        //ones with u in them
-        rules.Add((door_dir.r, "d"), new List<door_dir> { door_dir.u, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.ud, door_dir.dlu, door_dir.lur, door_dir.ur });
-        //ones with a r in them
-        rules.Add((door_dir.r, "l"), new List<door_dir> { door_dir.r, door_dir.ur, door_dir.lur, door_dir.urdl, door_dir.rd, door_dir.urd, door_dir.rdl, door_dir.rl });
+		//ones with a d in them
+		rules.Add((door_dir.r, "u"), new List<door_dir> { door_dir.d, door_dir.ud, door_dir.urd, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rd });
+		//ones without l in them
+		rules.Add((door_dir.r, "r"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.u, door_dir.rd, door_dir.ur, door_dir.blank, door_dir.ud, door_dir.urd });
+		//ones with u in them
+		rules.Add((door_dir.r, "d"), new List<door_dir> { door_dir.u, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.ud, door_dir.dlu, door_dir.lur, door_dir.ur, door_dir.urd });
+		//ones with a r in them
+		rules.Add((door_dir.r, "l"), new List<door_dir> { door_dir.r, door_dir.ur, door_dir.lur, door_dir.urdl, door_dir.rd, door_dir.urd, door_dir.rdl, door_dir.rl });
 
-        //ones with a d in them
-        rules.Add((door_dir.l, "u"), new List<door_dir> { door_dir.d, door_dir.ud, door_dir.urd, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rd });
-        //ones with a l in them
-        rules.Add((door_dir.l, "r"), new List<door_dir> { door_dir.l, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rl });
-        //ones with u in them
-        rules.Add((door_dir.l, "d"), new List<door_dir> { door_dir.u, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.ud, door_dir.dlu, door_dir.lur, door_dir.ur });
-        //ones without r in them
-        rules.Add((door_dir.l, "l"), new List<door_dir> { door_dir.l, door_dir.d, door_dir.u, door_dir.dl, door_dir.lu, door_dir.blank, door_dir.ud, door_dir.dlu });
-
-
-        //ones without d in them
-        rules.Add((door_dir.ur, "u"), new List<door_dir> { door_dir.r, door_dir.u, door_dir.l, door_dir.ur, door_dir.rl, door_dir.blank, door_dir.lu, door_dir.lur });
-        //ones without l in them
-        rules.Add((door_dir.ur, "r"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.u, door_dir.rd, door_dir.ur, door_dir.blank, door_dir.ud, door_dir.urd });
-        //ones with u in them
-        rules.Add((door_dir.ur, "d"), new List<door_dir> { door_dir.u, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.ud, door_dir.dlu, door_dir.lur, door_dir.ur });
-        //ones with r in them
-        rules.Add((door_dir.ur, "l"), new List<door_dir> { door_dir.r, door_dir.ur, door_dir.lur, door_dir.urdl, door_dir.rd, door_dir.urd, door_dir.rdl, door_dir.rl });
-
-        //ones without d in them
-        rules.Add((door_dir.ud, "u"), new List<door_dir> { door_dir.r, door_dir.u, door_dir.l, door_dir.ur, door_dir.rl, door_dir.blank, door_dir.lu, door_dir.lur });
-        //ones with l in them
-        rules.Add((door_dir.ud, "r"), new List<door_dir> { door_dir.l, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rl });
-        //ones without u in them
-        rules.Add((door_dir.ud, "d"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.l, door_dir.rd, door_dir.rl, door_dir.blank, door_dir.dl, door_dir.rdl });
-        //ones with r in them
-        rules.Add((door_dir.ud, "l"), new List<door_dir> { door_dir.r, door_dir.ur, door_dir.lur, door_dir.urdl, door_dir.rd, door_dir.urd, door_dir.rdl, door_dir.rl });
+		//ones with a d in them
+		rules.Add((door_dir.l, "u"), new List<door_dir> { door_dir.d, door_dir.ud, door_dir.urd, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rd });
+		//ones with a l in them
+		rules.Add((door_dir.l, "r"), new List<door_dir> { door_dir.l, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rl });
+		//ones with u in them
+		rules.Add((door_dir.l, "d"), new List<door_dir> { door_dir.u, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.ud, door_dir.dlu, door_dir.lur, door_dir.ur, door_dir.urd });
+		//ones without r in them
+		rules.Add((door_dir.l, "l"), new List<door_dir> { door_dir.l, door_dir.d, door_dir.u, door_dir.dl, door_dir.lu, door_dir.blank, door_dir.ud, door_dir.dlu });
 
 
-        //ones with u in them
-        rules.Add((door_dir.rd, "u"), new List<door_dir> { door_dir.u, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.ud, door_dir.dlu, door_dir.lur, door_dir.ur });
-        //ones without l in them
-        rules.Add((door_dir.rd, "r"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.u, door_dir.rd, door_dir.ur, door_dir.blank, door_dir.ud, door_dir.urd });
-        //ones without u in them
-        rules.Add((door_dir.rd, "d"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.l, door_dir.rd, door_dir.rl, door_dir.blank, door_dir.dl, door_dir.rdl });
-        //ones with r in them
-        rules.Add((door_dir.rd, "l"), new List<door_dir> { door_dir.r, door_dir.ur, door_dir.lur, door_dir.urdl, door_dir.rd, door_dir.urd, door_dir.rdl, door_dir.rl });
+		//ones without d in them
+		rules.Add((door_dir.ur, "u"), new List<door_dir> { door_dir.r, door_dir.u, door_dir.l, door_dir.ur, door_dir.rl, door_dir.blank, door_dir.lu, door_dir.lur });
+		//ones without l in them
+		rules.Add((door_dir.ur, "r"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.u, door_dir.rd, door_dir.ur, door_dir.blank, door_dir.ud, door_dir.urd });
+		//ones with u in them
+		rules.Add((door_dir.ur, "d"), new List<door_dir> { door_dir.u, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.ud, door_dir.dlu, door_dir.lur, door_dir.ur, door_dir.urd });
+		//ones with r in them
+		rules.Add((door_dir.ur, "l"), new List<door_dir> { door_dir.r, door_dir.ur, door_dir.lur, door_dir.urdl, door_dir.rd, door_dir.urd, door_dir.rdl, door_dir.rl });
 
-        //ones with d in them
-        rules.Add((door_dir.dl, "u"), new List<door_dir> { door_dir.d, door_dir.ud, door_dir.urd, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rd });
-        //ones with l in them
-        rules.Add((door_dir.dl, "r"), new List<door_dir> { door_dir.l, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rl });
-        //ones without u in them
-        rules.Add((door_dir.dl, "d"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.l, door_dir.rd, door_dir.rl, door_dir.blank, door_dir.dl, door_dir.rdl });
-        //ones without r in them
-        rules.Add((door_dir.dl, "l"), new List<door_dir> { door_dir.l, door_dir.d, door_dir.u, door_dir.dl, door_dir.lu, door_dir.blank, door_dir.ud, door_dir.dlu });
-
-
-        //ones without d in them
-        rules.Add((door_dir.lu, "u"), new List<door_dir> { door_dir.r, door_dir.u, door_dir.l, door_dir.ur, door_dir.rl, door_dir.blank, door_dir.lu, door_dir.lur });
-        //ones with l in them
-        rules.Add((door_dir.lu, "r"), new List<door_dir> { door_dir.l, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rl });
-        //ones with u in them
-        rules.Add((door_dir.lu, "d"), new List<door_dir> { door_dir.u, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.ud, door_dir.dlu, door_dir.lur, door_dir.ur });
-        //ones without r in them
-        rules.Add((door_dir.lu, "l"), new List<door_dir> { door_dir.l, door_dir.d, door_dir.u, door_dir.dl, door_dir.lu, door_dir.blank, door_dir.ud, door_dir.dlu });
-
-        //ones with d in them
-        rules.Add((door_dir.rl, "u"), new List<door_dir> { door_dir.d, door_dir.ud, door_dir.urd, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rd });
-        //ones without l in them
-        rules.Add((door_dir.rl, "r"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.u, door_dir.rd, door_dir.ur, door_dir.blank, door_dir.ud, door_dir.urd });
-        //ones with u in them
-        rules.Add((door_dir.rl, "d"), new List<door_dir> { door_dir.u, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.ud, door_dir.dlu, door_dir.lur, door_dir.ur });
-        //ones without r in them
-        rules.Add((door_dir.rl, "l"), new List<door_dir> { door_dir.l, door_dir.d, door_dir.u, door_dir.dl, door_dir.lu, door_dir.blank, door_dir.ud, door_dir.dlu });
-
-        //ones without d in them
-        rules.Add((door_dir.urd, "u"), new List<door_dir> { door_dir.r, door_dir.u, door_dir.l, door_dir.ur, door_dir.rl, door_dir.blank, door_dir.lu, door_dir.lur });
-        //ones without l in them
-        rules.Add((door_dir.urd, "r"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.u, door_dir.rd, door_dir.ur, door_dir.blank, door_dir.ud, door_dir.urd });
-        //ones without u in them
-        rules.Add((door_dir.urd, "d"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.l, door_dir.rd, door_dir.rl, door_dir.blank, door_dir.dl, door_dir.rdl });
-        //ones with r in them
-        rules.Add((door_dir.urd, "l"), new List<door_dir> { door_dir.r, door_dir.ur, door_dir.lur, door_dir.urdl, door_dir.rd, door_dir.urd, door_dir.rdl, door_dir.rl });
-
-        //ones with d in them
-        rules.Add((door_dir.rdl, "u"), new List<door_dir> { door_dir.d, door_dir.ud, door_dir.urd, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rd });
-        //ones without l in them
-        rules.Add((door_dir.rdl, "r"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.u, door_dir.rd, door_dir.ur, door_dir.blank, door_dir.ud, door_dir.urd });
-        //ones without u in them
-        rules.Add((door_dir.rdl, "d"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.l, door_dir.rd, door_dir.rl, door_dir.blank, door_dir.dl, door_dir.rdl });
-        //ones without r in them
-        rules.Add((door_dir.rdl, "l"), new List<door_dir> { door_dir.l, door_dir.d, door_dir.u, door_dir.dl, door_dir.lu, door_dir.blank, door_dir.ud, door_dir.dlu });
+		//ones without d in them
+		rules.Add((door_dir.ud, "u"), new List<door_dir> { door_dir.r, door_dir.u, door_dir.l, door_dir.ur, door_dir.rl, door_dir.blank, door_dir.lu, door_dir.lur });
+		//ones with l in them
+		rules.Add((door_dir.ud, "r"), new List<door_dir> { door_dir.l, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rl });
+		//ones without u in them
+		rules.Add((door_dir.ud, "d"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.l, door_dir.rd, door_dir.rl, door_dir.blank, door_dir.dl, door_dir.rdl });
+		//ones with r in them
+		rules.Add((door_dir.ud, "l"), new List<door_dir> { door_dir.r, door_dir.ur, door_dir.lur, door_dir.urdl, door_dir.rd, door_dir.urd, door_dir.rdl, door_dir.rl });
 
 
-        //ones without d in them
-        rules.Add((door_dir.dlu, "u"), new List<door_dir> { door_dir.r, door_dir.u, door_dir.l, door_dir.ur, door_dir.rl, door_dir.blank, door_dir.lu, door_dir.lur });
-        //ones with l in them
-        rules.Add((door_dir.dlu, "r"), new List<door_dir> { door_dir.l, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rl });
-        //ones without u in them
-        rules.Add((door_dir.dlu, "d"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.l, door_dir.rd, door_dir.rl, door_dir.blank, door_dir.dl, door_dir.rdl });
-        //ones without r in them
-        rules.Add((door_dir.dlu, "l"), new List<door_dir> { door_dir.l, door_dir.d, door_dir.u, door_dir.dl, door_dir.lu, door_dir.blank, door_dir.ud, door_dir.dlu });
+		//ones with u in them
+		rules.Add((door_dir.rd, "u"), new List<door_dir> { door_dir.u, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.ud, door_dir.dlu, door_dir.lur, door_dir.ur, door_dir.urd });
+		//ones without l in them
+		rules.Add((door_dir.rd, "r"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.u, door_dir.rd, door_dir.ur, door_dir.blank, door_dir.ud, door_dir.urd });
+		//ones without u in them
+		rules.Add((door_dir.rd, "d"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.l, door_dir.rd, door_dir.rl, door_dir.blank, door_dir.dl, door_dir.rdl });
+		//ones with r in them
+		rules.Add((door_dir.rd, "l"), new List<door_dir> { door_dir.r, door_dir.ur, door_dir.lur, door_dir.urdl, door_dir.rd, door_dir.urd, door_dir.rdl, door_dir.rl });
 
-        //ones without d in them
-        rules.Add((door_dir.lur, "u"), new List<door_dir> { door_dir.r, door_dir.u, door_dir.l, door_dir.ur, door_dir.rl, door_dir.blank, door_dir.lu, door_dir.lur });
-        //ones without l in them
-        rules.Add((door_dir.lur, "r"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.u, door_dir.rd, door_dir.ur, door_dir.blank, door_dir.ud, door_dir.urd });
-        //ones with u in them
-        rules.Add((door_dir.lur, "d"), new List<door_dir> { door_dir.u, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.ud, door_dir.dlu, door_dir.lur, door_dir.ur });
-        //ones without r in them
-        rules.Add((door_dir.lur, "l"), new List<door_dir> { door_dir.l, door_dir.d, door_dir.u, door_dir.dl, door_dir.lu, door_dir.blank, door_dir.ud, door_dir.dlu });
+		//ones with d in them
+		rules.Add((door_dir.dl, "u"), new List<door_dir> { door_dir.d, door_dir.ud, door_dir.urd, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rd });
+		//ones with l in them
+		rules.Add((door_dir.dl, "r"), new List<door_dir> { door_dir.l, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rl });
+		//ones without u in them
+		rules.Add((door_dir.dl, "d"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.l, door_dir.rd, door_dir.rl, door_dir.blank, door_dir.dl, door_dir.rdl });
+		//ones without r in them
+		rules.Add((door_dir.dl, "l"), new List<door_dir> { door_dir.l, door_dir.d, door_dir.u, door_dir.dl, door_dir.lu, door_dir.blank, door_dir.ud, door_dir.dlu });
 
-        //ones without d in them
-        rules.Add((door_dir.urdl, "u"), new List<door_dir> { door_dir.r, door_dir.u, door_dir.l, door_dir.ur, door_dir.rl, door_dir.blank, door_dir.lu, door_dir.lur });
-        //ones without l in them
-        rules.Add((door_dir.urdl, "r"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.u, door_dir.rd, door_dir.ur, door_dir.blank, door_dir.ud, door_dir.urd });
-        //ones without u in them
-        rules.Add((door_dir.urdl, "d"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.l, door_dir.rd, door_dir.rl, door_dir.blank, door_dir.dl, door_dir.rdl });
-        //ones without r in them
-        rules.Add((door_dir.urdl, "l"), new List<door_dir> { door_dir.l, door_dir.d, door_dir.u, door_dir.dl, door_dir.lu, door_dir.blank, door_dir.ud, door_dir.dlu });
 
-        //initialize tile_map_coord
-        tile_map_coord.Add(door_dir.blank, (3, 0));
+		//ones without d in them
+		rules.Add((door_dir.lu, "u"), new List<door_dir> { door_dir.r, door_dir.u, door_dir.l, door_dir.ur, door_dir.rl, door_dir.blank, door_dir.lu, door_dir.lur });
+		//ones with l in them
+		rules.Add((door_dir.lu, "r"), new List<door_dir> { door_dir.l, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rl });
+		//ones with u in them
+		rules.Add((door_dir.lu, "d"), new List<door_dir> { door_dir.u, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.ud, door_dir.dlu, door_dir.lur, door_dir.ur, door_dir.urd });
+		//ones without r in them
+		rules.Add((door_dir.lu, "l"), new List<door_dir> { door_dir.l, door_dir.d, door_dir.u, door_dir.dl, door_dir.lu, door_dir.blank, door_dir.ud, door_dir.dlu });
+
+		//ones with d in them
+		rules.Add((door_dir.rl, "u"), new List<door_dir> { door_dir.d, door_dir.ud, door_dir.urd, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rd });
+		//ones without l in them
+		rules.Add((door_dir.rl, "r"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.u, door_dir.rd, door_dir.ur, door_dir.blank, door_dir.ud, door_dir.urd });
+		//ones with u in them
+		rules.Add((door_dir.rl, "d"), new List<door_dir> { door_dir.u, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.ud, door_dir.dlu, door_dir.lur, door_dir.ur, door_dir.urd });
+		//ones without r in them
+		rules.Add((door_dir.rl, "l"), new List<door_dir> { door_dir.l, door_dir.d, door_dir.u, door_dir.dl, door_dir.lu, door_dir.blank, door_dir.ud, door_dir.dlu });
+
+		//ones without d in them
+		rules.Add((door_dir.urd, "u"), new List<door_dir> { door_dir.r, door_dir.u, door_dir.l, door_dir.ur, door_dir.rl, door_dir.blank, door_dir.lu, door_dir.lur });
+		//ones without l in them
+		rules.Add((door_dir.urd, "r"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.u, door_dir.rd, door_dir.ur, door_dir.blank, door_dir.ud, door_dir.urd });
+		//ones without u in them
+		rules.Add((door_dir.urd, "d"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.l, door_dir.rd, door_dir.rl, door_dir.blank, door_dir.dl, door_dir.rdl });
+		//ones with r in them
+		rules.Add((door_dir.urd, "l"), new List<door_dir> { door_dir.r, door_dir.ur, door_dir.lur, door_dir.urdl, door_dir.rd, door_dir.urd, door_dir.rdl, door_dir.rl });
+
+		//ones with d in them
+		rules.Add((door_dir.rdl, "u"), new List<door_dir> { door_dir.d, door_dir.ud, door_dir.urd, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rd });
+		//ones without l in them
+		rules.Add((door_dir.rdl, "r"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.u, door_dir.rd, door_dir.ur, door_dir.blank, door_dir.ud, door_dir.urd });
+		//ones without u in them
+		rules.Add((door_dir.rdl, "d"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.l, door_dir.rd, door_dir.rl, door_dir.blank, door_dir.dl, door_dir.rdl });
+		//ones without r in them
+		rules.Add((door_dir.rdl, "l"), new List<door_dir> { door_dir.l, door_dir.d, door_dir.u, door_dir.dl, door_dir.lu, door_dir.blank, door_dir.ud, door_dir.dlu });
+
+
+		//ones without d in them
+		rules.Add((door_dir.dlu, "u"), new List<door_dir> { door_dir.r, door_dir.u, door_dir.l, door_dir.ur, door_dir.rl, door_dir.blank, door_dir.lu, door_dir.lur });
+		//ones with l in them
+		rules.Add((door_dir.dlu, "r"), new List<door_dir> { door_dir.l, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rl });
+		//ones without u in them
+		rules.Add((door_dir.dlu, "d"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.l, door_dir.rd, door_dir.rl, door_dir.blank, door_dir.dl, door_dir.rdl });
+		//ones without r in them
+		rules.Add((door_dir.dlu, "l"), new List<door_dir> { door_dir.l, door_dir.d, door_dir.u, door_dir.dl, door_dir.lu, door_dir.blank, door_dir.ud, door_dir.dlu });
+
+		//ones without d in them
+		rules.Add((door_dir.lur, "u"), new List<door_dir> { door_dir.r, door_dir.u, door_dir.l, door_dir.ur, door_dir.rl, door_dir.blank, door_dir.lu, door_dir.lur });
+		//ones without l in them
+		rules.Add((door_dir.lur, "r"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.u, door_dir.rd, door_dir.ur, door_dir.blank, door_dir.ud, door_dir.urd });
+		//ones with u in them
+		rules.Add((door_dir.lur, "d"), new List<door_dir> { door_dir.u, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.ud, door_dir.dlu, door_dir.lur, door_dir.ur, door_dir.urd });
+		//ones without r in them
+		rules.Add((door_dir.lur, "l"), new List<door_dir> { door_dir.l, door_dir.d, door_dir.u, door_dir.dl, door_dir.lu, door_dir.blank, door_dir.ud, door_dir.dlu });
+
+		//ones without d in them
+		rules.Add((door_dir.urdl, "u"), new List<door_dir> { door_dir.r, door_dir.u, door_dir.l, door_dir.ur, door_dir.rl, door_dir.blank, door_dir.lu, door_dir.lur });
+		//ones without l in them
+		rules.Add((door_dir.urdl, "r"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.u, door_dir.rd, door_dir.ur, door_dir.blank, door_dir.ud, door_dir.urd });
+		//ones without u in them
+		rules.Add((door_dir.urdl, "d"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.l, door_dir.rd, door_dir.rl, door_dir.blank, door_dir.dl, door_dir.rdl });
+		//ones without r in them
+		rules.Add((door_dir.urdl, "l"), new List<door_dir> { door_dir.l, door_dir.d, door_dir.u, door_dir.dl, door_dir.lu, door_dir.blank, door_dir.ud, door_dir.dlu });
+
+		//initialize tile_map_coord
+		tile_map_coord.Add(door_dir.blank, (3, 0));
 		tile_map_coord.Add(door_dir.u, (3, 1));
 		tile_map_coord.Add(door_dir.r, (1, 0));
 		tile_map_coord.Add(door_dir.d, (2, 0));
@@ -250,14 +255,14 @@ public class Floor
 	public Floor()
 	{
 		fill_tables();
-
+		to_be_collapsed = 100;
 		max_x = 10;
 		max_y = 10;
 		for (int i = 0; i < max_x; i++)
 		{
 			for (int j = 0; j < max_y; j++)
 			{
-				floor_data[(i, j)] = new Tile(i,j);
+				floor_data[(i, j)] = new Tile(i, j);
 			}
 		}
 	}
@@ -265,64 +270,165 @@ public class Floor
 
 	public Tile get_min_enthropy()
 	{
-		Tile ret = null ;		
-		int current_min = int.MaxValue ;
+		Tile ret = null;
+		int current_min = int.MaxValue;
 		foreach (var item in floor_data)
 		{
-			if(! item.Value.collapsed && item.Value.possible_num < current_min)
+			if (!item.Value.collapsed && item.Value.possible_num < current_min)
 			{
-				ret = item.Value;				
+				ret = item.Value;
 			}
 		}
 		return ret;
 	}
+
 	public void adjust_corners()
 	{
+		//top row
 		for (int i = 0; i < max_x; i++)
 		{
-			floor_data[(i, max_y -1 ) ].propogate(new List<door_dir> { door_dir.u, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.ud, door_dir.dlu, door_dir.lur, door_dir.ur });
+			floor_data[(i, max_y - 1)].propogate(new List<door_dir> { door_dir.u, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.ud, door_dir.dlu, door_dir.lur, door_dir.ur, door_dir.urd });
 		}
+		//bottom row
 		for (int i = 0; i < max_x; i++)
 		{
-			floor_data[(i, 0)].propogate(new List<door_dir> { door_dir.d, door_dir.ud, door_dir.urd, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rd  });
+			floor_data[(i, 0)].propogate(new List<door_dir> { door_dir.d, door_dir.ud, door_dir.urd, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rd });
 		}
-		for (int j = 0; j < max_y ; j++)
-		{
-			floor_data[(max_x-1, j)].propogate(new List<door_dir> { door_dir.r, door_dir.ur, door_dir.lur, door_dir.urdl, door_dir.rd, door_dir.urd, door_dir.rdl, door_dir.rl });
-		}
+		//right column
 		for (int j = 0; j < max_y; j++)
 		{
-			floor_data[( 0, j)].propogate(new List<door_dir> { door_dir.r, door_dir.ur, door_dir.lur, door_dir.urdl, door_dir.rd, door_dir.urd, door_dir.rdl, door_dir.rl });
+			floor_data[(max_x - 1, j)].propogate(new List<door_dir> { door_dir.r, door_dir.ur, door_dir.lur, door_dir.urdl, door_dir.rd, door_dir.urd, door_dir.rdl, door_dir.rl });
+		}
+		//left column                                                           
+		for (int j = 0; j < max_y; j++)
+		{
+			floor_data[(0, j)].propogate(new List<door_dir> { door_dir.l, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rl });
 		}
 	}
-	public void Start_collapse()
+
+	public void print_enthropy()
+	{
+		for (int j = max_x - 1; j >= 0; j--)
+		{
+			string tmp = $"r {j}:  ";
+			for (int i = 0; i < max_y; i++)
+			{
+				tmp += $" {floor_data[(i, j)].possible_num}";
+			}
+			Debug.Log(tmp);
+		}
+
+	}
+	public void start_collapse()
 	{
 		adjust_corners();
 		Tile one = get_min_enthropy();
+		if (one.try_collapse())
+		{
+			//checks the tile on the right
+			if (floor_data.ContainsKey((one.x_cord + 1, one.y_cord)))
+			{
+				List<door_dir> curr_rule_list = rules[(one.value, "r")];
+				floor_data[(one.x_cord + 1, one.y_cord)].propogate(curr_rule_list);
+			}
+			//checks the tile on the left
+			if (floor_data.ContainsKey((one.x_cord - 1, one.y_cord)))
+			{
+				List<door_dir> curr_rule_list = rules[(one.value, "l")];
+				floor_data[(one.x_cord - 1, one.y_cord)].propogate(curr_rule_list);
+			}
+			//checks the tile on the up
+			if (floor_data.ContainsKey((one.x_cord, one.y_cord + 1)))
+			{
+				List<door_dir> curr_rule_list = rules[(one.value, "u")];
+				floor_data[(one.x_cord, one.y_cord + 1)].propogate(curr_rule_list);
+			}
+			//checks the tile on the down
+			if (floor_data.ContainsKey((one.x_cord, one.y_cord - 1)))
+			{
+				List<door_dir> curr_rule_list = rules[(one.value, "d")];
+				floor_data[(one.x_cord, one.y_cord - 1)].propogate(curr_rule_list);
+			}
+			to_be_collapsed--;
+			print_enthropy();
+		}
+		else
+		{
+			Debug.Log("can not find a solution ");
+		}
 	}
+	public bool next_collapse()
+	{
+		Tile one = get_min_enthropy();
+		if (one.try_collapse())
+		{
+			//checks the tile on the right
+			if (floor_data.ContainsKey((one.x_cord + 1, one.y_cord)))
+			{
+				List<door_dir> curr_rule_list = rules[(one.value, "r")];
+				floor_data[(one.x_cord + 1, one.y_cord)].propogate(curr_rule_list);
+			}
+			//checks the tile on the left
+			if (floor_data.ContainsKey((one.x_cord - 1, one.y_cord)))
+			{
+				List<door_dir> curr_rule_list = rules[(one.value, "l")];
+				floor_data[(one.x_cord - 1, one.y_cord)].propogate(curr_rule_list);
+			}
+			//checks the tile on the up
+			if (floor_data.ContainsKey((one.x_cord, one.y_cord + 1)))
+			{
+				List<door_dir> curr_rule_list = rules[(one.value, "u")];
+				floor_data[(one.x_cord, one.y_cord + 1)].propogate(curr_rule_list);
+			}
+			//checks the tile on the down
+			if (floor_data.ContainsKey((one.x_cord, one.y_cord - 1)))
+			{
+				List<door_dir> curr_rule_list = rules[(one.value, "d")];
+				floor_data[(one.x_cord, one.y_cord - 1)].propogate(curr_rule_list);
+			}
+			to_be_collapsed--;
+			print_enthropy();
+			return true;
+		}
+		else
+		{
+			Debug.Log("can not find a solution ");
+			return false;
+		}
+
+	}
+
+
+
 }
 
-public class tmp_texture : MonoBehaviour    
+public class tmp_texture : MonoBehaviour
 {
 
 
 	Color light_grey = new Color(0.7f, 0.7f, 0.7f, 1f);
-	Color dark = new Color( 0.05f, 0.05f, 0.05f, 1f);
+	Color dark = new Color(0.05f, 0.05f, 0.05f, 1f);
 
 
-	[SerializeField] Texture2D texture_atlas ;
+	[SerializeField] Texture2D texture_atlas;
 	float grid_size;
 	int line_thickness;
 	Texture2D texture;
+
+	public Floor floor;
 
 	private void Awake()
 	{
 		texture = new Texture2D(972, 972, TextureFormat.ARGB32, false);
 		line_thickness = 6;
+		floor = new Floor();
 	}
+
+
+
 	// Start is called before the first frame update
 	void Start()
-	{	
+	{
 		grid_size = 10;
 		for (int x = 0; x < texture.width; x++)
 		{
@@ -352,17 +458,21 @@ public class tmp_texture : MonoBehaviour
 		}
 
 		//block_len corresponds to one pixel in 12x12 texture atlas
-		int block_len = (int)((texture.width / grid_size)-line_thickness )/3 ;
-	
+		int block_len = (int)((texture.width / grid_size) - line_thickness) / 3;
+
 		// Apply all SetPixel calls
 		texture.Apply();
 
 		// connect texture to material of GameObject this script is attached to
 		GetComponent<RawImage>().material.mainTexture = texture;
-		
+
+		floor.start_collapse();
+		draw_current_floor();
+		StartCoroutine(gen_map());
+
 	}
 
-	void draw_room(int room_x , int room_y, int room_no_x, int room_no_y)
+	void draw_room(int room_x, int room_y, int room_no_x, int room_no_y)
 	{
 		int block_len = (int)((texture.width / grid_size) - line_thickness) / 3;
 
@@ -384,27 +494,36 @@ public class tmp_texture : MonoBehaviour
 				texture.SetPixels(strt_x, strt_y, block_len, block_len, src_colors);
 			}
 		}
-		
+
 		texture.Apply();
 
 		// connect texture to material of GameObject this script is attached to
-		
+
 	}
 
-	IEnumerator waitfd()
+	public void draw_current_floor()
 	{
-		while (true)
+		foreach (var t in floor.floor_data)
 		{
-			draw_room(Random.Range(0, 3), Random.Range(0, 3), Random.Range(0, 10), Random.Range(0, 10));
-			yield return new WaitForSeconds(0.5f);
-
+			if (t.Value.collapsed)
+			{
+				draw_room(floor.tile_map_coord[(t.Value.value)].Item1, floor.tile_map_coord[(t.Value.value)].Item2, t.Value.x_cord, t.Value.y_cord);
+			}
 		}
+	}
 	
+	IEnumerator gen_map()
+	{
+		while (floor.next_collapse())
+		{
+			draw_current_floor();
+            yield return new WaitForSeconds(0.1f);
+        }
 	}
 
 	// Update is called once per frame
 	void Update()
-    {
-        
-    }
+	{
+
+	}
 }
