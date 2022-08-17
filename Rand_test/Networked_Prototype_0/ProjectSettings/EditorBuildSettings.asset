@@ -6,15 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Dungeon/Start_Menu.unity
-    guid: 43e311e7aa5ebf84582483a7734bad34
-  - enabled: 1
-    path: Assets/Scenes/Dungeon/Start_room.unity
-    guid: 858ef6210be2b4b469a2c627898736ba
-  - enabled: 1
-    path: Assets/Scenes/Dungeon/Sample_room.unity
-    guid: e902fc061ce82a34fa9887bea3b02b0a
-  - enabled: 1
-    path: Assets/Scenes/Dungeon/Default_room.unity
-    guid: 5ed0e2650ee97684f9dcce47900968d9
+    path: Assets/Scenes/Dungeon/Test.unity
+    guid: 05e44f7272a385f4a834c8ba33894d5e
   m_configObjects: {}
