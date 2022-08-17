@@ -123,7 +123,6 @@ public class Tile
 public class Floor
 {
 	int max_x, max_y;
-	int to_be_collapsed;
 
 	List<door_dir> up_connection = new List<door_dir>();
     List<door_dir> down_connection = new List<door_dir>();
@@ -313,7 +312,7 @@ public class Floor
 		fill_tables();		
 		max_x = GLOBAL.GRID_SIZE;
 		max_y = GLOBAL.GRID_SIZE;
-        to_be_collapsed = max_x * max_y;
+      
 		for (int i = 0; i < max_x; i++)
 		{
 			for (int j = 0; j < max_y; j++)
@@ -323,8 +322,24 @@ public class Floor
 		}
         max_tree_size = -1;
     }
-
-
+	//when the generated too small it is reset and generated again
+	public void reset_floor()
+	{
+		
+		max_x = GLOBAL.GRID_SIZE;
+		max_y = GLOBAL.GRID_SIZE;
+	
+		for (int i = 0; i < max_x; i++)
+		{
+			for (int j = 0; j < max_y; j++)
+			{
+				floor_data[(i, j)] = new Tile(i, j);
+			}
+		}
+		max_tree_size = -1;
+		any_node_from_max_tree = null;
+	}
+	
 	public Tile get_min_enthropy()
 	{
 		Tile min = null;
@@ -412,7 +427,7 @@ public class Floor
 				List<door_dir> curr_rule_list = rules[(one.value, "d")];
 				floor_data[(one.x_cord, one.y_cord - 1)].propogate(curr_rule_list);
 			}
-			to_be_collapsed--;
+			
 			//print_enthropy();
 		}
 		else
@@ -451,7 +466,7 @@ public class Floor
 				List<door_dir> curr_rule_list = rules[(one.value, "d")];
 				floor_data[(one.x_cord, one.y_cord - 1)].propogate(curr_rule_list);
 			}
-			to_be_collapsed--;
+			
 			//print_enthropy();
 			return true;
 		}
@@ -487,9 +502,9 @@ public class Floor
 			
 			int this_tree_size=0;
 			while (stack.Count > 0)
-			{
-				
+			{				
 				Tile this_node = stack.Pop();
+				
 				visited[(this_node.x_cord, this_node.y_cord)] = true;
 
 				this_tree_size++;
@@ -502,46 +517,56 @@ public class Floor
 				if (up_connection.Contains(this_node.value))
 				{
 					Tile next_node = floor_data[(this_node.x_cord, this_node.y_cord + 1)];
-					if (!visited[(next_node.x_cord, next_node.y_cord)])
-					{
-						stack.Push(next_node);
+					if (!stack.Contains(next_node)) {
+						if (!visited[(next_node.x_cord, next_node.y_cord)])
+						{
+							stack.Push(next_node);
+						}
 					}
 					
 				}
                 if (right_connection.Contains(this_node.value))
                 {
-                    Tile next_node = floor_data[(this_node.x_cord+1, this_node.y_cord)];
-                    if (!visited[(next_node.x_cord, next_node.y_cord)])
-                    {
-                        stack.Push(next_node);
-                    }
+						Tile next_node = floor_data[(this_node.x_cord + 1, this_node.y_cord)];
+                    if (!stack.Contains(next_node)) {
+
+                        if (!visited[(next_node.x_cord, next_node.y_cord)])
+						{
+							stack.Push(next_node);
+						}
+					}
 
                 }
                 if (left_connection.Contains(this_node.value))
                 {
                     Tile next_node = floor_data[(this_node.x_cord - 1, this_node.y_cord)];
-                    if (!visited[(next_node.x_cord, next_node.y_cord)])
-                    {
-                        stack.Push(next_node);
-                    }
+					if (!stack.Contains(next_node)) {
+
+						if (!visited[(next_node.x_cord, next_node.y_cord)])
+						{
+							stack.Push(next_node);
+						}
+					}
 
                 }
                 if (down_connection.Contains(this_node.value))
                 {
                     Tile next_node = floor_data[(this_node.x_cord, this_node.y_cord-1)];
-                    if (!visited[(next_node.x_cord, next_node.y_cord)])
-                    {
-                        stack.Push(next_node);
-                    }
+					if (!stack.Contains(next_node)) {
+
+						if (!visited[(next_node.x_cord, next_node.y_cord)])
+						{
+							stack.Push(next_node);
+						}
+					}
 
                 }
             }
 		}
-		Debug.Log("max tree size:" + max_tree_size);
+		//Debug.Log("max tree size:" + max_tree_size);
+		//Debug.Log("any node from max tree: " + any_node_from_max_tree.x_cord + " " + any_node_from_max_tree.y_cord);
 		if (max_tree_size > GLOBAL.GRID_SIZE_X* GLOBAL.GRID_SIZE_Y /2)
-		{
-			
-			
+		{		
 			return true;
 		} 
 		return false;
@@ -577,6 +602,25 @@ public class tmp_texture : MonoBehaviour
 	void Start()
 	{
 		grid_size = GLOBAL.GRID_SIZE ;
+		draw_grid();
+
+		//block_len corresponds to one pixel in 12x12 texture atlas
+		int block_len = (int)((texture.width / grid_size) - line_thickness) / 3;
+
+		// Apply all SetPixel calls
+		texture.Apply();
+
+		// connect texture to material of GameObject this script is attached to
+		GetComponent<RawImage>().material.mainTexture = texture;
+
+
+		//floor.start_collapse();
+		//draw_current_floor();
+		StartCoroutine(gen_map());
+		
+	}
+	void draw_grid ()
+	{
 		for (int x = 0; x < texture.width; x++)
 		{
 			for (int y = 0; y < texture.height; y++)
@@ -603,22 +647,8 @@ public class tmp_texture : MonoBehaviour
 				}
 			}
 		}
-
-		//block_len corresponds to one pixel in 12x12 texture atlas
-		int block_len = (int)((texture.width / grid_size) - line_thickness) / 3;
-
-		// Apply all SetPixel calls
-		texture.Apply();
-
-		// connect texture to material of GameObject this script is attached to
-		GetComponent<RawImage>().material.mainTexture = texture;
-
-		floor.start_collapse();
-		draw_current_floor();
-		StartCoroutine(gen_map());
-		floor.validate();
+		
 	}
-
 	void draw_room(int room_x, int room_y, int room_no_x, int room_no_y)
 	{
 		int block_len = (int)((texture.width / grid_size) - line_thickness) / 3;
@@ -658,11 +688,19 @@ public class tmp_texture : MonoBehaviour
 
     IEnumerator gen_map()
     {
-        while (floor.next_collapse())
-        {
-            draw_current_floor();
-            yield return null;
-        }
+		while (true)
+		{
+			floor.start_collapse();
+			draw_current_floor();
+			while (floor.next_collapse())
+			{
+				draw_current_floor();
+				yield return null;
+			}
+			floor.validate();
+			floor.reset_floor();
+			draw_grid();
+		}
     }
 
     // Update is called once per frame
