@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -270,16 +271,19 @@ public class Floor
 
 	public Tile get_min_enthropy()
 	{
-		Tile ret = null;
-		int current_min = int.MaxValue;
+		Tile ret = null, min = null ;
+        int current_min = int.MaxValue;
 		foreach (var item in floor_data)
 		{
 			if (!item.Value.collapsed && item.Value.possible_num < current_min)
 			{
-				ret = item.Value;
+				min = item.Value as Tile ;
 			}
 		}
-		return ret;
+
+        List<KeyValuePair<(int,int), Tile>> subList = floor_data.Where( item  => (item.Value.possible_num == min.possible_num)).ToList();
+
+        return subList[Random.Range(0,subList.Count)].Value ;
 	}
 
 	public void adjust_corners()
@@ -468,7 +472,7 @@ public class tmp_texture : MonoBehaviour
 
 		floor.start_collapse();
 		draw_current_floor();
-		StartCoroutine(gen_map());
+		StartCoroutine(gen_map());		
 
 	}
 
@@ -511,18 +515,18 @@ public class tmp_texture : MonoBehaviour
 			}
 		}
 	}
-	
-	IEnumerator gen_map()
-	{
-		while (floor.next_collapse())
-		{
-			draw_current_floor();
+
+    IEnumerator gen_map()
+    {
+        while (floor.next_collapse())
+        {
+            draw_current_floor();
             yield return new WaitForSeconds(0.1f);
         }
-	}
+    }
 
-	// Update is called once per frame
-	void Update()
+    // Update is called once per frame
+    void Update()
 	{
 
 	}
