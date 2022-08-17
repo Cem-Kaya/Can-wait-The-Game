@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 public static class GLOBAL
 {
-	public static int GRID_SIZE = 20;
+	public static int GRID_SIZE = 10;
 	public static int GRID_SIZE_X = GRID_SIZE;
 	public static int GRID_SIZE_Y = GRID_SIZE;
 } 
@@ -592,7 +592,7 @@ public class tmp_texture : MonoBehaviour
 	private void Awake()
 	{
 		texture = new Texture2D(972, 972, TextureFormat.ARGB32, false);
-		line_thickness = 6;
+		line_thickness = 3;
 		floor = new Floor();
 	}
 
@@ -617,7 +617,7 @@ public class tmp_texture : MonoBehaviour
 		//floor.start_collapse();
 		//draw_current_floor();
 		StartCoroutine(gen_map());
-		
+		StartCoroutine(update_texture());
 	}
 	void draw_grid ()
 	{
@@ -688,24 +688,36 @@ public class tmp_texture : MonoBehaviour
 
     IEnumerator gen_map()
     {
-		//while (true)
+		while (true)
 		{
 			floor.start_collapse();
 			//draw_current_floor();
+			yield return new WaitForSeconds(2);
 			while (floor.next_collapse())
 			{
 				//draw_current_floor();
-				yield return new WaitForFixedUpdate();
+				yield return new WaitForSeconds(0.001f);
 			}
 			draw_current_floor();
 			floor.validate();
-			//floor.reset_floor();
-			//draw_grid();
+			floor.reset_floor();
+			draw_grid();
 		}
     }
 
-    // Update is called once per frame
-    void Update()
+	IEnumerator update_texture()
+	{
+		while (true)
+		{			
+			yield return new WaitForSeconds(10);			
+			draw_current_floor();						
+		}
+	}
+
+
+
+	// Update is called once per frame
+	void Update()
 	{
 
 	}
