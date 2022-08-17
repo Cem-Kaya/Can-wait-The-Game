@@ -5,6 +5,15 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+
+public static class GLOBAL
+{
+	public static int GRID_SIZE = 6;
+	public static int GRID_SIZE_X = GRID_SIZE;
+	public static int GRID_SIZE_Y = GRID_SIZE;
+} 
+
 public enum door_dir
 {
 	blank,
@@ -57,22 +66,22 @@ public class Tile
 	{
 		if (!(prob_weights.Count > 0))
 		{
-			prob_weights.Add(door_dir.blank, 6);
-			prob_weights.Add(door_dir.u, 4);
-			prob_weights.Add(door_dir.r, 4);
-			prob_weights.Add(door_dir.d, 4);
-			prob_weights.Add(door_dir.l, 4);
+			prob_weights.Add(door_dir.blank, 4);
+			prob_weights.Add(door_dir.u, 2);
+			prob_weights.Add(door_dir.r, 2);
+			prob_weights.Add(door_dir.d, 2);
+			prob_weights.Add(door_dir.l, 2);
 			prob_weights.Add(door_dir.ur, 8);
 			prob_weights.Add(door_dir.rd, 8);
 			prob_weights.Add(door_dir.dl, 8);
 			prob_weights.Add(door_dir.lu, 8);
 			prob_weights.Add(door_dir.rl, 10);
 			prob_weights.Add(door_dir.ud, 8);
-			prob_weights.Add(door_dir.urd, 12);
-			prob_weights.Add(door_dir.rdl, 12);
-			prob_weights.Add(door_dir.dlu, 12);
-			prob_weights.Add(door_dir.lur, 12);
-			prob_weights.Add(door_dir.urdl, 16);
+			prob_weights.Add(door_dir.urd, 15);
+			prob_weights.Add(door_dir.rdl, 15);
+			prob_weights.Add(door_dir.dlu, 15);
+			prob_weights.Add(door_dir.lur, 15);
+			prob_weights.Add(door_dir.urdl, 20);
 		}
 	}
 
@@ -99,11 +108,7 @@ public class Tile
 			collapsed = true;
 			return true;
 		}
-		foreach(var pos in possibles)
-		{
-			Debug.Log("one of the tiles: " + pos.ToString());
-		}
-		Debug.Log("try collopse returned ");
+		
 		return false;
 	}
 
@@ -294,8 +299,8 @@ public class Floor
 	public Floor()
 	{
 		fill_tables();		
-		max_x = 10;
-		max_y = 10;
+		max_x = GLOBAL.GRID_SIZE;
+		max_y = GLOBAL.GRID_SIZE;
 		to_be_collapsed = max_x * max_y;
 		for (int i = 0; i < max_x; i++)
 		{
@@ -309,20 +314,21 @@ public class Floor
 
 	public Tile get_min_enthropy()
 	{
-		Tile min = null ;
-        int current_min = int.MaxValue;
+		Tile min = null;
+		int current_min = int.MaxValue;
 		foreach (var item in floor_data)
 		{
-			if ((!item.Value.collapsed )&& (item.Value.possible_num> 0) && (item.Value.possible_num < current_min) )
+			if ((!item.Value.collapsed) && (item.Value.possible_num > 0) && (item.Value.possible_num < current_min))
 			{
-				min = item.Value ;
+				min = item.Value;
 			}
 		}
-		Debug.Log("the min enthropy is : " + min.value);
-        List<KeyValuePair<(int,int), Tile>> subList = floor_data.Where( item  => (item.Value.possible_num == min.possible_num)).ToList();
+		if (min == null) { 	return null;}
+
+		List<KeyValuePair<(int,int), Tile>> subList = floor_data.Where( item  => (item.Value.possible_num == min.possible_num)).ToList();
 
         var ret = subList[UnityEngine.Random.Range(0,subList.Count)].Value ;
-		Debug.Log( "the tile with min enthropy has " + ret.possible_num + "and is " + ret.x_cord + " , " + ret.y_cord);
+		//Debug.Log( "the tile with min enthropy has " + ret.possible_num + "and is " + ret.x_cord + " , " + ret.y_cord);
 		return ret;
 	}
 
@@ -394,16 +400,18 @@ public class Floor
 				floor_data[(one.x_cord, one.y_cord - 1)].propogate(curr_rule_list);
 			}
 			to_be_collapsed--;
-			print_enthropy();
+			//print_enthropy();
 		}
 		else
 		{
 			Debug.Log("can not find a solution ");
 		}
 	}
+
 	public bool next_collapse()
 	{
 		Tile one = get_min_enthropy();
+		if (one == null) { return false; }
 		if (one.try_collapse())
 		{
 			//checks the tile on the right
@@ -431,7 +439,7 @@ public class Floor
 				floor_data[(one.x_cord, one.y_cord - 1)].propogate(curr_rule_list);
 			}
 			to_be_collapsed--;
-			print_enthropy();
+			//print_enthropy();
 			return true;
 		}
 		else
@@ -473,7 +481,7 @@ public class tmp_texture : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
-		grid_size = 10;
+		grid_size = GLOBAL.GRID_SIZE ;
 		for (int x = 0; x < texture.width; x++)
 		{
 			for (int y = 0; y < texture.height; y++)
@@ -529,12 +537,9 @@ public class tmp_texture : MonoBehaviour
 				{
 					src_colors[i] = texture_atlas.GetPixel(room_x * 3 + x, room_y * 3 + y);
 				}
-				//Debug.Log(src_colors.Length);
 				int strt_x = x * block_len + line_thickness + (int)(room_no_x * (texture.width / grid_size));
 				int strt_y = y * block_len + line_thickness + (int)(room_no_y * (texture.height / grid_size));
-				//Debug.Log(strt_x + " " + strt_y);
-				//Debug.Log((strt_x + block_len) + " " + (strt_y + block_len));
-
+				
 				texture.SetPixels(strt_x, strt_y, block_len, block_len, src_colors);
 			}
 		}
@@ -561,7 +566,7 @@ public class tmp_texture : MonoBehaviour
         while (floor.next_collapse())
         {
             draw_current_floor();
-            yield return new WaitForSeconds(0.01f);
+            yield return null;
         }
     }
 
