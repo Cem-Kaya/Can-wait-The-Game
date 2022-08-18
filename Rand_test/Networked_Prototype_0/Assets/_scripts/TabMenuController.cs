@@ -58,14 +58,12 @@ public class TabMenuController : MonoBehaviour
 
     void Activate_menu()
     {
-        Time.timeScale = 0;
-        AudioListener.pause = true;
+       
         tab_ui.SetActive(true);
     }
     public void Deactivate_menu()
     {
-        Time.timeScale = 1;
-        AudioListener.pause = false;
+        
         tab_ui.SetActive(false);
         tab_ui_on = false;
     }
