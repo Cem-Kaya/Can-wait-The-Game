@@ -261,6 +261,15 @@ public partial class @Player_input_actions : IInputActionCollection2, IDisposabl
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""TabMenu"",
+                    ""type"": ""Value"",
+                    ""id"": ""0f7886ca-1a5d-434e-a46b-3e6f1d466d0c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -714,6 +723,17 @@ public partial class @Player_input_actions : IInputActionCollection2, IDisposabl
                     ""action"": ""Cancel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4c32eac9-18b1-4baf-aad2-2f32aa34abe3"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TabMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -749,6 +769,7 @@ public partial class @Player_input_actions : IInputActionCollection2, IDisposabl
         m_Menu_MiddleClick = m_Menu.FindAction("MiddleClick", throwIfNotFound: true);
         m_Menu_ScrollWheel = m_Menu.FindAction("ScrollWheel", throwIfNotFound: true);
         m_Menu_Navigate = m_Menu.FindAction("Navigate", throwIfNotFound: true);
+        m_Menu_TabMenu = m_Menu.FindAction("TabMenu", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -860,6 +881,7 @@ public partial class @Player_input_actions : IInputActionCollection2, IDisposabl
     private readonly InputAction m_Menu_MiddleClick;
     private readonly InputAction m_Menu_ScrollWheel;
     private readonly InputAction m_Menu_Navigate;
+    private readonly InputAction m_Menu_TabMenu;
     public struct MenuActions
     {
         private @Player_input_actions m_Wrapper;
@@ -875,6 +897,7 @@ public partial class @Player_input_actions : IInputActionCollection2, IDisposabl
         public InputAction @MiddleClick => m_Wrapper.m_Menu_MiddleClick;
         public InputAction @ScrollWheel => m_Wrapper.m_Menu_ScrollWheel;
         public InputAction @Navigate => m_Wrapper.m_Menu_Navigate;
+        public InputAction @TabMenu => m_Wrapper.m_Menu_TabMenu;
         public InputActionMap Get() { return m_Wrapper.m_Menu; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -917,6 +940,9 @@ public partial class @Player_input_actions : IInputActionCollection2, IDisposabl
                 @Navigate.started -= m_Wrapper.m_MenuActionsCallbackInterface.OnNavigate;
                 @Navigate.performed -= m_Wrapper.m_MenuActionsCallbackInterface.OnNavigate;
                 @Navigate.canceled -= m_Wrapper.m_MenuActionsCallbackInterface.OnNavigate;
+                @TabMenu.started -= m_Wrapper.m_MenuActionsCallbackInterface.OnTabMenu;
+                @TabMenu.performed -= m_Wrapper.m_MenuActionsCallbackInterface.OnTabMenu;
+                @TabMenu.canceled -= m_Wrapper.m_MenuActionsCallbackInterface.OnTabMenu;
             }
             m_Wrapper.m_MenuActionsCallbackInterface = instance;
             if (instance != null)
@@ -954,6 +980,9 @@ public partial class @Player_input_actions : IInputActionCollection2, IDisposabl
                 @Navigate.started += instance.OnNavigate;
                 @Navigate.performed += instance.OnNavigate;
                 @Navigate.canceled += instance.OnNavigate;
+                @TabMenu.started += instance.OnTabMenu;
+                @TabMenu.performed += instance.OnTabMenu;
+                @TabMenu.canceled += instance.OnTabMenu;
             }
         }
     }
@@ -985,5 +1014,6 @@ public partial class @Player_input_actions : IInputActionCollection2, IDisposabl
         void OnMiddleClick(InputAction.CallbackContext context);
         void OnScrollWheel(InputAction.CallbackContext context);
         void OnNavigate(InputAction.CallbackContext context);
+        void OnTabMenu(InputAction.CallbackContext context);
     }
 }
