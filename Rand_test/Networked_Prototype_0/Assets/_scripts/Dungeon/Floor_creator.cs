@@ -10,8 +10,8 @@ using UnityEngine.UI;
 public static class GLOBAL
 {
 	public static int GRID_SIZE = 10;
-	public static int GRID_SIZE_X = GRID_SIZE;
-	public static int GRID_SIZE_Y = GRID_SIZE;
+	public static int GRID_SIZE_X = 5;
+	public static int GRID_SIZE_Y = 3;
 } 
 
 public enum door_dir
@@ -102,7 +102,8 @@ public class Tile
 					select_from.Add(dd);
 				}
 			}
-			
+			//it creates a counting sort like array where a random one is picked and since there are like 16 many of one
+			//it is more probable for it to be chosen
 			value = select_from[UnityEngine.Random.Range(0, select_from.Count)];
 			possibles.Clear();
 			collapsed = true;
@@ -139,7 +140,6 @@ public class Floor
 	Dictionary<(door_dir, string), List<door_dir>> rules = new Dictionary<(door_dir, string), List<door_dir>>();
 	public void fill_tables()
 	{
-
 		rules.Add((door_dir.blank, "u"), new List<door_dir> { door_dir.d, door_dir.urdl, door_dir.rdl, door_dir.dl, door_dir.ud, door_dir.dlu, door_dir.rd, door_dir.urd });
 		rules.Add((door_dir.blank, "r"), new List<door_dir> { door_dir.l, door_dir.urdl, door_dir.rdl, door_dir.dl, door_dir.lu, door_dir.dlu, door_dir.rl, door_dir.lur });
 		rules.Add((door_dir.blank, "d"), new List<door_dir> { door_dir.u, door_dir.urdl, door_dir.lur, door_dir.lu, door_dir.ud, door_dir.dlu, door_dir.ur, door_dir.urd });
@@ -310,8 +310,8 @@ public class Floor
 	public Floor()
 	{
 		fill_tables();		
-		max_x = GLOBAL.GRID_SIZE;
-		max_y = GLOBAL.GRID_SIZE;
+		max_x = GLOBAL.GRID_SIZE_X;
+		max_y = GLOBAL.GRID_SIZE_Y;
       
 		for (int i = 0; i < max_x; i++)
 		{
@@ -326,8 +326,8 @@ public class Floor
 	public void reset_floor()
 	{
 		
-		max_x = GLOBAL.GRID_SIZE;
-		max_y = GLOBAL.GRID_SIZE;
+		max_x = GLOBAL.GRID_SIZE_X;
+		max_y = GLOBAL.GRID_SIZE_Y;
 	
 		for (int i = 0; i < max_x; i++)
 		{
@@ -397,6 +397,20 @@ public class Floor
 		}
 
 	}
+	public void print_status()
+	{
+		for (int j = max_x - 1; j >= 0; j--)
+		{
+			string tmp = $"r {j}:  ";
+			for (int i = 0; i < max_y; i++)
+			{
+				tmp += $" {floor_data[(i, j)].value}";
+			}
+			Debug.Log(tmp);
+		}
+
+	}
+
 	public void start_collapse()
 	{
 		adjust_corners();
@@ -574,16 +588,17 @@ public class Floor
 
 }
 
-public class tmp_texture : MonoBehaviour
+public class Floor_creator : MonoBehaviour
 {
-
-
 	Color light_grey = new Color(0.7f, 0.7f, 0.7f, 1f);
 	Color dark = new Color(0.05f, 0.05f, 0.05f, 1f);
 
-
 	[SerializeField] Texture2D texture_atlas;
-	float grid_size;
+	float grid_size_x;
+	float grid_size_y;
+	int block_len_x;
+	int block_len_y;
+
 	int line_thickness;
 	Texture2D texture;
 
@@ -594,18 +609,22 @@ public class tmp_texture : MonoBehaviour
 		texture = new Texture2D(972, 972, TextureFormat.ARGB32, false);
 		line_thickness = 3;
 		floor = new Floor();
-	}
+		grid_size_x = GLOBAL.GRID_SIZE_X;
+		grid_size_y = GLOBAL.GRID_SIZE_Y;
 
+		//block_len corresponds to one pixel in 12x12 texture atlas
+		block_len_x = (int)((texture.width / grid_size_x) - line_thickness) / 3;
+		block_len_y = (int)((texture.width / grid_size_y) - line_thickness) / 3;
+
+	}
 
 
 	// Start is called before the first frame update
 	void Start()
 	{
-		grid_size = GLOBAL.GRID_SIZE ;
+		
 		draw_grid();
-
-		//block_len corresponds to one pixel in 12x12 texture atlas
-		int block_len = (int)((texture.width / grid_size) - line_thickness) / 3;
+		
 
 		// Apply all SetPixel calls
 		texture.Apply();
@@ -625,11 +644,11 @@ public class tmp_texture : MonoBehaviour
 		{
 			for (int y = 0; y < texture.height; y++)
 			{
-				if (x % (texture.width / grid_size) < 1 * line_thickness)
+				if (x % (texture.width / grid_size_x) < 1 * line_thickness)
 				{
 					texture.SetPixel(x, y, light_grey);
 				}
-				else if (y % (texture.height / grid_size) < 1 * line_thickness)
+				else if (y % (texture.height / grid_size_y) < 1 * line_thickness)
 				{
 					texture.SetPixel(x, y, light_grey);
 				}
@@ -646,26 +665,23 @@ public class tmp_texture : MonoBehaviour
 					texture.SetPixel(x, y, dark);
 				}
 			}
-		}
-		
+		}		
 	}
 	void draw_room(int room_x, int room_y, int room_no_x, int room_no_y)
 	{
-		int block_len = (int)((texture.width / grid_size) - line_thickness) / 3;
-
 		for (int x = 0; x < texture_atlas.width / 4; x++)
 		{
 			for (int y = 0; y < texture_atlas.height / 4; y++)
 			{
-				Color[] src_colors = new Color[block_len * block_len];
-				for (int i = 0; i < block_len * block_len; i++)
+				Color[] src_colors = new Color[block_len_x * block_len_y];
+				for (int i = 0; i < block_len_x * block_len_y; i++)
 				{
 					src_colors[i] = texture_atlas.GetPixel(room_x * 3 + x, room_y * 3 + y);
 				}
-				int strt_x = x * block_len + line_thickness + (int)(room_no_x * (texture.width / grid_size));
-				int strt_y = y * block_len + line_thickness + (int)(room_no_y * (texture.height / grid_size));
+				int strt_x = x * block_len_x + line_thickness + (int)(room_no_x * (texture.width / grid_size_x));
+				int strt_y = y * block_len_y + line_thickness + (int)(room_no_y * (texture.height / grid_size_y));
 				
-				texture.SetPixels(strt_x, strt_y, block_len, block_len, src_colors);
+				texture.SetPixels(strt_x, strt_y, block_len_x, block_len_y, src_colors);
 			}
 		}
 

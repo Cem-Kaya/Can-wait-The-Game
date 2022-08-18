@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Dungeon/Test.unity
+    path: Assets/Scenes/Dungeon/Legacy/Floor_creator_test.unity
     guid: 05e44f7272a385f4a834c8ba33894d5e
   m_configObjects: {}
