@@ -62,7 +62,7 @@ public class ExampleNetworkDiscoveryHud : MonoBehaviour
 			DiscoveryResponseData tmp = new DiscoveryResponseData() ;
 			tmp.Port = response.Port;
 			tmp.ServerName = response.ServerName;
-            Debug.Log(ip_add);
+            //Debug.Log(ip_add);
 			discoveredServers[ IPAddress.Parse( ip_add )] = tmp;
 		}
 	}
@@ -112,7 +112,7 @@ public class ExampleNetworkDiscoveryHud : MonoBehaviour
 					
                     transport.SetConnectionData(discoveredServer.Key.ToString(), discoveredServer.Value.Port);
 					
-                    Debug.Log(discoveredServer.Key.ToString());
+                    //Debug.Log(discoveredServer.Key.ToString());
 					
                     m_NetworkManager.StartClient();
                 }
