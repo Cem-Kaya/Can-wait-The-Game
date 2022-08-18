@@ -2,17 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
 
-
-public static class GLOBAL
-{
-	public static int GRID_SIZE = 10;
-	public static int GRID_SIZE_X = 5;
-	public static int GRID_SIZE_Y = 3;
-} 
 
 public enum door_dir
 {
@@ -36,8 +30,9 @@ public enum door_dir
 
 public class Tile
 {
-	public Tile(int x, int y)
+	public Tile(int x, int y, int seed)
 	{
+		T_RNG = new System.Random(seed);
 		collapsed = false;
 		possibles = new List<door_dir> { door_dir.blank,
 													door_dir.u,
@@ -61,6 +56,8 @@ public class Tile
 		fill_table();
 	}
 
+	System.Random T_RNG ;
+	
 	private static Dictionary<door_dir, int> prob_weights = new Dictionary<door_dir, int>();
 	private void fill_table()
 	{
@@ -102,9 +99,9 @@ public class Tile
 					select_from.Add(dd);
 				}
 			}
-			//it creates a counting sort like array where a random one is picked and since there are like 16 many of one
+			//it creates a counting sort like array where a RNG one is picked and since there are like 16 many of one
 			//it is more probable for it to be chosen
-			value = select_from[UnityEngine.Random.Range(0, select_from.Count)];
+			value = select_from[T_RNG.Next(0, select_from.Count)];
 			possibles.Clear();
 			collapsed = true;
 			return true;
@@ -121,8 +118,28 @@ public class Tile
 		}
 	}
 }
-public class Floor
+
+public class Floor 
 {
+	int this_seed;
+	public Floor(int seed,  int in_max_x = GLOBAL.GRID_SIZE_X , int in_max_y = GLOBAL.GRID_SIZE_Y )
+	{
+		this_seed = seed;
+		RNG = new System.Random(seed) ;
+		fill_tables();
+		max_x = in_max_x ;
+		max_y = in_max_y ;
+
+		for (int i = 0; i < max_x; i++)
+		{
+			for (int j = 0; j < max_y; j++)
+			{
+				floor_data[(i, j)] = new Tile(i, j, RNG.Next()); //seed is psudo random
+			}
+		}
+		max_tree_size = -1;
+	}
+	System.Random RNG;
 	int max_x, max_y;
 
 	List<door_dir> up_connection = new List<door_dir>();
@@ -307,25 +324,11 @@ public class Floor
 		right_connection = new List<door_dir> { door_dir.r, door_dir.ur, door_dir.lur, door_dir.urdl, door_dir.rd, door_dir.urd, door_dir.rdl, door_dir.rl };
 		left_connection = new List<door_dir>  { door_dir.l, door_dir.lu, door_dir.lur, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rl };
 	}
-	public Floor()
-	{
-		fill_tables();		
-		max_x = GLOBAL.GRID_SIZE_X;
-		max_y = GLOBAL.GRID_SIZE_Y;
-      
-		for (int i = 0; i < max_x; i++)
-		{
-			for (int j = 0; j < max_y; j++)
-			{
-				floor_data[(i, j)] = new Tile(i, j);
-			}
-		}
-        max_tree_size = -1;
-    }
+	
 	//when the generated too small it is reset and generated again
 	public void reset_floor()
 	{
-		
+		RNG = new System.Random(this_seed);
 		max_x = GLOBAL.GRID_SIZE_X;
 		max_y = GLOBAL.GRID_SIZE_Y;
 	
@@ -333,7 +336,7 @@ public class Floor
 		{
 			for (int j = 0; j < max_y; j++)
 			{
-				floor_data[(i, j)] = new Tile(i, j);
+				floor_data[(i, j)] = new Tile(i, j, RNG.Next());
 			}
 		}
 		max_tree_size = -1;
@@ -355,7 +358,7 @@ public class Floor
 
 		List<KeyValuePair<(int,int), Tile>> subList = floor_data.Where( item  => (item.Value.possible_num == min.possible_num)).ToList();
 
-        var ret = subList[UnityEngine.Random.Range(0,subList.Count)].Value ;
+        var ret = subList[RNG.Next(0,subList.Count)].Value ;
 		//Debug.Log( "the tile with min enthropy has " + ret.possible_num + "and is " + ret.x_cord + " , " + ret.y_cord);
 		return ret;
 	}
@@ -608,7 +611,7 @@ public class Floor_creator : MonoBehaviour
 	{
 		texture = new Texture2D(972, 972, TextureFormat.ARGB32, false);
 		line_thickness = 3;
-		floor = new Floor();
+		floor = new Floor(42); // use rpc here 
 		grid_size_x = GLOBAL.GRID_SIZE_X;
 		grid_size_y = GLOBAL.GRID_SIZE_Y;
 
