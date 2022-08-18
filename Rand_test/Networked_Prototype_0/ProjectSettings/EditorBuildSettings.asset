@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Dungeon/Start_Menu.unity
     guid: 43e311e7aa5ebf84582483a7734bad34
   - enabled: 1
+    path: Assets/Scenes/Dungeon/Lobby.unity
+    guid: 4ca29e9f4e0b82d4cbedf7438732a68b
+  - enabled: 1
     path: Assets/Scenes/Dungeon/Start_room.unity
     guid: 858ef6210be2b4b469a2c627898736ba
   - enabled: 1

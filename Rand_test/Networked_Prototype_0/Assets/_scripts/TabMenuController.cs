@@ -6,9 +6,10 @@ using UnityEngine.SceneManagement;
 
 public class TabMenuController : MonoBehaviour
 {
+    private CanvasRenderer rend;
     private Player_input_actions player_input_actions;
     private InputAction menu;
-    
+
     [SerializeField] private GameObject tab_ui;
 
     [SerializeField] private bool tab_ui_on;
@@ -21,7 +22,9 @@ public class TabMenuController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        rend = tab_ui.GetComponent<CanvasRenderer>();
+        rend.SetAlpha(0);
+        Debug.Log(rend.ToString());
     }
 
     // Update is called once per frame
@@ -44,27 +47,30 @@ public class TabMenuController : MonoBehaviour
 
     void TabMenuOpen(InputAction.CallbackContext context)
     {
+
         tab_ui_on = !tab_ui_on;
 
         if (tab_ui_on)
         {
             Activate_menu();
+            Debug.Log("Turned on");
         }
         else
         {
             Deactivate_menu();
+            Debug.Log("Turned off");
         }
     }
 
     void Activate_menu()
     {
-       
-        tab_ui.SetActive(true);
+        //tab_ui.SetActive(true);
+        rend.SetAlpha(1);
     }
     public void Deactivate_menu()
     {
-        
-        tab_ui.SetActive(false);
+        rend.SetAlpha(0);
+        //tab_ui.SetActive(false);
         tab_ui_on = false;
     }
 

@@ -60,7 +60,6 @@ public class StartMenuController : MonoBehaviour
         host_menu.SetActive(true);
         my_config.enabled = true;
         
-        
     }
 
     public void Start_game_as_host_button()
@@ -68,7 +67,7 @@ public class StartMenuController : MonoBehaviour
        
 
         NetworkManager.Singleton.StartHost();
-        NetworkManager.Singleton.SceneManager.LoadScene("Start_room", LoadSceneMode.Single);
+        NetworkManager.Singleton.SceneManager.LoadScene("Lobby", LoadSceneMode.Single);
         my_config.enabled = false;
     }
 
