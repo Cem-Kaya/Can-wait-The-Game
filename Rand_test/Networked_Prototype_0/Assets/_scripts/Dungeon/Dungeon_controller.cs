@@ -45,14 +45,14 @@ public class Dungeon_controller : NetworkBehaviour
     [ServerRpc]
     public void gen_map_ServerRpc()
     {
-        Debug.Log("server sent rpc");
+        //Debug.Log("server sent rpc");
         gen_map_ClientRpc(Random.Range(int.MinValue, int.MaxValue));
     }
 
     [ClientRpc]
     public void gen_map_ClientRpc(int my_seed)
     {
-		Debug.Log("clietn got rpc");
+		//Debug.Log("clietn got rpc");
 		current_floor = new Floor(my_seed);
         StartCoroutine(gen_map());
     }
@@ -82,7 +82,7 @@ public class Dungeon_controller : NetworkBehaviour
 	}
 	IEnumerator gen_map()
 	{
-		Debug.Log("clietn got  gen_map rpc");
+		//Debug.Log("clietn got  gen_map rpc");
 		while (true)
 		{
 			current_floor.start_collapse();

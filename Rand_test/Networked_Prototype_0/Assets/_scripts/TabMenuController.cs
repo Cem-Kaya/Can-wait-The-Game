@@ -24,7 +24,7 @@ public class TabMenuController : MonoBehaviour
     {
         rend = tab_ui.GetComponent<CanvasRenderer>();
         rend.SetAlpha(0);
-        Debug.Log(rend.ToString());
+        
     }
 
     // Update is called once per frame
@@ -53,12 +53,12 @@ public class TabMenuController : MonoBehaviour
         if (tab_ui_on)
         {
             Activate_menu();
-            Debug.Log("Turned on");
+            //Debug.Log("Turned on");
         }
         else
         {
             Deactivate_menu();
-            Debug.Log("Turned off");
+            //Debug.Log("Turned off");
         }
     }
 
