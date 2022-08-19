@@ -94,7 +94,7 @@ public class Door_controller : NetworkBehaviour
             int y = Mathf.RoundToInt(new_room_dir.y);
             y += (int)Room_controller.instance.current_room_info.y;
 
-            Debug.Log("coordinates are seen during collision: " + x + " " + y);
+            //Debug.Log("coordinates are seen during collision: " + x + " " + y);
 
             /*
             if (!Room_controller.instance.does_room_exist(x, y))
@@ -117,7 +117,8 @@ public class Door_controller : NetworkBehaviour
             //Room_controller.instance.current_room_info =
             Room_controller.instance.current_room_info.x = x;
             Room_controller.instance.current_room_info.y = y;
-            Debug.Log("coordinates are seen during collision 2: " + Room_controller.instance.current_room_info.x + " " + Room_controller.instance.current_room_info.y);
+
+			
             Room_controller.instance.current_room_info.room_name = "Defult_room";
 			Room_controller.instance.current_room_info.room_name = Room_controller.instance.current_world_name;
 			

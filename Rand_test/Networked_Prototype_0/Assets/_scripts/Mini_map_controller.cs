@@ -17,7 +17,7 @@ public class Mini_map_controller : MonoBehaviour
             }
             else
             {
-                Debug.Log("waiting for map fail ");
+                //Debug.Log("waiting for map fail ");
             }
         }
         GetComponent<RawImage>().material.mainTexture = Dungeon_controller.instance.texture;

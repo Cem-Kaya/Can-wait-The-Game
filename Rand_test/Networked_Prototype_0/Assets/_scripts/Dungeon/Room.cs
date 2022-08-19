@@ -57,7 +57,7 @@ public class Room : NetworkBehaviour
                 Room_info tmp_inf = new Room_info("Starting room", Room_controller.instance.current_world_name, starting_room.start_room_tile.x_cord, starting_room.start_room_tile.y_cord);
                 Room_controller.instance.load_room_queue.Enqueue(tmp_inf);
                 Room_controller.instance.current_room_info = tmp_inf;
-                Debug.Log(tmp_inf.x + " " + tmp_inf.y);
+                //Debug.Log(tmp_inf.x + " " + tmp_inf.y);
 
             }
         }
