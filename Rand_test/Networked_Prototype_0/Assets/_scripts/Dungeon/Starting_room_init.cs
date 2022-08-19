@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using Unity.Netcode;
+using UnityEngine.UI;
+
 public class Starting_room_init : NetworkBehaviour
 {
 	static bool first = true;
@@ -22,6 +24,27 @@ public class Starting_room_init : NetworkBehaviour
 		Camera_controller.load_new_boundry(confiner_collider);
 
 	}
+	Tile start_room_tile;
+	IEnumerator wait_for_map()
+	{
+		while (true)
+		{			
+			if (Dungeon_controller.instance.created)
+			{	
+				break;
+			}
+			yield return new WaitForEndOfFrame();
+		}
+		start_room_tile = Dungeon_controller.instance.current_floor.any_node_from_max_tree;
+		
+		if (Room_controller.instance.load_room_queue.Count == 0 && once)
+		{
+			once = false;
+			Room_info tmp_inf = new Room_info("Starting room", Room_controller.instance.current_world_name, start_room_tile.x_cord, start_room_tile.y_cord );
+			Room_controller.instance.load_room_queue.Enqueue(tmp_inf);
+		}
+	}
+
 
 	IEnumerator wait_untill_rc_not_null()
 	{
@@ -36,7 +59,6 @@ public class Starting_room_init : NetworkBehaviour
 	void Start()
 	{
 		StartCoroutine(wait_untill_rc_not_null());
-
 		var lplayer = NetworkManager.Singleton.LocalClient.PlayerObject;
 		CinemachineVirtualCamera vcam = GameObject.Find("CM_vcam").GetComponent<CinemachineVirtualCamera>();
 		vcam.Follow = lplayer.transform;
@@ -46,16 +68,10 @@ public class Starting_room_init : NetworkBehaviour
 	bool once = true;
 	public void init_start()
 	{
-		if (Room_controller.instance.load_room_queue.Count == 0 && once)
-		{
-			once = false;
-			Room_info tmp_inf = new Room_info("Starting room", Room_controller.instance.current_world_name, 0, 0);
-
-			Room_controller.instance.load_room_queue.Enqueue(tmp_inf);
-		}
-	}
-	// Update is called once per frame
-	void Update()
+        StartCoroutine(wait_for_map());
+    }
+    // Update is called once per frame
+    void Update()
 	{
 
 	}
