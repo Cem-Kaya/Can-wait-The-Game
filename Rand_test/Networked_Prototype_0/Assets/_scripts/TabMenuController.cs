@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -20,13 +21,25 @@ public class TabMenuController : NetworkBehaviour
         player_input_actions = new Player_input_actions();
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {		
+    IEnumerator wait_for_object()
+    {
+        while (tab_ui == null)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
         rend = tab_ui.GetComponent<CanvasRenderer>();
         rend.SetAlpha(0);
+
     }
 
+    // Start is called before the first frame update
+    void Start()
+    {
+        StartCoroutine(wait_for_object());
+    }
+
+  
     
 
     // Update is called once per frame
