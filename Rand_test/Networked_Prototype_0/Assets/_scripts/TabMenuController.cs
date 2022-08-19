@@ -22,11 +22,12 @@ public class TabMenuController : NetworkBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {
+    {		
         rend = tab_ui.GetComponent<CanvasRenderer>();
         rend.SetAlpha(0);
-
     }
+
+    
 
     // Update is called once per frame
     void Update()

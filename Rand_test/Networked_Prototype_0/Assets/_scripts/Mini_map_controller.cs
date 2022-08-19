@@ -12,7 +12,7 @@ public class Mini_map_controller : NetworkBehaviour
         while (true)
         {
             yield return new WaitForEndOfFrame();
-            if (Dungeon_controller.instance.created)
+            if (Dungeon_controller.instance.created && Room_controller.instance.current_room_info != null)
             {
                 break;
             }
@@ -24,7 +24,7 @@ public class Mini_map_controller : NetworkBehaviour
         //GetComponent<RawImage>().material.mainTexture =  Dungeon_controller.instance.texture ;
         if (IsServer)
         {
-            Debug.Log("is server sent rpc ");
+            //Debug.Log("is server sent rpc ");
             draw_texture_ClientRpc(Room_controller.instance.current_room_info.x, Room_controller.instance.current_room_info.y);
         }
         //when the gameobject is disabled the courotine is also removed from scheduler but the code in the middle of execution
@@ -34,7 +34,7 @@ public class Mini_map_controller : NetworkBehaviour
     [ClientRpc]
     void draw_texture_ClientRpc(int room_x, int room_y)
     {
-        Debug.Log("was in rpc fro minimap");
+        //Debug.Log("was in rpc fro minimap");
         GetComponent<RawImage>().material.mainTexture = Dungeon_controller.instance.draw_player_copy_texture(room_x, room_y);
         this.gameObject.SetActive(false);
         this.gameObject.SetActive(true);
