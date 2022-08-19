@@ -16,7 +16,7 @@ public class Enemy_manager : NetworkBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(6);
+            yield return new WaitForSeconds(15);
 
 
             //// Instantiate the GameObject Instance

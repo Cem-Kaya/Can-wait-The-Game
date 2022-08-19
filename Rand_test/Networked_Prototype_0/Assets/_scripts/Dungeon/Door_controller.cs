@@ -18,7 +18,7 @@ public class Door_controller : NetworkBehaviour
     {
         while (true)
         {
-            yield return new WaitForEndOfFrame();
+            yield return new WaitForSeconds(0.0001f);
             if (Dungeon_controller.instance.created && Room_controller.instance !=null &&Room_controller.instance.start_room_initialized && Room_controller.instance.current_room_info != null)
             {
                 break;
@@ -166,6 +166,8 @@ public class Door_controller : NetworkBehaviour
 			triger_guard = false;
 			
             Room_controller.instance.load_room("Default_room", x, y);
+
+
         }
     }
 }

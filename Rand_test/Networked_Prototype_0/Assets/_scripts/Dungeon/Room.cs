@@ -33,7 +33,7 @@ public class Room : NetworkBehaviour
     {
         while (Room_controller.instance == null)
         {
-            yield return new WaitForEndOfFrame();
+            yield return new WaitForSeconds(0.0001f) ;
         }
 		
         //Debug.Log("room 36" + (Room_controller.instance == null).ToString());
@@ -92,7 +92,7 @@ public class Room : NetworkBehaviour
     {
         while (NetworkManager.Singleton.LocalClient.PlayerObject == null)
         {
-            yield return new WaitForEndOfFrame();     
+            yield return new WaitForSeconds(0.0001f) ;     
         }
 
         var lplayer = NetworkManager.Singleton.LocalClient.PlayerObject;
