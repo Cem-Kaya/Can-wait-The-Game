@@ -50,13 +50,14 @@ public class Starting_room_init : NetworkBehaviour
 
 	IEnumerator wait_untill_rc_not_null()
 	{
-		while (Room_controller.instance == null)
+		while ( Dungeon_controller.instance == null || !Dungeon_controller.instance.created || Room_controller.instance == null)
 		{
 			yield return new WaitForEndOfFrame();
 		}
-		//Debug.Log("room 36" + (Room_controller.instance == null).ToString());
-		Room_controller.instance.current_room_info = new Room_info(gameObject.GetComponent<Room>());  //runtime error     Room_controller.instance.loaded_rooms[0];
-	}
+		
+        Room_info tmp_inf = new Room_info("Starting room", Room_controller.instance.current_world_name, Dungeon_controller.instance.current_floor.any_node_from_max_tree.x_cord, Dungeon_controller.instance.current_floor.any_node_from_max_tree.y_cord);
+		Room_controller.instance.current_room_info = tmp_inf;   
+    }
 
 	void Start()
 	{

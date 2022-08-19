@@ -69,6 +69,8 @@ public class Room_controller : NetworkBehaviour
 
     public Queue<Room_info> load_room_queue = new Queue<Room_info>();
 
+
+
     //public List<Room> loaded_rooms = new List<Room>();
     //public Hashtable  loaded_rooms = new Hashtable();
     public Dictionary<(int,int), Room_info> loaded_rooms = new Dictionary<(int, int), Room_info>();

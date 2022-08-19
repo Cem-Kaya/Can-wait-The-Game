@@ -142,10 +142,10 @@ public class Floor
 	System.Random RNG;
 	int max_x, max_y;
 
-	List<door_dir> up_connection = new List<door_dir>();
-    List<door_dir> down_connection = new List<door_dir>();
-    List<door_dir> left_connection = new List<door_dir>();
-    List<door_dir> right_connection = new List<door_dir>();
+	public List<door_dir> up_connection = new List<door_dir>();
+    public List<door_dir> down_connection = new List<door_dir>();
+    public List<door_dir> left_connection = new List<door_dir>();
+    public List<door_dir> right_connection = new List<door_dir>();
 
 	public int max_tree_size;
     public Tile any_node_from_max_tree;
@@ -328,7 +328,8 @@ public class Floor
 	//when the generated too small it is reset and generated again
 	public void reset_floor()
 	{
-		RNG = new System.Random(this_seed);
+		Debug.Log("Reset floor was called. ");
+		//RNG = new System.Random(this_seed);
 		max_x = GLOBAL.GRID_SIZE_X;
 		max_y = GLOBAL.GRID_SIZE_Y;
 	

@@ -13,10 +13,47 @@ public class Door_controller : NetworkBehaviour
     {
      
     }
+
+    IEnumerator wait_for_map()
+    {
+        while (true)
+        {
+            yield return new WaitForEndOfFrame();
+            if (Dungeon_controller.instance.created && Room_controller.instance !=null &&Room_controller.instance.start_room_initialized && Room_controller.instance.current_room_info != null)
+            {
+                break;
+            }           
+        }
+
+		
+		(int, int) pos = (Room_controller.instance.current_room_info.x, Room_controller.instance.current_room_info.y);
+		door_dir room_type = Dungeon_controller.instance.current_floor.floor_data[pos].value;
+        if (IsServer)
+        {
+            if ( transform.position.y > 7 && !Dungeon_controller.instance.current_floor.up_connection.Contains(room_type))
+            {
+                GetComponent<NetworkObject>().Despawn();
+            }
+			else if (transform.position.y < -7 && !Dungeon_controller.instance.current_floor.down_connection.Contains(room_type))
+			{
+				GetComponent<NetworkObject>().Despawn();
+			}
+			else if (transform.position.x > 13 && !Dungeon_controller.instance.current_floor.right_connection.Contains(room_type))
+			{
+				GetComponent<NetworkObject>().Despawn();
+			}
+			else if (transform.position.x < -13 && !Dungeon_controller.instance.current_floor.left_connection.Contains(room_type))
+			{
+				GetComponent<NetworkObject>().Despawn();
+			}
+		}
+	}
+
+
     void Start()
     {
-
-    }
+		StartCoroutine(wait_for_map());
+	}
 
     // Update is called once per frame
     void FixedUpdate()
@@ -29,6 +66,7 @@ public class Door_controller : NetworkBehaviour
     {
        
     }
+
     private IEnumerator cool_down()
     {
         yield return new WaitForSeconds(0.25f);
