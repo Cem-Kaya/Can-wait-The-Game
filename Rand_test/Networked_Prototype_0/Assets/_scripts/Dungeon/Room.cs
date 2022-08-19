@@ -4,6 +4,7 @@ using UnityEngine;
 using Cinemachine;
 using Unity.Netcode;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
 
 public class Room : NetworkBehaviour
 {
@@ -40,7 +41,25 @@ public class Room : NetworkBehaviour
         {
             Room_controller.instance.start_room_initialized = true;
             Starting_room_init starting_room = GetComponent<Starting_room_init>();
-            starting_room.init_start();
+            while (true)
+            {
+                if (Dungeon_controller.instance.created)
+                {
+                    break;
+                }
+                yield return new WaitForEndOfFrame();
+            }
+            starting_room.start_room_tile = Dungeon_controller.instance.current_floor.any_node_from_max_tree;
+
+            if (Room_controller.instance.load_room_queue.Count == 0 && starting_room.once)
+            {
+                starting_room.once = false;
+                Room_info tmp_inf = new Room_info("Starting room", Room_controller.instance.current_world_name, starting_room.start_room_tile.x_cord, starting_room.start_room_tile.y_cord);
+                Room_controller.instance.load_room_queue.Enqueue(tmp_inf);
+                Room_controller.instance.current_room_info = tmp_inf;
+                Debug.Log(tmp_inf.x + " " + tmp_inf.y);
+
+            }
         }
         //client's room info will not be up to date keep this in mind
 

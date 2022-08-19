@@ -94,13 +94,15 @@ public class Door_controller : NetworkBehaviour
             int y = Mathf.RoundToInt(new_room_dir.y);
             y += (int)Room_controller.instance.current_room_info.y;
 
+            Debug.Log("coordinates are seen during collision: " + x + " " + y);
+
             /*
             if (!Room_controller.instance.does_room_exist(x, y))
             {
                 Room_controller.Room_registered = false;
             }
             */
-			
+
             foreach (var a in NetworkManager.Singleton.ConnectedClients)
             {
                 a.Value.PlayerObject.GetComponent<box_mover>().teleport_to_ClientRpc(new Vector2(-transform.position.x + new_room_dir.x * 3.5f , -transform.position.y + new_room_dir.y * 3.5f ));
@@ -115,6 +117,7 @@ public class Door_controller : NetworkBehaviour
             //Room_controller.instance.current_room_info =
             Room_controller.instance.current_room_info.x = x;
             Room_controller.instance.current_room_info.y = y;
+            Debug.Log("coordinates are seen during collision 2: " + Room_controller.instance.current_room_info.x + " " + Room_controller.instance.current_room_info.y);
             Room_controller.instance.current_room_info.room_name = "Defult_room";
 			Room_controller.instance.current_room_info.room_name = Room_controller.instance.current_world_name;
 			

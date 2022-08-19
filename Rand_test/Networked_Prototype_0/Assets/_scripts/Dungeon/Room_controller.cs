@@ -124,7 +124,7 @@ public class Room_controller : NetworkBehaviour
 	// Update is called once per frame
 	void Update()
     {
-		
+        //Debug.Log(current_room_info.x + " " + current_room_info.y);
     }
 
 
