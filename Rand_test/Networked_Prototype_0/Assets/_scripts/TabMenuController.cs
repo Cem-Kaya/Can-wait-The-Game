@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-public class TabMenuController : MonoBehaviour
+public class TabMenuController : NetworkBehaviour
 {
     private CanvasRenderer rend;
     private Player_input_actions player_input_actions;
@@ -24,7 +25,7 @@ public class TabMenuController : MonoBehaviour
     {
         rend = tab_ui.GetComponent<CanvasRenderer>();
         rend.SetAlpha(0);
-        
+
     }
 
     // Update is called once per frame
