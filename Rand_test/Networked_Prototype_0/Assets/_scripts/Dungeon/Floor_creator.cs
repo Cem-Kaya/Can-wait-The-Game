@@ -12,7 +12,7 @@ public enum door_dir
 {
 	blank,
 	u,
-	r,
+	r,	
 	d,
 	l,
 	ur,
@@ -129,7 +129,7 @@ public class Floor
 		fill_tables();
 		max_x = in_max_x ;
 		max_y = in_max_y ;
-
+				
 		for (int i = 0; i < max_x; i++)
 		{
 			for (int j = 0; j < max_y; j++)
@@ -330,8 +330,7 @@ public class Floor
 	{
 		Debug.Log("Reset floor was called. ");
 		//RNG = new System.Random(this_seed);
-		max_x = GLOBAL.GRID_SIZE_X;
-		max_y = GLOBAL.GRID_SIZE_Y;
+		
 	
 		for (int i = 0; i < max_x; i++)
 		{
@@ -403,10 +402,10 @@ public class Floor
 	}
 	public void print_status()
 	{
-		for (int j = max_x - 1; j >= 0; j--)
+		for (int j = max_y - 1; j >= 0; j--)
 		{
 			string tmp = $"r {j}:  ";
-			for (int i = 0; i < max_y; i++)
+			for (int i = 0; i < max_x; i++)
 			{
 				tmp += $" {floor_data[(i, j)].value}";
 			}
@@ -583,7 +582,7 @@ public class Floor
 		}
 		//Debug.Log("max tree size:" + max_tree_size);
 		//Debug.Log("any node from max tree: " + any_node_from_max_tree.x_cord + " " + any_node_from_max_tree.y_cord);
-		if (max_tree_size > GLOBAL.GRID_SIZE_X* GLOBAL.GRID_SIZE_Y /2)
+		if (max_tree_size > max_x* max_y /2)
 		{		
 			return true;
 		} 

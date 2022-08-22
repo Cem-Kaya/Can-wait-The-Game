@@ -8,8 +8,8 @@ using UnityEngine.Rendering;
 public static class GLOBAL
 {
     public const int GRID_SIZE = 10;
-    public const int GRID_SIZE_X = 5;
-    public const int GRID_SIZE_Y = 3;
+    public const int GRID_SIZE_X = 6;
+    public const int GRID_SIZE_Y = 5;
 }
 
 

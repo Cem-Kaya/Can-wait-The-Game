@@ -59,6 +59,7 @@ public class Starting_room_init : NetworkBehaviour
 		Room_controller.instance.current_room_info = tmp_inf;   
     }
 
+
 	void Start()
 	{
 		StartCoroutine(wait_untill_rc_not_null());
