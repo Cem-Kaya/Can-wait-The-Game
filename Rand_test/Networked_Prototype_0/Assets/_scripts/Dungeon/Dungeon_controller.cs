@@ -171,31 +171,32 @@ public class Dungeon_controller : NetworkBehaviour
         }
     }
 
-    public Texture2D draw_player_copy_texture(int room_x, int room_y)
-    {
-        Texture2D my_texture = new Texture2D(972, 972, TextureFormat.ARGB32, false);
-        Graphics.CopyTexture(texture, my_texture);
-        //ind for indicator
-        int ind_x = (int)(my_texture.width / grid_size_x);
-        int ind_y = (int)(my_texture.width / grid_size_y);
-        //room_x will be the current room's x in map coordinates
-        //times threee because three pixels correspond to one edge 
-        for (int x = ind_x * room_x; x < ind_x * room_x + ind_x; x++)
-        {
-            for (int y = ind_y * room_y; y < ind_y * room_y + ind_y; y++)
-            {
-                if ((x < ind_x * room_x + line_thickness * 5) || (x > ind_x * room_x + ind_x - line_thickness * 5))
-                {
-                    my_texture.SetPixel(x, y, Color.red);
-                }
-                if ((y < ind_y * room_y + line_thickness * 5) || (y > ind_y * room_y + ind_y - line_thickness * 5))
-                {
-                    my_texture.SetPixel(x, y, Color.red);
 
-                }
-            }
-        }
-        my_texture.Apply();
-        return my_texture;
-    }
+	public Texture2D draw_player_copy_texture(int room_x, int room_y)
+	{        		
+		Texture2D my_texture = new Texture2D(972, 972, TextureFormat.ARGB32, false);
+		Graphics.CopyTexture(texture, my_texture);
+		//ind for indicator
+		int ind_x = (int)(my_texture.width / grid_size_x);
+		int ind_y = (int)(my_texture.width / grid_size_y);
+		//room_x will be the current room's x in map coordinates
+		//times threee because three pixels correspond to one edge 
+		for (int x = ind_x * room_x; x < ind_x * room_x + ind_x; x++)
+		{
+			for (int y = ind_y * room_y; y < ind_y * room_y + ind_y; y++)
+			{
+				if ((x < ind_x * room_x + line_thickness * 5) || (x > ind_x * room_x + ind_x - line_thickness * 5))
+				{
+					my_texture.SetPixel(x, y, Color.red);
+				}
+				if ((y < ind_y * room_y + line_thickness * 5) || (y > ind_y * room_y + ind_y - line_thickness * 5))
+				{
+					my_texture.SetPixel(x, y, Color.red);
+
+				}
+			}
+		}
+		my_texture.Apply();
+		return my_texture;
+	}
 }

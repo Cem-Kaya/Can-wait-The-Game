@@ -31,19 +31,32 @@ public class Mini_map_controller : NetworkBehaviour
         //continues until the end;
     }
 
-    [ClientRpc]
-    void draw_texture_ClientRpc(int room_x, int room_y)
+
+    IEnumerator wait_for_map_client_fix(int room_x, int room_y)
     {
+        while (true)
+        {           
+            if (Dungeon_controller.instance.created )
+            {
+                break;
+            }
+			yield return new WaitForEndOfFrame();
+		}
+		GetComponent<RawImage>().material.mainTexture = Dungeon_controller.instance.draw_player_copy_texture(room_x, room_y);
+		this.gameObject.SetActive(false);
+		this.gameObject.SetActive(true);
+		this.gameObject.GetComponent<CanvasRenderer>().SetAlpha(0);
+	}
+
+	[ClientRpc]
+	void draw_texture_ClientRpc(int room_x, int room_y)
+	{
         //Debug.Log("was in rpc fro minimap");
-        GetComponent<RawImage>().material.mainTexture = Dungeon_controller.instance.draw_player_copy_texture(room_x, room_y);
-        this.gameObject.SetActive(false);
-        this.gameObject.SetActive(true);
-        this.gameObject.GetComponent<CanvasRenderer>().SetAlpha(0);
+        StartCoroutine(wait_for_map_client_fix(room_x, room_y));
+	}
 
-    }
-
-    // Start is called before the first frame update
-    void Start()
+	// Start is called before the first frame update
+	void Start()
     {
         StartCoroutine(wait_for_map());
 
