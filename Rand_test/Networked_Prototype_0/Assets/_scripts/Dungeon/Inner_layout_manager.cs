@@ -4,7 +4,10 @@ using UnityEngine;
 using Unity.Netcode;
 
 
-//my chunk represents my
+//my chunk represents my chunk coordinates (it is 3*5) my grid represents my grid coordinates' world coordinate values
+//they are not exactly world coordinates but carry more information, if you recall in texture atlas each chunk was made up of
+//3x3 pixels, hence to get all the information needed a grid is needed 3*3 * 5*3 as you recall a 3x3 pixel is needed to convey
+//which direction a door is
 
 public class rconfig
 {

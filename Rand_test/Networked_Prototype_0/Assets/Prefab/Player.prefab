@@ -80,7 +80,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -5177388603050735206, guid: 278ed466d08329c439705191ded101b3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 278ed466d08329c439705191ded101b3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -173,8 +173,52 @@ MonoBehaviour:
     m_ActionName: player/shoot[/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow]
   - m_PersistentCalls:
       m_Calls: []
-    m_ActionId: 3ade2802-2452-4049-ab7e-0c15597415fe
+    m_ActionId: 94710b4f-04de-4796-9dd7-bebb7a3a6e8d
     m_ActionName: Menu/Escape[/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 0cd78026-12fe-4b92-9085-259b9d8ffd96
+    m_ActionName: Menu/Cancel[/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 77849cbd-47fe-4846-9ff2-0dec644c24be
+    m_ActionName: Menu/Submit[/Keyboard/enter,/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 20cbd37c-0501-40ea-a697-0c09b9898ba7
+    m_ActionName: Menu/Point[/Mouse/position,/Pen/position]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2d577351-31ce-4035-9564-a524e4b8f47b
+    m_ActionName: Menu/Click[/Mouse/leftButton,/Pen/tip]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 1917c054-54b7-4bfe-949e-cea6402a1172
+    m_ActionName: Menu/TrackedDeviceOrientation
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 1461c347-34e3-46d4-bbda-e01ea5f12dd6
+    m_ActionName: Menu/TrackedDevicePosition
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 87bf5e4c-2157-446e-8117-bc8bded3df53
+    m_ActionName: Menu/RightClick[/Mouse/rightButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: f3d477a6-bc4e-4f68-b64b-7d86caa61c60
+    m_ActionName: Menu/MiddleClick[/Mouse/middleButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 6b796a57-bd42-4ac4-aa90-d1942e507918
+    m_ActionName: Menu/ScrollWheel[/Mouse/scroll]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a19c4603-1b8e-4ece-881a-c0c638a7ed0a
+    m_ActionName: Menu/Navigate[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 0f7886ca-1a5d-434e-a46b-3e6f1d466d0c
+    m_ActionName: Menu/TabMenu[/Keyboard/tab]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: player
