@@ -123,7 +123,33 @@ public class Inner_layout_manager : NetworkBehaviour
             }
         }
         cleanup_grid();
+		
 		draw_grid();
+    }
+    private bool astar((int,int) start ,(int,int) end ) 
+    {
+        //this is used to make sure one can access all doors int the room, that rocks wont prevent players from going to certain places
+		//PriorityQueue<string, int> queue = new PriorityQueue<string, int>();
+		SortedList slist = new SortedList();
+		(int, int) current = start;
+		slist.Add( (int)Mathf.Abs(end.Item1-current.Item1 + end.Item2 - current.Item2), current );
+        while(slist.Count> 0)
+        {
+			current = slist.GetByIndex(0);
+			slist.RemoveAt(0);
+
+		}
+		return true;
+    
+    }
+		
+	private bool validate_grid()
+    {
+		int start_x =  (int)Mathf.Floor(rconfig.rx / 2.0f) * 3;
+		int start_y = rconfig.ry * 3-1 ;
+		//table[(tmpx, tmpy)] = 0;
+
+		return true;
     }
     private void cleanup_grid()
     {
@@ -150,8 +176,8 @@ public class Inner_layout_manager : NetworkBehaviour
 				{
 					//fixes rocks in front of doors
 					int tmpx = i + (int)Mathf.Floor(rconfig.rx / 2.0f) * 3;
-					int tmpy = rconfig.ry * 3 - j;
-                    table[(tmpx, tmpy)] = 0;
+					int tmpy = rconfig.ry * 3 - j-1 ;					
+					table[(tmpx, tmpy)] = 0;
                     //Debug.Log($"{tmpx} {tmpy}");
                 }
             }
@@ -163,7 +189,7 @@ public class Inner_layout_manager : NetworkBehaviour
 				for (int j = 0; j < 3; j++)
 				{
 					//fixes rocks in front of doors
-					int tmpx = rconfig.rx * 3 - i;
+					int tmpx = rconfig.rx * 3 - i - 1;
 					int tmpy = j + (int)Mathf.Floor(rconfig.ry / 2.0f) * 3;
                     table[(tmpx, tmpy)] = 0;
                     //Debug.Log($"{tmpx} {tmpy}");
@@ -204,16 +230,12 @@ public class Inner_layout_manager : NetworkBehaviour
             //initially there were cases where groups of rocks had gaps, this fixes it 
 			for (int j = 0; j < rconfig.ry * 3; j++)
 			{
-				if (table.ContainsKey((i, j)) && 
-                    table.ContainsKey((i+1 , j)) && 
-                    table.ContainsKey((i-1, j)) && 
-                    table.ContainsKey((i, j+1)) && 
-                    table.ContainsKey((i, j-1)) && 
-                    table[(i, j)] == 0 && 
-                    table[(i+1, j)] >= 1 &&  
-                    table[(i -1, j)] >= 1 && 
-                    table[(i , j+1)] >= 1 && 
-                    table[(i , j-1 )] >= 1)
+				if ((table.ContainsKey((i+1 , j)) ? table[(i + 1, j)] >= 1: true  )&& 
+                    (table.ContainsKey((i-1, j)) ? table[(i - 1, j)] >= 1 : true  )&& 
+                    (table.ContainsKey((i, j+1)) ? table[(i, j + 1)] >= 1 : true )&& 
+                    (table.ContainsKey((i, j-1)) ? table[(i, j - 1)] >= 1:  true )&&
+                     table[(i, j)] == 0
+                    )
                 {
                     Debug.Log((i, j));
 					table[(i, j)] = 1 ;
