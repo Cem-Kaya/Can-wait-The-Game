@@ -19,7 +19,7 @@ public class Dungeon_controller : NetworkBehaviour
     public static Dungeon_controller instance;
     public Floor current_floor;
     public bool created;
-
+    public int init_vector;
 
     Color light_grey = new Color(0.7f, 0.7f, 0.7f, 1f);
     Color dark = new Color(0.05f, 0.05f, 0.05f, 1f);
@@ -39,7 +39,8 @@ public class Dungeon_controller : NetworkBehaviour
 	// Start is called before the first frame update
 	private void Awake()
     {
-        created = false;
+        init_vector = Random.Range(int.MinValue,int.MaxValue);
+		created = false;
     }
 
     [ServerRpc]

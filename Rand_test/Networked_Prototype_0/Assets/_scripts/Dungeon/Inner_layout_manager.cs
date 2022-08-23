@@ -17,7 +17,7 @@ public class rconfig
 {
 	//represents the total grid not an individual room, think of them as max
     //corresponds to number of tiles on axis
-	public const int rx = 4;
+	public const int rx = 5;
     public const int ry = 3;
 }
 
@@ -36,9 +36,15 @@ public class Inner_layout_manager : NetworkBehaviour
     Dictionary<(int, int), bool> grid = new Dictionary<(int, int), bool>();
     public GameObject rock_prefab;
     private System.Random rng = new System.Random();
+    Room_info tmp_inf = new Room_info();
+    door_dir my_type = new door_dir();
+
+
+
+
     private void Awake()
     {
-        created = false;
+		created = false;
         room_len_x = 29f;
         room_len_y = 15f;
         //grid len corresponds to length of one tile
@@ -57,10 +63,13 @@ public class Inner_layout_manager : NetworkBehaviour
     void Start()
     {
         // if (!IsServer) Destroy(gameObject);
-        Room_info tmp_inf = Room_controller.instance.current_room_info;
-        if ( ! Dungeon_controller.instance.special.ContainsKey((tmp_inf.x, tmp_inf.y)))
+        tmp_inf = Room_controller.instance.current_room_info;
+		rng = new System.Random(Dungeon_controller.instance.init_vector * tmp_inf.x*42 + Dungeon_controller.instance.init_vector * tmp_inf.y* 68 );
+		my_type = Dungeon_controller.instance.current_floor.floor_data[(tmp_inf.x, tmp_inf.y)].value;
+		
+		if ( ! Dungeon_controller.instance.special.ContainsKey((tmp_inf.x, tmp_inf.y)))
         {
-            inside = new Floor(Random.Range(int.MinValue, int.MaxValue), rconfig.rx, rconfig.ry);
+            inside = new Floor(rng.Next(), rconfig.rx, rconfig.ry);
             StartCoroutine(gen_layout());
             StartCoroutine(lay_out_layout());
         }
@@ -81,7 +90,9 @@ public class Inner_layout_manager : NetworkBehaviour
         while (true)
         {
             inside.start_collapse();
-            while (inside.next_collapse())
+            
+
+			while (inside.next_collapse())
             {
                 yield return new WaitForSeconds(0.0001f);
             }
@@ -182,11 +193,22 @@ public class Inner_layout_manager : NetworkBehaviour
 			{
 				if (table[(i, j)] < 3 )
 				{
-					grid[(i, j)] = false;
+					grid[(i , j)] = false;
 				}				
 			}
 		}
-		
+		//  door infront clean up 
+		if (Dungeon_controller.instance.current_floor.up_connection.Contains(my_type))
+		{
+            for(int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+					grid[(i + (int)Mathf.Ceil(rconfig.rx / 2.0f), j)] = false;
+				}
+            }
+		}
+
 	}
  
     private void draw_grid ()

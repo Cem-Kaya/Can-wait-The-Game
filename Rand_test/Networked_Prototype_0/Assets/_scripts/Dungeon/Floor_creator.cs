@@ -150,6 +150,7 @@ public class Floor
 	public int max_tree_size;
     public Tile any_node_from_max_tree;
 
+	//coordinates of directions in texture atlas
     public Dictionary<door_dir, (int, int)> tile_map_coord = new Dictionary<door_dir, (int, int)>();
 
 	public Dictionary<(int, int), Tile> floor_data = new Dictionary<(int, int), Tile>();
