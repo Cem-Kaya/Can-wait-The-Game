@@ -130,13 +130,13 @@ public class Inner_layout_manager : NetworkBehaviour
     {
         //this is used to make sure one can access all doors int the room, that rocks wont prevent players from going to certain places
 		//PriorityQueue<string, int> queue = new PriorityQueue<string, int>();
-		SortedList slist = new SortedList();
+		SortedList<int, (int, int)> slist = new SortedList<int, (int, int)>();
 		(int, int) current = start;
 		slist.Add( (int)Mathf.Abs(end.Item1-current.Item1 + end.Item2 - current.Item2), current );
         while(slist.Count> 0)
         {
-			current = slist.GetByIndex(0);
-			slist.RemoveAt(0);
+            current = slist.Values[0];
+            slist.RemoveAt(0);
 
 		}
 		return true;
