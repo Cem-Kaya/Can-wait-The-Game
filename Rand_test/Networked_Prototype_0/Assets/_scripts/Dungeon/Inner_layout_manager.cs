@@ -156,14 +156,18 @@ public class Inner_layout_manager : NetworkBehaviour
                         st.Push((cur.Item1, cur.Item2 + 1));
                     }
                 }
-            }
+				if (table[(i, j)] > 0)
+				{
+					table[(i, j)] -- ;
+				}
+			}
         }
-        for (int j = rconfig.ry * 3 -1 ; j >0 ; j--)
+        for (int j = rconfig.ry * 3 -1 ; j >= 0 ; j--)
         {
             string tmp_string = $"r {j-1 }: ";
             for (int i = 0; i < rconfig.rx * 3; i++)
             {
-                tmp_string += $" { table[(i, j)] -1 } ";
+                tmp_string += $" { table[(i, j)]  } ";
 			}
 			Debug.Log(tmp_string);
 		}
