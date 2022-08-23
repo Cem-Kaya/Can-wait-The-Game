@@ -171,7 +171,19 @@ public class Inner_layout_manager : NetworkBehaviour
 			}
 			Debug.Log(tmp_string);
 		}
-    }
+		//rocks with less than 2 adjacent rocks (so rocks with less than a total of 3 connected rocks) will be deleted
+		for (int i = 0; i < rconfig.rx * 3; i++)
+		{
+			for (int j = 0; j < rconfig.ry * 3; j++)
+			{
+				if (table[(i, j)] < 3 )
+				{
+					grid[(i, j)] = false;
+				}				
+			}
+		}
+		
+	}
  
     private void draw_grid ()
     {
