@@ -142,9 +142,91 @@ public class Inner_layout_manager : NetworkBehaviour
                 }
             }
         }
+		if (Dungeon_controller.instance.current_floor.up_connection.Contains(my_type))
+		{
+			for (int i = 0; i < 3; i++)
+			{
+				for (int j = 0; j < 3; j++)
+				{
+					//fixes rocks in front of doors
+					int tmpx = i + (int)Mathf.Floor(rconfig.rx / 2.0f) * 3;
+					int tmpy = rconfig.ry * 3 - j;
+                    table[(tmpx, tmpy)] = 0;
+                    //Debug.Log($"{tmpx} {tmpy}");
+                }
+            }
+		}
+		if (Dungeon_controller.instance.current_floor.right_connection.Contains(my_type))
+		{
+			for (int i = 0; i < 3; i++)
+			{
+				for (int j = 0; j < 3; j++)
+				{
+					//fixes rocks in front of doors
+					int tmpx = rconfig.rx * 3 - i;
+					int tmpy = j + (int)Mathf.Floor(rconfig.ry / 2.0f) * 3;
+                    table[(tmpx, tmpy)] = 0;
+                    //Debug.Log($"{tmpx} {tmpy}");
+                }
+            }
+		}
+		if (Dungeon_controller.instance.current_floor.down_connection.Contains(my_type))
+		{
+			for (int i = 0; i < 3; i++)
+			{
+				for (int j = 0; j < 3; j++)
+				{
+					//fixes rocks in front of doors
+					int tmpx = i + (int)Mathf.Floor(rconfig.rx / 2.0f) * 3;
+					int tmpy = j;
+                    table[(tmpx, tmpy)] = 0;
+                    //Debug.Log($"{tmpx} {tmpy}");
+                }
+            }
+		}
+		if (Dungeon_controller.instance.current_floor.left_connection.Contains(my_type))
+		{
+			for (int i = 0; i < 3; i++)
+			{
+				for (int j = 0; j < 3; j++)
+				{
+					//fixes rocks in front of doors
+					int tmpx = i;
+					int tmpy = j + (int)Mathf.Floor(rconfig.ry / 2.0f) * 3;
+					table[(tmpx, tmpy)] = 0;
+					//Debug.Log($"{tmpx} {tmpy}");
+				}
+			}
+		}
+
+		for (int i = 0; i < rconfig.rx * 3; i++)
+		{
+            //initially there were cases where groups of rocks had gaps, this fixes it 
+			for (int j = 0; j < rconfig.ry * 3; j++)
+			{
+				if (table.ContainsKey((i, j)) && 
+                    table.ContainsKey((i+1 , j)) && 
+                    table.ContainsKey((i-1, j)) && 
+                    table.ContainsKey((i, j+1)) && 
+                    table.ContainsKey((i, j-1)) && 
+                    table[(i, j)] == 0 && 
+                    table[(i+1, j)] >= 1 &&  
+                    table[(i -1, j)] >= 1 && 
+                    table[(i , j+1)] >= 1 && 
+                    table[(i , j-1 )] >= 1)
+                {
+                    Debug.Log((i, j));
+					table[(i, j)] = 1 ;
+					grid[(i, j)] = true;
+				}
+
+				
+			}
+		}
 
 
-        for (int i = 0; i < rconfig.rx * 3; i++)
+
+		for (int i = 0; i < rconfig.rx * 3; i++)
         {
             for (int j = 0; j < rconfig.ry * 3; j++)
             {
@@ -184,8 +266,8 @@ public class Inner_layout_manager : NetworkBehaviour
             {
                 tmp_string += $" { table[(i, j)]  } ";
 			}
-			Debug.Log(tmp_string);
-		}
+			//Debug.Log(tmp_string);
+		}		
 		//rocks with less than 2 adjacent rocks (so rocks with less than a total of 3 connected rocks) will be deleted
 		for (int i = 0; i < rconfig.rx * 3; i++)
 		{
@@ -198,18 +280,9 @@ public class Inner_layout_manager : NetworkBehaviour
 			}
 		}
 		//  door infront clean up 
-		if (Dungeon_controller.instance.current_floor.up_connection.Contains(my_type))
-		{
-            for(int i = 0; i < 3; i++)
-            {
-                for (int j = 0; j < 3; j++)
-                {
-					grid[(i + (int)Mathf.Ceil(rconfig.rx / 2.0f), j)] = false;
-				}
-            }
-		}
-
-	}
+		
+		
+    }
  
     private void draw_grid ()
     {
