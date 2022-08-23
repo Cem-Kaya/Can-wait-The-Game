@@ -716,6 +716,7 @@ public class Floor_creator : MonoBehaviour
 			{
 				//draw_current_floor();
 				yield return new WaitForSeconds(0.001f);
+				draw_current_floor();
 			}
 			draw_current_floor();
 			floor.validate();
