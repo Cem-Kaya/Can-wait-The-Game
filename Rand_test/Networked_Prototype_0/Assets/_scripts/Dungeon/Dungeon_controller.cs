@@ -32,12 +32,12 @@ public class Dungeon_controller : NetworkBehaviour
 
     int line_thickness;
     public Texture2D texture;
+    public Dictionary<(int,int),string> special = new Dictionary<(int, int), string>();
 
 
 
-
-    // Start is called before the first frame update
-    private void Awake()
+	// Start is called before the first frame update
+	private void Awake()
     {
         created = false;
     }

@@ -56,8 +56,10 @@ public class Starting_room_init : NetworkBehaviour
 		}
 		
         Room_info tmp_inf = new Room_info("Starting room", Room_controller.instance.current_world_name, Dungeon_controller.instance.current_floor.any_node_from_max_tree.x_cord, Dungeon_controller.instance.current_floor.any_node_from_max_tree.y_cord);
-		Room_controller.instance.current_room_info = tmp_inf;   
-    }
+		Room_controller.instance.current_room_info = tmp_inf;
+		Dungeon_controller.instance.special[(tmp_inf.x, tmp_inf.y)] = "start";
+
+	}
 
 
 	void Start()

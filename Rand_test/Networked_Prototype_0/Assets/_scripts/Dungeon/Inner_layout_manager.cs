@@ -57,9 +57,13 @@ public class Inner_layout_manager : NetworkBehaviour
     void Start()
     {
         // if (!IsServer) Destroy(gameObject);
-        inside = new Floor(Random.Range(int.MinValue, int.MaxValue), rconfig.rx, rconfig.ry);
-        StartCoroutine(gen_layout());
-        StartCoroutine(lay_out_layout());
+        Room_info tmp_inf = Room_controller.instance.current_room_info;
+        if ( ! Dungeon_controller.instance.special.ContainsKey((tmp_inf.x, tmp_inf.y)))
+        {
+            inside = new Floor(Random.Range(int.MinValue, int.MaxValue), rconfig.rx, rconfig.ry);
+            StartCoroutine(gen_layout());
+            StartCoroutine(lay_out_layout());
+        }
 
 
     }
