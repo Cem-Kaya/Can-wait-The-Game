@@ -144,7 +144,9 @@ public class Inner_layout_manager : NetworkBehaviour
 
     public void reset_grid()
     {
-        inside.reset_floor();
+		rng.Next();
+        rng_sorter.Next();
+		inside.reset_floor();
 		for (int i = 0; i < rconfig.rx * 3; i++)
 		{
 			for (int j = 0; j < rconfig.ry * 3; j++)
