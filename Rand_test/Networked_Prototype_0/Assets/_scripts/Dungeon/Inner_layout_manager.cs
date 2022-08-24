@@ -43,11 +43,12 @@ public class Inner_layout_manager : NetworkBehaviour
 	Room_info tmp_inf = new Room_info();
     door_dir my_type = new door_dir();
 
-
+    private int reduction_amount;
 
 
     private void Awake()
     {
+        reduction_amount = 90;
 		created = false;
         room_len_x = 29f;
         room_len_y = 15f;
@@ -75,7 +76,7 @@ public class Inner_layout_manager : NetworkBehaviour
 		if ( ! Dungeon_controller.instance.special.ContainsKey((tmp_inf.x, tmp_inf.y)))
         {
             inside = new Floor(rng.Next(), rconfig.rx, rconfig.ry);
-            StartCoroutine(gen_layout());
+			
             StartCoroutine(lay_out_layout());
         }
 
@@ -89,52 +90,71 @@ public class Inner_layout_manager : NetworkBehaviour
     }
 
 
-    IEnumerator gen_layout()
-    {
-        //Debug.Log("clietn got  gen_map rpc");
-        while (true)
-        {
-            inside.start_collapse();
-            
-
-			while (inside.next_collapse())
-            {
-                yield return new WaitForSeconds(0.0001f);
-            }
-            if (inside.validate())
-            {
-                break;
-            }
-            inside.reset_floor();
-        }
-        created = true;
-        inside.print_status();
-    }
+   
 
 	private float add_small_rand()
     {
         return rng_sorter.Next(-1000000000, 1000000000) / 100000000000.0f;
 	}
-    //lays out the layout aka put stuf in place ! 
+    //lays out the layout aka put stuf in place ! This is inner room layout by the way
     IEnumerator lay_out_layout()
     {
-        while (!created)
-        {
-            yield return new WaitForEndOfFrame();
-        }
-        //tile coordinates' world coordinates. if we wanted world coordinates we would've multiplied by 3
-        for (int i = 0; i < rconfig.rx; i++)
-        {
-            for (int j = 0; j < rconfig.ry; j++)
+        
+		while (true)
+		{
+			//Debug.Log("clietn got  gen_map rpc");
+			while (true)
+			{
+				inside.start_collapse();
+				while (inside.next_collapse())
+				{
+					yield return new WaitForSeconds(0.0001f);
+				}
+				if (inside.validate())
+				{
+					break;
+				}
+				inside.reset_floor();
+			}
+
+			created = true;
+			//inside.print_status();
+			yield return new WaitForSeconds(0.0001f);
+
+
+			//tile coordinates' world coordinates. if we wanted world coordinates we would've multiplied by 3
+			for (int i = 0; i < rconfig.rx; i++)
+			{
+				for (int j = 0; j < rconfig.ry; j++)
+				{
+					//info of 9 pixels and it is called 15 times
+					add_section(i, j, inside.floor_data[(i, j)].value);
+				}
+			}
+			cleanup_grid();
+            if (validate_grid())
             {
-                //info of 9 pixels and it is called 15 times
-                add_section(i, j, inside.floor_data[(i, j)].value);
-            }
-        }
-        cleanup_grid();
-        astar((0, 3), (5,5));
-		draw_grid();
-    }
+				draw_grid();
+				break;
+            }			
+            reset_grid();
+			yield return new WaitForEndOfFrame();
+		}
+	}
+
+    public void reset_grid()
+    {
+        inside.reset_floor();
+		for (int i = 0; i < rconfig.rx * 3; i++)
+		{
+			for (int j = 0; j < rconfig.ry * 3; j++)
+			{
+				grid[(i, j)] = false;
+			}
+		}
+		
+	}
+
     private bool astar((int, int) start, (int, int) end)
     {
         //this is used to make sure one can access all doors int the room, that rocks wont prevent players from going to certain places
@@ -158,7 +178,7 @@ public class Inner_layout_manager : NetworkBehaviour
             step++;
             current = slist.Values[0];
             slist.RemoveAt(0);
-            Debug.Log(step + ": " + current);
+            //Debug.Log(step + ": " + current);
             if (current == end)
             {
                 return true;
@@ -209,12 +229,45 @@ public class Inner_layout_manager : NetworkBehaviour
 
     private bool validate_grid()
     {
-		int start_x =  (int)Mathf.Floor(rconfig.rx / 2.0f) * 3;
-		int start_y = rconfig.ry * 3-1 ;
-		//table[(tmpx, tmpy)] = 0;
+        //checks if doors are connected to each other with astar algorithm, if not the grid will be reset
+        List<(int, int)> doors = new List<(int, int)>();
+        //start_x and start_y represent coordinaes for the door on center top
+        if (Dungeon_controller.instance.current_floor.up_connection.Contains(my_type)) {
+            int start_x = (int)Mathf.Floor(rconfig.rx / 2.0f) * 3;
+            int start_y = rconfig.ry * 3 - 1;
+            doors.Add((start_x, start_y));
+        }
+        if (Dungeon_controller.instance.current_floor.down_connection.Contains(my_type))
+        {
+            int start_x = (int)Mathf.Floor(rconfig.rx / 2.0f) * 3;
+            int start_y = 0;
+            doors.Add((start_x, start_y));
+        }
+        if (Dungeon_controller.instance.current_floor.right_connection.Contains(my_type))
+        {
+            int start_x = rconfig.rx * 3 - 1;
+            int start_y = (int)Mathf.Floor(rconfig.ry / 2.0f) * 3;
+            doors.Add((start_x, start_y));
+        }
+        if (Dungeon_controller.instance.current_floor.left_connection.Contains(my_type))
+        {
+            int start_x = 0;
+            int start_y = (int)Mathf.Floor(rconfig.ry / 2.0f) * 3;
+            doors.Add((start_x, start_y));
+        }
 
+        for (int i = 1; i < doors.Count; i++)
+        {
+            if (!astar(doors[0], doors[i]))
+            {
+                Debug.Log("validation for door connections failed inner layout is reset");
+                return false;
+            }
+        }  		
 		return true;
     }
+
+
     private void cleanup_grid()
     {
         Dictionary<(int, int), int> table = new Dictionary<(int, int), int>();
@@ -301,7 +354,7 @@ public class Inner_layout_manager : NetworkBehaviour
                      table[(i, j)] == 0
                     )
                 {
-                    Debug.Log((i, j));
+                    //Debug.Log((i, j));
 					table[(i, j)] = 1 ;
 					grid[(i, j)] = true;
 				}
@@ -387,7 +440,7 @@ public class Inner_layout_manager : NetworkBehaviour
 		}		
 
 	}
-
+    
     private void add_section(int xpos, int ypos, door_dir type)
     {
         Dictionary<(int, int), bool> chunk = new Dictionary<(int, int), bool>();
@@ -412,8 +465,8 @@ public class Inner_layout_manager : NetworkBehaviour
         {
             //if there is a connection to the upper room, the chances of upper right and upper left of the room
             //having a boulder is lowered same with others
-			NW_prob -= 40 ;
-			NE_prob -= 40 ;
+			NW_prob -= reduction_amount;
+			NE_prob -= reduction_amount;
 		}
 		
         if (!inside.down_connection.Contains(type))
@@ -421,8 +474,8 @@ public class Inner_layout_manager : NetworkBehaviour
             chunk[(1, 0)] = true;
         }else
         {
-			SW_prob -= 40;
-			SE_prob -= 40;
+			SW_prob -= reduction_amount;
+			SE_prob -= reduction_amount;
 		}
 		if (!inside.left_connection.Contains(type))
         {
@@ -430,8 +483,8 @@ public class Inner_layout_manager : NetworkBehaviour
         }
 	    else
         {
-			NW_prob -= 40;
-			SW_prob -= 40;
+			NW_prob -= reduction_amount;
+			SW_prob -= reduction_amount;
 		}
         if (!inside.right_connection.Contains(type))
         {
@@ -439,8 +492,8 @@ public class Inner_layout_manager : NetworkBehaviour
         }
 		else
 		{
-			NE_prob -= 40;
-			SE_prob -= 40;
+			NE_prob -= reduction_amount;
+			SE_prob -= reduction_amount;
 		}
 
 		chunk[(0, 0)] =  rng.Next(0,101)  >= NW_prob ?true :false  ;
