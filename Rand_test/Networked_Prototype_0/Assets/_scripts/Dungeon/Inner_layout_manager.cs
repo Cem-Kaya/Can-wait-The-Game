@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using Unity.VisualScripting;
 
 
 //my chunk represents my chunk coordinates (it is 3*5) my grid represents my grid coordinates' world coordinate values
@@ -36,7 +37,10 @@ public class Inner_layout_manager : NetworkBehaviour
     Dictionary<(int, int), bool> grid = new Dictionary<(int, int), bool>();
     public GameObject rock_prefab;
     private System.Random rng = new System.Random();
-    Room_info tmp_inf = new Room_info();
+    //rng for priorityqueue in sorter
+	private System.Random rng_sorter = new System.Random();
+
+	Room_info tmp_inf = new Room_info();
     door_dir my_type = new door_dir();
 
 
@@ -65,6 +69,7 @@ public class Inner_layout_manager : NetworkBehaviour
         // if (!IsServer) Destroy(gameObject);
         tmp_inf = Room_controller.instance.current_room_info;
 		rng = new System.Random(Dungeon_controller.instance.init_vector * tmp_inf.x*42 + Dungeon_controller.instance.init_vector * tmp_inf.y* 68 );
+		rng_sorter = new System.Random(Dungeon_controller.instance.init_vector * tmp_inf.x * 42 + Dungeon_controller.instance.init_vector * tmp_inf.y * 68);
 		my_type = Dungeon_controller.instance.current_floor.floor_data[(tmp_inf.x, tmp_inf.y)].value;
 		
 		if ( ! Dungeon_controller.instance.special.ContainsKey((tmp_inf.x, tmp_inf.y)))
@@ -106,6 +111,10 @@ public class Inner_layout_manager : NetworkBehaviour
         inside.print_status();
     }
 
+	private float add_small_rand()
+    {
+        return rng_sorter.Next(-1000000000, 1000000000) / 100000000000.0f;
+	}
     //lays out the layout aka put stuf in place ! 
     IEnumerator lay_out_layout()
     {
@@ -123,27 +132,82 @@ public class Inner_layout_manager : NetworkBehaviour
             }
         }
         cleanup_grid();
-		
+        astar((0, 3), (5,5));
 		draw_grid();
     }
-    private bool astar((int,int) start ,(int,int) end ) 
+    private bool astar((int, int) start, (int, int) end)
     {
         //this is used to make sure one can access all doors int the room, that rocks wont prevent players from going to certain places
-		//PriorityQueue<string, int> queue = new PriorityQueue<string, int>();
-		SortedList<int, (int, int)> slist = new SortedList<int, (int, int)>();
-		(int, int) current = start;
-		slist.Add( (int)Mathf.Abs(end.Item1-current.Item1 + end.Item2 - current.Item2), current );
-        while(slist.Count> 0)
+        //PriorityQueue<string, int> queue = new PriorityQueue<string, int>();
+        //in case of 2 coordinates with same cost+heuristics, a random float is added and this will act as the randomness as well, since
+        //one will be 5.000000001 and other will be 5.00000002 and other be 4.99999999
+        SortedList<float, (int, int)> slist = new SortedList<float, (int, int)>();
+        Dictionary<(int, int), bool> scene = new Dictionary<(int, int), bool>();
+
+        (int, int) current = start;
+        slist.Add(Mathf.Abs(end.Item1 - current.Item1 + end.Item2 - current.Item2) + add_small_rand(), current);
+        int step = 0;
+		
+		if(!scene.ContainsKey(current))
+		{
+			scene.Add(current, true);
+		}
+
+		while (slist.Count > 0)
         {
+            step++;
             current = slist.Values[0];
             slist.RemoveAt(0);
+            Debug.Log(step + ": " + current);
+            if (current == end)
+            {
+                return true;
+            }
 
-		}
-		return true;
-    
+            (int, int) up = (current.Item1, current.Item2 + 1), down = (current.Item1, current.Item2 - 1), left = (current.Item1 - 1, current.Item2), right = (current.Item1 + 1, current.Item2);
+            //as these new nodes are added to the priority queue the lowest during the while loop the algorithm will always continue until
+            //in the lowest cost path the current node is equal to the end node. we also check for !grid[up] since player can't move through rocks
+
+            if (grid.ContainsKey(up) && !grid[up])
+            {
+                if (!scene.ContainsKey(up))
+                {
+                    scene.Add(up, true);
+                    slist.Add(Mathf.Abs(end.Item1 - up.Item1 + end.Item2 - up.Item2) + add_small_rand(), up);
+                }
+            }
+            if (grid.ContainsKey(left) && !grid[left])
+            {
+                if (!scene.ContainsKey(left))
+                {
+                    scene.Add(left, true);
+                    slist.Add(Mathf.Abs(end.Item1 - left.Item1 + end.Item2 - left.Item2) + add_small_rand(), left);
+                }
+            }
+            if (grid.ContainsKey(down) && !grid[down])
+            {
+                if (!scene.ContainsKey(down))
+                {
+                    scene.Add(down, true);
+                    slist.Add(Mathf.Abs(end.Item1 - down.Item1 + end.Item2 - down.Item2) + add_small_rand(), down);
+                }
+            }
+            if (grid.ContainsKey(right) && !grid[right])
+            {
+                if (!scene.ContainsKey(right))
+                {
+                    scene.Add(right, true);
+                    slist.Add(Mathf.Abs(end.Item1 - right.Item1 + end.Item2 - right.Item2) + add_small_rand(), right);
+                }
+            }
+
+        }
+
+        return false;
+
     }
-		
-	private bool validate_grid()
+
+    private bool validate_grid()
     {
 		int start_x =  (int)Mathf.Floor(rconfig.rx / 2.0f) * 3;
 		int start_y = rconfig.ry * 3-1 ;
