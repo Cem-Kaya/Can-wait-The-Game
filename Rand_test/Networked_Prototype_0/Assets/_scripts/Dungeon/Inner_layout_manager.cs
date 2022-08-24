@@ -35,7 +35,11 @@ public class Inner_layout_manager : NetworkBehaviour
     float grid_len_y;
     bool created;
     Dictionary<(int, int), bool> grid = new Dictionary<(int, int), bool>();
-    public GameObject rock_prefab;
+	Dictionary<(int, int), string> type_grid = new Dictionary<(int, int), string>();
+
+    public GameObject dirt_prefab;
+    public GameObject grass_prefab;
+	public GameObject rock_prefab;
     private System.Random rng = new System.Random();
     //rng for priorityqueue in sorter
 	private System.Random rng_sorter = new System.Random();
@@ -56,8 +60,9 @@ public class Inner_layout_manager : NetworkBehaviour
         //grid's coordinates are in world coordinates, chunk in tile coordinates, 
         grid_len_x = room_len_x / rconfig.rx;
         grid_len_y = room_len_y / rconfig.ry;
+        
 
-        for (int i = 0; i < rconfig.rx * 3; i++)
+		for (int i = 0; i < rconfig.rx * 3; i++)
         {
             for (int j = 0; j < rconfig.ry * 3; j++)
             {
@@ -67,7 +72,7 @@ public class Inner_layout_manager : NetworkBehaviour
     }
     void Start()
     {
-        if (!IsServer) Destroy(gameObject);
+        
         tmp_inf = Room_controller.instance.current_room_info;
 		rng = new System.Random(Dungeon_controller.instance.init_vector * tmp_inf.x*42 + Dungeon_controller.instance.init_vector * tmp_inf.y* 68 );
 		rng_sorter = new System.Random(Dungeon_controller.instance.init_vector * tmp_inf.x * 42 + Dungeon_controller.instance.init_vector * tmp_inf.y * 68);
@@ -76,8 +81,8 @@ public class Inner_layout_manager : NetworkBehaviour
 		if ( ! Dungeon_controller.instance.special.ContainsKey((tmp_inf.x, tmp_inf.y)))
         {
             inside = new Floor(rng.Next(), rconfig.rx, rconfig.ry);
-			
-            StartCoroutine(lay_out_layout());
+			//this and clientrpc allows the host and client to be synchronized
+			if (IsServer) StartCoroutine(lay_out_layout());
         }
 
 
@@ -405,7 +410,7 @@ public class Inner_layout_manager : NetworkBehaviour
             string tmp_string = $"r {j-1 }: ";
             for (int i = 0; i < rconfig.rx * 3; i++)
             {
-                tmp_string += $" { table[(i, j)]  } ";
+                //tmp_string += $" { table[(i, j)]  } ";
 			}
 			//Debug.Log(tmp_string);
 		}		
@@ -421,10 +426,73 @@ public class Inner_layout_manager : NetworkBehaviour
 			}
 		}
 		//  door infront clean up 
-		
-		
-    }
- 
+		// adding rocks and stuff 
+		for (int i = 0; i < rconfig.rx * 3; i++)
+		{
+			for (int j = 0; j < rconfig.ry * 3; j++)
+			{
+				if (grid[(i, j)])
+				{
+                    int num_neighbour = 0 ; 
+					if (table.ContainsKey((i, j)))
+					{
+                        (int, int) up = (i , j + 1), down = (i, j - 1), left = (i - 1, j), right = (i + 1, j);
+                        //if it is a valid grid coordinate and there is anything there, num of neighbour is up.
+                        if (grid.ContainsKey(up) && grid[up])
+                        {
+                            num_neighbour++;
+						}
+                        if (grid.ContainsKey(left) && grid[left])
+                        {
+							num_neighbour++;
+						}
+						if (grid.ContainsKey(down) && grid[down])
+                        {
+							num_neighbour++;
+						}
+						if (grid.ContainsKey(right) && !grid[right])
+                        {
+							num_neighbour++;
+						}
+					}
+					if (num_neighbour == 4 )
+					{
+						type_grid [(i, j)] = "rock";
+					}
+					else if (num_neighbour == 2)
+					{
+						type_grid[(i, j)] = "grass";
+					}
+                    else
+                    {
+						type_grid[(i, j)] = "dirt";
+					}
+				}
+			}
+		}
+
+
+	}
+
+    [ClientRpc]
+    public void draw_grid_ClientRpc(float tmp_x, float tmp_y, float grid_len_x, float grid_len_y, string type)
+    {
+        if (type == "dirt")
+        {
+            GameObject boulder = Instantiate(dirt_prefab, new Vector3(tmp_x, tmp_y, 0), Quaternion.identity);
+            boulder.transform.localScale = new Vector3(grid_len_x / 3, grid_len_y / 3, 1);
+        }else if (type == "rock")
+        {
+            GameObject boulder = Instantiate(rock_prefab, new Vector3(tmp_x, tmp_y, 0), Quaternion.identity);
+            boulder.transform.localScale = new Vector3(grid_len_x / 3, grid_len_y / 3, 1);
+        }
+        else if (type == "grass")
+        {
+            GameObject boulder = Instantiate(grass_prefab, new Vector3(tmp_x, tmp_y, 0), Quaternion.identity);
+            boulder.transform.localScale = new Vector3(grid_len_x / 3, grid_len_y / 3, 1);
+        }
+    } 
+	
     private void draw_grid ()
     {
 		for (int i = 0; i < rconfig.rx * 3; i++)
@@ -435,8 +503,7 @@ public class Inner_layout_manager : NetworkBehaviour
 				{
 					float tmp_x = i * grid_len_x/3  - room_len_x / 2;
 					float tmp_y = j * grid_len_y/3 - room_len_y / 2;
-					GameObject boulder = Instantiate(rock_prefab, new Vector3(tmp_x, tmp_y, 0), Quaternion.identity);
-					boulder.transform.localScale = new Vector3(grid_len_x / 3, grid_len_y / 3, 1);
+					draw_grid_ClientRpc(tmp_x, tmp_y, grid_len_x, grid_len_y, type_grid[(i, j)]);
 				} 
 			}
 		}		

@@ -61,4 +61,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a7faf3c6262fc444a3f9ea4babc97da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dirt_prefab: {fileID: 5377362518470311210, guid: 7ca2555b13002a14ca8729100d2b0f2f, type: 3}
+  grass_prefab: {fileID: 5377362518470311210, guid: c9c79bf664b22f74490503240fb0727f, type: 3}
   rock_prefab: {fileID: 5377362518470311210, guid: 9aebf7ad5f7bb5746a929d88a8df43aa, type: 3}
