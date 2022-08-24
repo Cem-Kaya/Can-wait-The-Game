@@ -67,7 +67,7 @@ public class Inner_layout_manager : NetworkBehaviour
     }
     void Start()
     {
-        // if (!IsServer) Destroy(gameObject);
+        if (!IsServer) Destroy(gameObject);
         tmp_inf = Room_controller.instance.current_room_info;
 		rng = new System.Random(Dungeon_controller.instance.init_vector * tmp_inf.x*42 + Dungeon_controller.instance.init_vector * tmp_inf.y* 68 );
 		rng_sorter = new System.Random(Dungeon_controller.instance.init_vector * tmp_inf.x * 42 + Dungeon_controller.instance.init_vector * tmp_inf.y * 68);
