@@ -178,7 +178,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5377362518470311383}
   - component: {fileID: 5377362518470311380}
-  - component: {fileID: 5377362518470311381}
+  - component: {fileID: 6814373774625893438}
   m_Layer: 0
   m_Name: Rock
   m_TagString: Untagged
@@ -260,8 +260,8 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &5377362518470311381
-BoxCollider2D:
+--- !u!58 &6814373774625893438
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -269,20 +269,10 @@ BoxCollider2D:
   m_GameObject: {fileID: 5377362518470311210}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 01d6af454f3194c43b99419e5d698f28, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.49461362, y: 0.50762975}
-  m_SpriteTilingProperty:
-    border: {x: 0.015625, y: 0.015625, z: 0.015625, w: 0.015625}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
+  m_Offset: {x: 0.51585513, y: 0.46458733}
   serializedVersion: 2
-  m_Size: {x: 0.9826451, y: 1.0086775}
-  m_EdgeRadius: 0
+  m_Radius: 0.41716033
