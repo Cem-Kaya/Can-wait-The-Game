@@ -251,7 +251,8 @@ public class Inner_layout_manager : NetworkBehaviour
     [ClientRpc]
     public void layout_coins_ClientRpc(float tmp_x , float tmp_y )
     {       
-        GameObject coin = Instantiate(coin_prefab, new Vector3(tmp_x, tmp_y, 0), Quaternion.identity);        
+        GameObject coin = Instantiate(coin_prefab, new Vector3(tmp_x, tmp_y, 0), Quaternion.identity);
+        coin.GetComponent<NetworkObject>().Spawn();
     }
 	
     public void reset_grid()
