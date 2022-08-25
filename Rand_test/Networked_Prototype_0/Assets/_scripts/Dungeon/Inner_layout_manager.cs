@@ -433,40 +433,41 @@ public class Inner_layout_manager : NetworkBehaviour
 			{
 				if (grid[(i, j)])
 				{
-                    int num_neighbour = 0 ; 
-					if (table.ContainsKey((i, j)))
-					{
-                        (int, int) up = (i , j + 1), down = (i, j - 1), left = (i - 1, j), right = (i + 1, j);
+                    int num_neighbour = 0 ;
+                    if (table.ContainsKey((i, j)))
+                    {
+                        (int, int) up = (i, j + 1), down = (i, j - 1), left = (i - 1, j), right = (i + 1, j);
                         //if it is a valid grid coordinate and there is anything there, num of neighbour is up.
                         if (grid.ContainsKey(up) && grid[up])
                         {
                             num_neighbour++;
-						}
+                        }
                         if (grid.ContainsKey(left) && grid[left])
                         {
-							num_neighbour++;
-						}
-						if (grid.ContainsKey(down) && grid[down])
+                            num_neighbour++;
+                        }
+                        if (grid.ContainsKey(down) && grid[down])
                         {
-							num_neighbour++;
-						}
-						if (grid.ContainsKey(right) && !grid[right])
+                            num_neighbour++;
+                        }
+                        if (grid.ContainsKey(right) && grid[right])
                         {
-							num_neighbour++;
-						}
-					}
-					if (num_neighbour == 4 )
-					{
-						type_grid [(i, j)] = "rock";
-					}
-					else if (num_neighbour == 2)
-					{
-						type_grid[(i, j)] = "grass";
-					}
-                    else
-                    {
-						type_grid[(i, j)] = "dirt";
-					}
+                            num_neighbour++;
+                        }
+
+                        if (num_neighbour == 4)
+                        {
+                            type_grid[(i, j)] = "rock";
+                        }
+                        else if (num_neighbour == 2)
+                        {
+                            type_grid[(i, j)] = "grass";
+                        }
+                        else
+                        {
+                            type_grid[(i, j)] = "dirt";
+                        }
+                    }
 				}
 			}
 		}
