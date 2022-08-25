@@ -64,3 +64,4 @@ MonoBehaviour:
   dirt_prefab: {fileID: 5377362518470311210, guid: 7ca2555b13002a14ca8729100d2b0f2f, type: 3}
   grass_prefab: {fileID: 5377362518470311210, guid: c9c79bf664b22f74490503240fb0727f, type: 3}
   rock_prefab: {fileID: 5377362518470311210, guid: 9aebf7ad5f7bb5746a929d88a8df43aa, type: 3}
+  coin_prefab: {fileID: 8673540297459301850, guid: ed97531213670b348941ae1c86848545, type: 3}

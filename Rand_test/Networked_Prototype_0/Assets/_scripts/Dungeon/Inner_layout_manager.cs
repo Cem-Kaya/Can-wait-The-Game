@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using Unity.VisualScripting;
+using System.Drawing;
 
 
 //my chunk represents my chunk coordinates (it is 3*5) my grid represents my grid coordinates' world coordinate values
@@ -40,7 +41,10 @@ public class Inner_layout_manager : NetworkBehaviour
     public GameObject dirt_prefab;
     public GameObject grass_prefab;
 	public GameObject rock_prefab;
-    private System.Random rng = new System.Random();
+	
+    public GameObject coin_prefab;
+	
+	private System.Random rng = new System.Random();
     //rng for priorityqueue in sorter
 	private System.Random rng_sorter = new System.Random();
 
@@ -103,8 +107,7 @@ public class Inner_layout_manager : NetworkBehaviour
 	}
     //lays out the layout aka put stuf in place ! This is inner room layout by the way
     IEnumerator lay_out_layout()
-    {
-        
+    {        
 		while (true)
 		{
 			//Debug.Log("clietn got  gen_map rpc");
@@ -145,8 +148,112 @@ public class Inner_layout_manager : NetworkBehaviour
             reset_grid();
 			yield return new WaitForEndOfFrame();
 		}
+
+        // do coin stuff here
+        layout_coins();
 	}
 
+
+    private void layout_coins() //literally the opposite of the table in clean grid function
+    { 
+		Dictionary<(int, int), int> table = new Dictionary<(int, int), int>();
+		for (int i = 0; i < rconfig.rx * 3; i++)
+		{
+			for (int j = 0; j < rconfig.ry * 3; j++)
+			{
+				if (grid[(i, j)])
+				{
+					table[(i, j)] =0;
+				}
+				else
+				{
+					table[(i, j)] = 1;
+				}
+			}
+		}		
+		for (int i = 0; i < rconfig.rx * 3; i++)
+		{
+			for (int j = 0; j < rconfig.ry * 3; j++)
+			{
+				Dictionary<(int, int), bool> seen = new Dictionary<(int, int), bool>();
+				Stack<(int, int)> st = new Stack<(int, int)>();
+				if (table[(i, j)] > 0)
+				{
+					st.Push((i, j));
+				}
+				while (st.Count > 0)
+				{
+					//i take an element from my grid, if it is not seen before and in table there should be something in my table, 
+					//the blocks around the current node are also pushed into the stack, i pop them and check if 
+					//its adjacent nodes are suspposed to have rocks. at the end table will be a matrix that represents
+					//which parts of the grid have rocks and how many rocks are adjacefnt to each other.
+					(int, int) cur = st.Pop();
+					if (!seen.ContainsKey(cur) && table.ContainsKey(cur) && table[cur] > 0)
+					{
+						seen[cur] = true;
+						table[(i, j)] += 1;
+						st.Push((cur.Item1 - 1, cur.Item2));
+						st.Push((cur.Item1 + 1, cur.Item2));
+						st.Push((cur.Item1, cur.Item2 - 1));
+						st.Push((cur.Item1, cur.Item2 + 1));
+					}
+				}
+				if (table[(i, j)] > 0)
+				{
+					table[(i, j)]--;
+				}
+			}
+		}
+		/*
+        //printing out the table
+		for (int j = rconfig.ry * 3 - 1; j >= 0; j--)
+		{
+			string tmp_string = $"r {j - 1}: ";
+			for (int i = 0; i < rconfig.rx * 3; i++)
+			{
+				tmp_string += $" { table[(i, j)]  } ";
+			}
+			Debug.Log(tmp_string);
+		}
+		*/
+		List<(int, int)> tmp_list = new List<(int, int)>();
+        int cur_max = -1;
+		for (int i = 0; i < rconfig.rx * 3; i++)
+		{			
+			for (int j = 0; j < rconfig.ry * 3; j++)
+			{
+				if (table[(i, j)] > cur_max)
+				{
+					cur_max = table[(i, j)];
+					tmp_list = new List<(int, int)>();
+					tmp_list.Add((i, j));
+				}
+				else if (table[(i, j)] ==cur_max)
+                {
+                    tmp_list.Add((i, j));
+                }
+			}
+		}
+        /////////////////////////////////
+
+		int num_coins = rng.Next(0, 5);
+
+        for (int i = 0; i < num_coins; i++)
+        {
+            (int, int) coord = tmp_list[rng.Next(0, tmp_list.Count)] ; 
+            float tmp_x = coord.Item1 * grid_len_x / 3 - room_len_x / 2;
+            float tmp_y = coord.Item2 * grid_len_y / 3 - room_len_y / 2;
+            layout_coins_ClientRpc(tmp_x, tmp_y);
+        }
+	}
+
+
+    [ClientRpc]
+    public void layout_coins_ClientRpc(float tmp_x , float tmp_y )
+    {       
+        GameObject coin = Instantiate(coin_prefab, new Vector3(tmp_x, tmp_y, 0), Quaternion.identity);        
+    }
+	
     public void reset_grid()
     {
 		rng.Next();
@@ -384,7 +491,7 @@ public class Inner_layout_manager : NetworkBehaviour
                 }
                 while (st.Count > 0)
                 {
-                    //i take an element, if it is not seen before and in table there should be something, 
+                    //i take an element from my grid, if it is not seen before and in table there should be something in my table, 
                     //the blocks around the current node are also pushed into the stack, i pop them and check if 
                     //its adjacent nodes are suspposed to have rocks. at the end table will be a matrix that represents
                     //which parts of the grid have rocks and how many rocks are adjacefnt to each other.
@@ -405,6 +512,7 @@ public class Inner_layout_manager : NetworkBehaviour
 				}
 			}
         }
+		
         for (int j = rconfig.ry * 3 -1 ; j >= 0 ; j--)
         {
             string tmp_string = $"r {j-1 }: ";
