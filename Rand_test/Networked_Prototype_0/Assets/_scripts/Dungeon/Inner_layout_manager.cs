@@ -244,6 +244,7 @@ public class Inner_layout_manager : NetworkBehaviour
             float tmp_x = coord.Item1 * grid_len_x / 3 - (room_len_x / 2) + (grid_len_x - 1) / 2;
             float tmp_y = coord.Item2 * grid_len_y / 3 - (room_len_y / 2) + (grid_len_y - 1) / 2;
             layout_coins_ClientRpc(tmp_x  , tmp_y );
+            
         }
 	}
 
