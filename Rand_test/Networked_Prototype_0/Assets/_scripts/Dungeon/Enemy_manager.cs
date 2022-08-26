@@ -57,7 +57,7 @@ public class Enemy_manager : NetworkBehaviour
         }
 
         
-        StartCoroutine(timed_spawner());
+        //StartCoroutine(timed_spawner());
     }
 
     public void Start()

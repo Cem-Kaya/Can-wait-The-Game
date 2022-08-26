@@ -157,7 +157,8 @@ public class Inner_layout_manager : NetworkBehaviour
         // do coin stuff here
         layout_coins();
 
-        //
+        //do enemy stuff here
+        layout_enemies();
     }
 
     private void layout_coins() //literally the opposite of the table in clean grid function
@@ -209,7 +210,7 @@ public class Inner_layout_manager : NetworkBehaviour
                 }
             }
         }
-        
+		/*
         //printing out the empty_table
 		for (int j = rconfig.ry * 3 - 1; j >= 0; j--)
 		{
@@ -220,8 +221,9 @@ public class Inner_layout_manager : NetworkBehaviour
 			}
 			Debug.Log(tmp_string);
 		}
-		
-        int cur_max = -1;
+		*/
+
+		int cur_max = -1;
         for (int i = 0; i < rconfig.rx * 3; i++)
         {
             for (int j = 0; j < rconfig.ry * 3; j++)
@@ -305,36 +307,40 @@ public class Inner_layout_manager : NetworkBehaviour
 		
 
 	}
+
+    //laying out enemies very straightforward
     public void layout_enemies()
     {
-        if (rng.Next(0, 10) == 1)
+        if (rng.Next(0, 10) == 1) // mono eney type of room 
         {
             int enemy_type = rng.Next(0, enemy_prefab_list.Count);
-            int num_enemies = rng.Next(3, 7);
-
+            int num_enemies = rng.Next(5, 10);                
             for (int i = 0; i < num_enemies; i++)
             {
                 int rindex = rng.Next(0, empty_list.Count);
                 (int, int) coord = empty_list[rindex];
                 float tmp_x = coord.Item1 * grid_len_x / 3 - (room_len_x / 2);//+ (grid_len_x/3 - 1) / 2;
                 float tmp_y = coord.Item2 * grid_len_y / 3 - (room_len_y / 2);//+ (grid_len_y/3 - 1) / 2; //  fix this number later !!! TODO
-
+                GameObject new_enemy = Instantiate(enemy_prefab_list[enemy_type], new Vector3(tmp_x, tmp_y, 0), Quaternion.identity);
+                new_enemy.GetComponent<NetworkObject>().Spawn();
+                spawned_objects.Add(new_enemy);
             }
-
         }
         else
         {
-            int num_enemies = rng.Next(2, 5);
-            for (int i = 0; i < num_enemies; i++)
-            {
-                int rindex = rng.Next(0, empty_list.Count);
-                (int, int) coord = empty_list[rindex];
-
-                float tmp_x = coord.Item1 * grid_len_x / 3 - (room_len_x / 2) + (grid_len_x - 1) / 2;
-
-                float tmp_y = coord.Item2 * grid_len_y / 3 - (room_len_y / 2) + (grid_len_y - 1) / 2; //  fix this number later !!! TODO
-            }
-        }
+			int num_enemies = rng.Next(2,6);
+			for (int i = 0; i < num_enemies; i++)
+			{
+                int enemy_type = rng.Next(0, enemy_prefab_list.Count); 
+				int rindex = rng.Next(0, empty_list.Count);
+				(int, int) coord = empty_list[rindex];
+				float tmp_x = coord.Item1 * grid_len_x / 3 - (room_len_x / 2);//+ (grid_len_x/3 - 1) / 2;
+				float tmp_y = coord.Item2 * grid_len_y / 3 - (room_len_y / 2);//+ (grid_len_y/3 - 1) / 2; //  fix this number later !!! TODO
+				GameObject new_enemy = Instantiate(enemy_prefab_list[enemy_type], new Vector3(tmp_x, tmp_y, 0), Quaternion.identity);
+				new_enemy.GetComponent<NetworkObject>().Spawn();
+				spawned_objects.Add(new_enemy);
+			}
+		}
     }
 
          

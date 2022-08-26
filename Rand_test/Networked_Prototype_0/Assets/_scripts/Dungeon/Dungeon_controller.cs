@@ -33,6 +33,7 @@ public class Dungeon_controller : NetworkBehaviour
     int line_thickness;
     public Texture2D texture;
     public Dictionary<(int,int),string> special = new Dictionary<(int, int), string>();
+	public Dictionary<(int, int), bool> cleaned = new Dictionary<(int, int), bool>();
 
 
 
