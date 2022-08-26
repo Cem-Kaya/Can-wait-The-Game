@@ -67,6 +67,7 @@ public class Inner_layout_manager : NetworkBehaviour
         room_len_y = 15f;
         //grid len corresponds to length of one tile
         //grid's coordinates are in world coordinates, chunk in tile coordinates, 
+        //one chunk is made up of 3x3 squares of tiles thats why they are always divided by 3
         grid_len_x = room_len_x / rconfig.rx;
         grid_len_y = room_len_y / rconfig.ry;
 
@@ -208,7 +209,7 @@ public class Inner_layout_manager : NetworkBehaviour
                 }
             }
         }
-        /*
+        
         //printing out the empty_table
 		for (int j = rconfig.ry * 3 - 1; j >= 0; j--)
 		{
@@ -219,7 +220,7 @@ public class Inner_layout_manager : NetworkBehaviour
 			}
 			Debug.Log(tmp_string);
 		}
-		*/
+		
         int cur_max = -1;
         for (int i = 0; i < rconfig.rx * 3; i++)
         {
@@ -229,11 +230,11 @@ public class Inner_layout_manager : NetworkBehaviour
                 {
                     cur_max = empty_table[(i, j)];
                     empty_list = new List<(int, int)>();
-                    empty_list.Add((i-1, j-1));
+                    empty_list.Add((i, j));
                 }
                 else if (empty_table[(i, j)] == cur_max)
                 {
-                    empty_list.Add((i-1, j-1));
+                    empty_list.Add((i, j));
                 }
             }
         }
@@ -301,7 +302,23 @@ public class Inner_layout_manager : NetworkBehaviour
 			coin.GetComponent<NetworkObject>().Spawn();
             spawned_objects.Add(coin);
 		}
-    }
+		for (int i = 0; i < rconfig.rx*3; i++)
+		{
+            for (int j = 0; j < rconfig.ry*3; j++)
+            {
+				
+                float tmp_x = i * grid_len_x / 3 - (room_len_x / 2) + (grid_len_x - 1) / 2;
+				
+                float tmp_y = j * grid_len_y / 3 - (room_len_y / 2) + (grid_len_y - 1) / 2; //  fix this number later !!! TODO
+
+                GameObject coin = Instantiate(coin_prefab, new Vector3(tmp_x, tmp_y, 0), Quaternion.identity);
+                coin.GetComponent<NetworkObject>().Spawn();
+                spawned_objects.Add(coin);
+            }
+		}
+
+
+	}
     public void layout_enemies()
     {
         if (rng.Next(0, 10) == 1)
@@ -312,9 +329,9 @@ public class Inner_layout_manager : NetworkBehaviour
             for (int i = 0; i < num_enemies; i++)
             {
                 int rindex = rng.Next(0, empty_list.Count);
-                (int, int) coord = empty_list[rindex]; 
-                float tmp_x = coord.Item1 * grid_len_x / 3 - (room_len_x / 2) + (grid_len_x - 1) / 2;
-                float tmp_y = coord.Item2 * grid_len_y / 3 - (room_len_y / 2) + (grid_len_y - 1) / 2; //  fix this number later !!! TODO
+                (int, int) coord = empty_list[rindex];
+                float tmp_x = coord.Item1 * grid_len_x / 3 - (room_len_x / 2);//+ (grid_len_x/3 - 1) / 2;
+                float tmp_y = coord.Item2 * grid_len_y / 3 - (room_len_y / 2);//+ (grid_len_y/3 - 1) / 2; //  fix this number later !!! TODO
 
             }
 
