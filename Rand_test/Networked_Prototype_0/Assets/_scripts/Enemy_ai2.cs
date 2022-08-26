@@ -24,8 +24,14 @@ public class Enemy_ai2 : NetworkBehaviour
 	private Quaternion look_dir;
 	private Vector2 walking_direction;
 	private Rigidbody2D rb;
-
+	
 	private bool once;
+	
+	// event for when the ai dies
+	//
+	public delegate void on_death_event();
+	public static event on_death_event on_death;
+
 
 
 	// Start is called before the first frame update
@@ -153,6 +159,7 @@ public class Enemy_ai2 : NetworkBehaviour
 
 	private IEnumerator delayed_death()
 	{
+		on_death?.Invoke();
 		yield return new WaitForFixedUpdate();
 		gameObject.GetComponent<NetworkObject>().Despawn();
 		//Destroy(gameObject);		

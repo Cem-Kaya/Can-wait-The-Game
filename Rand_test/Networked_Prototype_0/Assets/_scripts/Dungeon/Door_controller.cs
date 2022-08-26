@@ -7,12 +7,19 @@ public class Door_controller : NetworkBehaviour
 {
     // Start is called before the first frame update
     static bool door_cool_down = false;
-
-
+    
+    bool locked ;
     private void Awake()
     {
-     
+		locked = true;
+        Starting_room_init.on_no_enemy += unlock_doors;
+        Inner_layout_manager.on_no_enemy += unlock_doors;
     }
+
+	public void unlock_doors()
+	{
+		locked = false;
+	}
 
     IEnumerator wait_for_map()
     {
@@ -47,11 +54,13 @@ public class Door_controller : NetworkBehaviour
 				GetComponent<NetworkObject>().Despawn();
 			}
 		}
+
 	}
 
 
-    void Start()
-    {
+    void Start()		
+    { 
+		
 		StartCoroutine(wait_for_map());
 	}
 
@@ -105,6 +114,12 @@ public class Door_controller : NetworkBehaviour
     [ServerRpc (RequireOwnership =false )]
 	public void change_room_ServerRpc (Vector2 new_room_dir)
     {
+
+		if (locked)
+		{
+			return;
+		}
+
 		if (is_colliding) return;
 		if (triger_guard) return;
 
@@ -152,16 +167,21 @@ public class Door_controller : NetworkBehaviour
 
 	void OnTriggerEnter2D (Collider2D hitObject)        
     {
-        //Debug.Log(" current room is: " + Room_controller.instance.current_room_info.x + " " +Room_controller.instance.current_room_info.y);
+		//Debug.Log(" current room is: " + Room_controller.instance.current_room_info.x + " " +Room_controller.instance.current_room_info.y);
 		// Debug.Log("IsServer" + IsServer.ToString() + " IsClient" + IsClient.ToString());
-			
+		
         if (hitObject.gameObject.layer == 3 )
         {
 			Vector2 new_room_dir = transform.position - transform.parent.position;
 			new_room_dir.Normalize();
-
 			change_room_ServerRpc(new_room_dir);
 
 		}
+    }
+	
+    public override void OnNetworkDespawn()
+    {
+        Inner_layout_manager.on_no_enemy -= unlock_doors;
+        Starting_room_init.on_no_enemy -= unlock_doors;
     }
 }

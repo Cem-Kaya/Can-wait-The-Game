@@ -37,7 +37,7 @@ public class Inner_layout_manager : NetworkBehaviour
     bool created;
     Dictionary<(int, int), bool> grid = new Dictionary<(int, int), bool>();
     Dictionary<(int, int), string> type_grid = new Dictionary<(int, int), string>();
-
+    
     public GameObject dirt_prefab;
     public GameObject grass_prefab;
     public GameObject rock_prefab;
@@ -58,10 +58,16 @@ public class Inner_layout_manager : NetworkBehaviour
     public List<GameObject> enemy_prefab_list = new List<GameObject>();
     public List<GameObject> spawned_objects = new List<GameObject>();
 
+    public int num_enemy ;
+
+    public delegate void on_no_enemy_event();
+    public static event on_no_enemy_event on_no_enemy;
+
 
     private void Awake()
     {
-        reduction_amount = 90;
+		num_enemy = 0;
+		reduction_amount = 90;
         created = false;
         room_len_x = 29f;
         room_len_y = 15f;
@@ -82,6 +88,8 @@ public class Inner_layout_manager : NetworkBehaviour
     }
     void Start()
     {
+		Enemy_ai.on_death += on_death_dec;
+        Enemy_ai2.on_death += on_death_dec;
 
         tmp_inf = Room_controller.instance.current_room_info;
         rng = new System.Random(Dungeon_controller.instance.init_vector * tmp_inf.x * 42 + Dungeon_controller.instance.init_vector * tmp_inf.y * 68);
@@ -94,6 +102,11 @@ public class Inner_layout_manager : NetworkBehaviour
             //this and clientrpc allows the host and client to be synchronized
             if (IsServer) StartCoroutine(lay_out_layout());
         }
+        else
+        {
+			Debug.Log("in special ROOM dah ? ");
+			on_no_enemy?.Invoke();
+        }
 
 
     }
@@ -105,7 +118,15 @@ public class Inner_layout_manager : NetworkBehaviour
     }
 
 
-
+    public void on_death_dec()
+    {        
+        num_enemy--;
+        if(num_enemy == 0)
+        {
+            on_no_enemy?.Invoke();
+        }
+        Debug.Log("Num of enemies after the event is triggered: " + num_enemy);
+    }
 
     private float add_small_rand()
     {
@@ -153,12 +174,22 @@ public class Inner_layout_manager : NetworkBehaviour
             reset_grid();
             yield return new WaitForEndOfFrame();
         }
-
-        // do coin stuff here
-        layout_coins();
-
-        //do enemy stuff here
-        layout_enemies();
+        //this line allows the already cleaned rooms to not generate new enemies and coins
+        if (  ! Dungeon_controller.instance.cleaned.ContainsKey((tmp_inf.x, tmp_inf.y)) || Dungeon_controller.instance.cleaned.ContainsKey((tmp_inf.x, tmp_inf.y)) && !Dungeon_controller.instance.cleaned[(tmp_inf.x, tmp_inf.y)])
+        {
+            Dungeon_controller.instance.cleaned[(tmp_inf.x, tmp_inf.y)] = true; // change later if added teleport 
+			// do coin stuff here
+			layout_coins();
+    
+            //do enemy stuff here
+            layout_enemies();
+        }
+        else
+        {
+            on_no_enemy?.Invoke();
+        }
+    
+		
     }
 
     private void layout_coins() //literally the opposite of the table in clean grid function
@@ -281,15 +312,10 @@ public class Inner_layout_manager : NetworkBehaviour
 		}
 
 
-
-
-
-
-
 		/////////////////////////////////
 		//fixes coin position
 		int num_coins = rng.Next(0, 5);
-        Debug.Log(num_coins);
+        //Debug.Log("number of coins in the room :" + num_coins);
         for (int i = 0; i < num_coins; i++)
         {
             int rindex = rng.Next(0, empty_list.Count);
@@ -298,14 +324,12 @@ public class Inner_layout_manager : NetworkBehaviour
             float tmp_x = coord.Item1 * grid_len_x / 3 - (room_len_x / 2) + (grid_len_x / 3 - 1) / 2 ;
 
             float tmp_y = coord.Item2 * grid_len_y / 3 - (room_len_y / 2) + (grid_len_y / 3 - 1) / 2; //  fix this number later !!! TODO
-			Debug.Log("COin pos x : " + coord.Item1 + " y : " + coord.Item2 );
+			//Debug.Log("COin pos x : " + coord.Item1 + " y : " + coord.Item2 );
 			
 			GameObject coin = Instantiate(coin_prefab, new Vector3(tmp_x, tmp_y, 0), Quaternion.identity);
 			coin.GetComponent<NetworkObject>().Spawn();
             spawned_objects.Add(coin);
-		}
-		
-
+		}	
 	}
 
     //laying out enemies very straightforward
@@ -322,6 +346,7 @@ public class Inner_layout_manager : NetworkBehaviour
                 float tmp_x = coord.Item1 * grid_len_x / 3 - (room_len_x / 2);//+ (grid_len_x/3 - 1) / 2;
                 float tmp_y = coord.Item2 * grid_len_y / 3 - (room_len_y / 2);//+ (grid_len_y/3 - 1) / 2; //  fix this number later !!! TODO
                 GameObject new_enemy = Instantiate(enemy_prefab_list[enemy_type], new Vector3(tmp_x, tmp_y, 0), Quaternion.identity);
+                num_enemy++;
                 new_enemy.GetComponent<NetworkObject>().Spawn();
                 spawned_objects.Add(new_enemy);
             }
@@ -337,7 +362,8 @@ public class Inner_layout_manager : NetworkBehaviour
 				float tmp_x = coord.Item1 * grid_len_x / 3 - (room_len_x / 2);//+ (grid_len_x/3 - 1) / 2;
 				float tmp_y = coord.Item2 * grid_len_y / 3 - (room_len_y / 2);//+ (grid_len_y/3 - 1) / 2; //  fix this number later !!! TODO
 				GameObject new_enemy = Instantiate(enemy_prefab_list[enemy_type], new Vector3(tmp_x, tmp_y, 0), Quaternion.identity);
-				new_enemy.GetComponent<NetworkObject>().Spawn();
+                num_enemy++;
+                new_enemy.GetComponent<NetworkObject>().Spawn();
 				spawned_objects.Add(new_enemy);
 			}
 		}
@@ -783,8 +809,11 @@ public class Inner_layout_manager : NetworkBehaviour
     }
 
     public override void OnNetworkDespawn()
-    {
-        foreach (GameObject spawned_object in spawned_objects)
+	{
+		Enemy_ai.on_death -= on_death_dec;
+        Enemy_ai2.on_death -= on_death_dec;
+
+		foreach (GameObject spawned_object in spawned_objects)
         {
             //Debug.Log("Got in OnNetworkDespawn");
 

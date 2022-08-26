@@ -30,7 +30,11 @@ public class Enemy_ai : NetworkBehaviour
 	private Rigidbody2D rb;
 	private bool once;
 
-
+	// event for when the ai dies
+	//
+	public delegate void  on_death_event();
+	public static event on_death_event on_death;
+	
 
 	// Start is called before the first frame update
 	private void Awake()
@@ -137,7 +141,8 @@ public class Enemy_ai : NetworkBehaviour
 
 	private IEnumerator delayed_death()
 	{
-		yield return new WaitForFixedUpdate();
+		on_death?.Invoke();  // event trigerd 
+		yield return new WaitForFixedUpdate();		
 		gameObject.GetComponent<NetworkObject>().Despawn();
 		//estroy(gameObject);		
 	}
@@ -203,6 +208,9 @@ public class Enemy_ai : NetworkBehaviour
 			Player_controller.instance.take_damage(1);
 		}
 	}
+
+	
+	
 }
 
 

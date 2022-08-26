@@ -11,6 +11,12 @@ public class Starting_room_init : NetworkBehaviour
 	public GameObject confiner_object;
 
 	public PolygonCollider2D confiner_collider;
+
+
+	public delegate void on_no_enemy_event();
+	public static event on_no_enemy_event on_no_enemy;
+
+
 	private void Awake()
 	{
 
@@ -58,6 +64,7 @@ public class Starting_room_init : NetworkBehaviour
         Room_info tmp_inf = new Room_info("Starting room", Room_controller.instance.current_world_name, Dungeon_controller.instance.current_floor.any_node_from_max_tree.x_cord, Dungeon_controller.instance.current_floor.any_node_from_max_tree.y_cord);
 		Room_controller.instance.current_room_info = tmp_inf;
 		Dungeon_controller.instance.special[(tmp_inf.x, tmp_inf.y)] = "start";
+		Dungeon_controller.instance.cleaned[(tmp_inf.x, tmp_inf.y)] = true;
 
 	}
 
@@ -68,7 +75,7 @@ public class Starting_room_init : NetworkBehaviour
 		var lplayer = NetworkManager.Singleton.LocalClient.PlayerObject;
 		CinemachineVirtualCamera vcam = GameObject.Find("CM_vcam").GetComponent<CinemachineVirtualCamera>();
 		vcam.Follow = lplayer.transform;
-
+		on_no_enemy?.Invoke();
 	}
 
 	public bool once = true;
