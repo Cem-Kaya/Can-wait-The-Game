@@ -293,30 +293,16 @@ public class Inner_layout_manager : NetworkBehaviour
             int rindex = rng.Next(0, empty_list.Count);
             (int, int) coord = empty_list[rindex];
 
-            float tmp_x = coord.Item1 * grid_len_x / 3 - (room_len_x / 2) + (grid_len_x - 1) / 2;
+            float tmp_x = coord.Item1 * grid_len_x / 3 - (room_len_x / 2) + (grid_len_x / 3 - 1) / 2 ;
 
-            float tmp_y = coord.Item2 * grid_len_y / 3 - (room_len_y / 2) + (grid_len_y - 1) / 2; //  fix this number later !!! TODO
+            float tmp_y = coord.Item2 * grid_len_y / 3 - (room_len_y / 2) + (grid_len_y / 3 - 1) / 2; //  fix this number later !!! TODO
 			Debug.Log("COin pos x : " + coord.Item1 + " y : " + coord.Item2 );
 			
 			GameObject coin = Instantiate(coin_prefab, new Vector3(tmp_x, tmp_y, 0), Quaternion.identity);
 			coin.GetComponent<NetworkObject>().Spawn();
             spawned_objects.Add(coin);
 		}
-		for (int i = 0; i < rconfig.rx*3; i++)
-		{
-            for (int j = 0; j < rconfig.ry*3; j++)
-            {
-				
-                float tmp_x = i * grid_len_x / 3 - (room_len_x / 2) + (grid_len_x - 1) / 2;
-				
-                float tmp_y = j * grid_len_y / 3 - (room_len_y / 2) + (grid_len_y - 1) / 2; //  fix this number later !!! TODO
-
-                GameObject coin = Instantiate(coin_prefab, new Vector3(tmp_x, tmp_y, 0), Quaternion.identity);
-                coin.GetComponent<NetworkObject>().Spawn();
-                spawned_objects.Add(coin);
-            }
-		}
-
+		
 
 	}
     public void layout_enemies()
