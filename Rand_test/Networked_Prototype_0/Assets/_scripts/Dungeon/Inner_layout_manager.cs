@@ -55,7 +55,8 @@ public class Inner_layout_manager : NetworkBehaviour
 
     private Dictionary<(int, int), int> empty_table = new Dictionary<(int, int), int>();
     private List<(int, int)> empty_list = new List<(int, int)>();
-    public List<GameObject> enemy_list = new List<GameObject>();
+    public List<GameObject> enemy_prefab_list = new List<GameObject>();
+    public List<GameObject> spawned_objects = new List<GameObject>();
 
 
     private void Awake()
@@ -228,17 +229,63 @@ public class Inner_layout_manager : NetworkBehaviour
                 {
                     cur_max = empty_table[(i, j)];
                     empty_list = new List<(int, int)>();
-                    empty_list.Add((i, j));
+                    empty_list.Add((i-1, j-1));
                 }
                 else if (empty_table[(i, j)] == cur_max)
                 {
-                    empty_list.Add((i, j));
+                    empty_list.Add((i-1, j-1));
                 }
             }
         }
-        /////////////////////////////////
-        //fixes coin position
-        int num_coins = rng.Next(0, 5);
+        //coins wont spawn near spawn zone
+		List<int> tmp_x_list = new List<int>();
+        tmp_x_list.Add(6);
+		tmp_x_list.Add(7);
+		tmp_x_list.Add(8);
+		List<int> tmp_y_list = new List<int>();
+		tmp_y_list.Add(0);
+		tmp_y_list.Add(1);
+		tmp_y_list.Add(2);
+		tmp_y_list.Add(8);
+		tmp_y_list.Add(7);
+		tmp_y_list.Add(6);
+		foreach (var i in tmp_x_list)
+        {
+			foreach (var j in tmp_y_list)
+			{
+				empty_list.Remove((i, j));
+			}
+		}
+		List<int> tmp_x_list2 = new List<int>();
+		tmp_x_list2.Add(0);
+		tmp_x_list2.Add(1);
+		tmp_x_list2.Add(2);
+        tmp_x_list2.Add(12);
+        tmp_x_list2.Add(13);
+        tmp_x_list2.Add(14);
+
+        List<int> tmp_y_list2 = new List<int>();
+		tmp_y_list2.Add(3);
+		tmp_y_list2.Add(4);
+		tmp_y_list2.Add(5);
+	
+		foreach (var i in tmp_x_list2)
+		{
+			foreach (var j in tmp_y_list2)
+			{
+				empty_list.Remove((i, j));
+			}
+		}
+
+
+
+
+
+
+
+		/////////////////////////////////
+		//fixes coin position
+		int num_coins = rng.Next(0, 5);
         Debug.Log(num_coins);
         for (int i = 0; i < num_coins; i++)
         {
@@ -249,14 +296,17 @@ public class Inner_layout_manager : NetworkBehaviour
 
             float tmp_y = coord.Item2 * grid_len_y / 3 - (room_len_y / 2) + (grid_len_y - 1) / 2; //  fix this number later !!! TODO
 			Debug.Log("COin pos x : " + coord.Item1 + " y : " + coord.Item2 );
-			layout_coins_ClientRpc(tmp_x, tmp_y);
-        }
+			
+			GameObject coin = Instantiate(coin_prefab, new Vector3(tmp_x, tmp_y, 0), Quaternion.identity);
+			coin.GetComponent<NetworkObject>().Spawn();
+            spawned_objects.Add(coin);
+		}
     }
     public void layout_enemies()
     {
         if (rng.Next(0, 10) == 1)
         {
-            int enemy_type = rng.Next(0, enemy_list.Count);
+            int enemy_type = rng.Next(0, enemy_prefab_list.Count);
             int num_enemies = rng.Next(3, 7);
 
             for (int i = 0; i < num_enemies; i++)
@@ -284,14 +334,7 @@ public class Inner_layout_manager : NetworkBehaviour
         }
     }
 
-
-
-    [ClientRpc]
-    public void layout_coins_ClientRpc(float tmp_x, float tmp_y)
-    {
-        GameObject coin = Instantiate(coin_prefab, new Vector3(tmp_x, tmp_y, 0), Quaternion.identity);
-        coin.GetComponent<NetworkObject>().Spawn();
-    }
+         
 
     public void reset_grid()
     {
@@ -727,6 +770,21 @@ public class Inner_layout_manager : NetworkBehaviour
             {
                 grid[(3 * xpos + ch.Key.Item1, 3 * ypos + ch.Key.Item2)] = true;
             }
+        }
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        foreach (GameObject spawned_object in spawned_objects)
+        {
+            //Debug.Log("Got in OnNetworkDespawn");
+
+            if (IsServer && (spawned_object != null) && spawned_object.GetComponent<NetworkObject>() != null && spawned_object.GetComponent<NetworkObject>().IsSpawned)
+            {
+                //Debug.Log("Got in OnNetworkDespawn's if clause");
+                spawned_object.GetComponent<NetworkObject>().Despawn();
+            }
+            base.OnNetworkDespawn();
         }
     }
 }
