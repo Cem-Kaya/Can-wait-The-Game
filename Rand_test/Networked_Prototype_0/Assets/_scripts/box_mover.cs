@@ -52,7 +52,7 @@ public class box_mover : NetworkBehaviour
 	{
 		last_firesd = 0;
 		timer = 0;
-		fdelay = 1;
+		fdelay = 25 ;
 		movement_direction = new Vector2(0, 0);
 		moving = 0;
 		coin_num = 0;
@@ -178,4 +178,16 @@ public class box_mover : NetworkBehaviour
 	{
 		control.Disable();
 	}
+	public void dec_fire_rate_delay(uint delay)
+	{		
+		if ((int )fdelay - (int )delay < 0 )
+		{
+			fdelay = 0;
+		}
+		else
+		{
+			fdelay -= delay; 
+		}
+	}
+	
 }
