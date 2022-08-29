@@ -9,14 +9,14 @@ using TMPro;
 public class box_mover : NetworkBehaviour
 {
 	public GameObject bullet_prefab; 
-    public float speed ;   
-    public Player_input_actions control ;
+	public float speed ;   
+	public Player_input_actions control ;
 	public TextMeshProUGUI coin_text;
 	public TextMeshProUGUI health_text;
 	
 	private ulong  last_firesd ;
 	private ulong timer;
-	private uint fdelay; // 0.01 sec is 1  
+	public uint fdelay; // 0.01 sec is 1  
 	private float terminal_velocity ;
 
 	public  int coin_num; 
@@ -28,7 +28,6 @@ public class box_mover : NetworkBehaviour
 	private Vector2 fire_direction;
 
 	[SerializeField] private Transform _spawner; // Netcode 
-
 	public override void OnNetworkSpawn()
 	{
 		//if (!IsOwner) Destroy(this);
@@ -46,12 +45,9 @@ public class box_mover : NetworkBehaviour
 		control.player.fire.started += ctx => start_fire(ctx.ReadValue<Vector2>());// gets input too early cant read multipress // register to the system with contect ctx 
 		control.player.fire.performed += ctx => mid_fire(ctx.ReadValue<Vector2>()); // register to the system with contect ctx 
 		control.player.fire.canceled += ctx => end_fire(ctx.ReadValue<Vector2>()); // register to the system with contect ctx 
-
-		
-
-
 		//Debug.Log("end of awake ");
 	}
+	
 	public void Start()
 	{
 		last_firesd = 0;
@@ -66,10 +62,10 @@ public class box_mover : NetworkBehaviour
 		//coin_text =  GameObject.Find("Coin Text").GetComponent<TextMeshProUGUI>() ;
 		//health_text = GameObject.Find("Health Text").GetComponent<TextMeshProUGUI>();
 	}
+
 	public void Update()
 	{
 		//coin_text.text = " coin :" + coin_num;
-				
 	}
 
 	public void FixedUpdate()
@@ -85,10 +81,12 @@ public class box_mover : NetworkBehaviour
 		//Debug.Log("moving is :" + moving);
 
 	}
+
 	public void start_move(Vector2 input_diraction)
 	{
 		moving++;
 	}
+
 	public void mid_move(Vector2 input_diraction)
 	{
 		movement_direction = input_diraction;
@@ -105,6 +103,7 @@ public class box_mover : NetworkBehaviour
 	{
 		fireing++;
 	}
+
 	public void mid_fire(Vector2 input_diraction)
 	{
 		fire_direction = input_diraction;
@@ -116,13 +115,15 @@ public class box_mover : NetworkBehaviour
 		fireing--;
 		//Debug.Log("moveing: "+ moving);
 	}
-	[ServerRpc]  //  (RequireOwnership = false) the function which runs on the server which will make some code run on the clients 
+
+	[ServerRpc]  //  (RequireOwnership = false) the function which runs on the server which will make some code run on the clients 	
 	private void request_fire_ServerRpc(Vector3 fire_dir)
 	{
 		//Debug.Log("send server rpc ");
 		fire_ClientRpc(fire_dir);
 		
 	}
+
 	[ClientRpc]
 	private void fire_ClientRpc(Vector3 fire_dir)
 	{
@@ -158,8 +159,6 @@ public class box_mover : NetworkBehaviour
 		transform.position = to;
 
 	}
-
-
 
 	[ClientRpc]
 	public void teleport_to_ClientRpc(Vector2 to)
