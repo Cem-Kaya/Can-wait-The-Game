@@ -25,8 +25,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 973857844008263981}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.5014, y: 0.5351, z: -0.014953709}
-  m_LocalScale: {x: 1.6290226, y: 1.592819, z: 1}
+  m_LocalPosition: {x: 0.5014, y: 0.5099, z: -0.014953709}
+  m_LocalScale: {x: 1, y: 1.0503, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5377362518470311383}
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 41
-  m_Sprite: {fileID: 21300000, guid: 7138fd1de52a02f47803a98d28a33a5b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3615f7b6ed6fcb443a8c405cd88d719c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -109,8 +109,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3101350445580031177}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.505, y: 0.475, z: -0.011897905}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.505, y: 0.5324, z: -0.011897905}
+  m_LocalScale: {x: 1, y: 1.1148, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5377362518470311383}
@@ -157,7 +157,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 51
-  m_Sprite: {fileID: 21300000, guid: 67f9f16241a26d7428920cd0f905d0ee, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 806144ab744e3344d9a6cb4548976a39, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -178,7 +178,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5377362518470311383}
   - component: {fileID: 5377362518470311380}
-  - component: {fileID: 6814373774625893438}
+  - component: {fileID: 4644117169132793193}
   m_Layer: 0
   m_Name: stump
   m_TagString: Untagged
@@ -260,8 +260,8 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &6814373774625893438
-CircleCollider2D:
+--- !u!70 &4644117169132793193
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -269,10 +269,10 @@ CircleCollider2D:
   m_GameObject: {fileID: 5377362518470311210}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: 01d6af454f3194c43b99419e5d698f28, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.51585513, y: 0.46458733}
-  serializedVersion: 2
-  m_Radius: 0.41716033
+  m_Offset: {x: 0.53413165, y: 0.56315005}
+  m_Size: {x: 0.8476465, y: 0.93760705}
+  m_Direction: 0
