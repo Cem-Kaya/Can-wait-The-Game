@@ -217,7 +217,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   delay_dec: 0
-  speed_up: 10
+  speed_up: 5
+  bullet_bounce: 0
+  bullet_lf: 0
+  bullet_dmg: 0
+  bullet_scale: 0
+  bullet_speed: 0
+  increase_max_health: 0
+  increase_health: 0
 --- !u!114 &7106865952161664393
 MonoBehaviour:
   m_ObjectHideFlags: 0

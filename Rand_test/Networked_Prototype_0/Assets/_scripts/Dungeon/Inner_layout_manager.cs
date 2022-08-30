@@ -44,7 +44,7 @@ public class Inner_layout_manager : NetworkBehaviour
 	public GameObject stump_prefab;
 
 	public GameObject coin_prefab;
-
+	public GameObject health_pickup_prefab;
 	private System.Random rng = new System.Random();
 	//rng for priorityqueue in sorter
 	private System.Random rng_sorter = new System.Random();
@@ -105,7 +105,7 @@ public class Inner_layout_manager : NetworkBehaviour
 		}
 		else
 		{
-			Debug.Log("in special ROOM dah ? ");
+			// Debug.Log("in special ROOM dah ? ");
 			on_no_enemy?.Invoke();
 		}
 
@@ -126,7 +126,7 @@ public class Inner_layout_manager : NetworkBehaviour
 		{
 			on_no_enemy?.Invoke();
 		}
-		Debug.Log("Num of enemies after the event is triggered: " + num_enemy);
+		//Debug.Log("Num of enemies after the event is triggered: " + num_enemy);
 	}
 
 	private float add_small_rand()
@@ -181,6 +181,9 @@ public class Inner_layout_manager : NetworkBehaviour
 			Dungeon_controller.instance.cleaned[(tmp_inf.x, tmp_inf.y)] = true; // change later if added teleport 
 			// do coin stuff here
 			layout_coins();
+
+			//do health stuff here
+			layout_health();
 	
 			//do enemy stuff here
 			layout_enemies();
@@ -370,7 +373,27 @@ public class Inner_layout_manager : NetworkBehaviour
 		}
 	}
 
-		 
+
+	public void layout_health()
+	{
+		if (true || rng.Next(0, 10) == 1) //mono eney type of room 
+		{
+			int num_health = rng.Next(1, 4);
+			for (int i = 0; i < num_health; i++)
+			{
+				int rindex = rng.Next(0, empty_list.Count);
+				(int, int) coord = empty_list[rindex];
+				float tmp_x = coord.Item1 * grid_len_x / 3 - (room_len_x / 2) + (grid_len_x / 3 - 1) / 2;
+				float tmp_y = coord.Item2 * grid_len_y / 3 - (room_len_y / 2) + (grid_len_y / 3 - 1) / 2;
+			   
+				GameObject new_health = Instantiate(health_pickup_prefab, new Vector3(tmp_x, tmp_y, 0), Quaternion.identity);
+				new_health.GetComponent<NetworkObject>().Spawn();
+				spawned_objects.Add(new_health);
+			}
+		}
+		
+	}
+
 
 	public void reset_grid()
 	{

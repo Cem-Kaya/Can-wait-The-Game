@@ -66,6 +66,7 @@ MonoBehaviour:
   rock_prefab: {fileID: 5377362518470311210, guid: 9aebf7ad5f7bb5746a929d88a8df43aa, type: 3}
   stump_prefab: {fileID: 5377362518470311210, guid: 966df8c7d179c7b4b8b5955af0ede998, type: 3}
   coin_prefab: {fileID: 8673540297459301850, guid: ed97531213670b348941ae1c86848545, type: 3}
+  health_pickup_prefab: {fileID: 8673540297459301850, guid: 9ccbcb5fc705efe4b8d7db5747ae18ca, type: 3}
   enemy_prefab_list:
   - {fileID: 2528314809511988402, guid: 299b75fe50a1ad2468efafad58816e64, type: 3}
   - {fileID: 8130310601243210548, guid: 365960c04cc8ec44a8491f16cf86ca96, type: 3}

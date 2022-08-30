@@ -232,5 +232,12 @@ public class box_mover : NetworkBehaviour
 			GameObject.Find("Player_controller").GetComponent<Player_controller>().inc_max_health(mx_health);
 		}
 	}
+	public void inc_health_bm(int in_health)
+	{
+		if (IsOwner)
+		{
+			GameObject.Find("Player_controller").GetComponent<Player_controller>().inc_health(in_health);
+		}
+	}
 
 }

@@ -193,3 +193,4 @@ MonoBehaviour:
   bullet_scale: 0
   bullet_speed: 0
   increase_max_health: 0
+  increase_health: 5

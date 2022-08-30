@@ -103,7 +103,7 @@ public class Player_controller : NetworkBehaviour
 		SceneManager.LoadScene("Start_menu", LoadSceneMode.Single);
 	}
 
-	public   void death()
+	public void death()
 	{
 		health = 10;
 		/*
@@ -150,7 +150,14 @@ public class Player_controller : NetworkBehaviour
 	{
 
 		max_health += mx_health;
-	}
+		UI_Controller.current_instance.update_gear_health();
 
+	}
+	public void inc_health(int in_health)
+	{
+		health += in_health;
+		UI_Controller.current_instance.update_health_text();
+		UI_Controller.current_instance.update_gear_health();
+	}
 }
 

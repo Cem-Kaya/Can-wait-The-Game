@@ -12,7 +12,7 @@ public class Bullet_controller : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
-		Debug.Log("start of bullet  ");
+		//Debug.Log("start of bullet  ");
 		StartCoroutine(death_delay() );   
 	}
 
