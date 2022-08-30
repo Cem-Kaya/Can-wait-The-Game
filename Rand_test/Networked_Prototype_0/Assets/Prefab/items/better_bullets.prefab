@@ -181,7 +181,7 @@ GameObject:
   - component: {fileID: 7106865952161664393}
   - component: {fileID: 8837667309442113437}
   m_Layer: 0
-  m_Name: damage_increase
+  m_Name: better_bullets
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -217,7 +217,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   delay_dec: 0
-  speed_up: 10
+  speed_up: 0
+  bullet_bounce: 4
+  bullet_lf: 3
+  bullet_dmg: 3
+  bullet_scale: 1.5
+  bullet_speed: 7
 --- !u!114 &7106865952161664393
 MonoBehaviour:
   m_ObjectHideFlags: 0

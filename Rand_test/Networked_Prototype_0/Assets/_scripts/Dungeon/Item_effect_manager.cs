@@ -7,12 +7,12 @@ public class Item_effect_manager : NetworkBehaviour
 {
 	public uint  delay_dec ;
 	public int speed_up ;
-	
-	int bullet_bounce;
-	float bullet_lf;
-	float bullet_dmg;
-	float bullet_scale;
-	float bullet_speed;
+
+    public int bullet_bounce;
+    public float bullet_lf;
+    public float bullet_dmg;
+    public float bullet_scale;
+    public float bullet_speed;
 
 	// Start is called before the first frame update
 	void Start()

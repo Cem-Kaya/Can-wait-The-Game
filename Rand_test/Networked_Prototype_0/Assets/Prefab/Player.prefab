@@ -107,7 +107,7 @@ Rigidbody2D:
   m_LinearDrag: 1
   m_AngularDrag: 0.1
   m_GravityScale: 0
-  m_Material: {fileID: 6200000, guid: 3fff42ae248815c44b8c1f84aa95ad29, type: 2}
+  m_Material: {fileID: 6200000, guid: 678447e3ae23a7845be2494a748f04d6, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
@@ -240,6 +240,7 @@ MonoBehaviour:
   speed: 0
   coin_text: {fileID: 0}
   health_text: {fileID: 0}
+  fdelay: 0
   coin_num: 0
   _spawner: {fileID: 2931956275494323237}
 --- !u!114 &1860055655739974895
