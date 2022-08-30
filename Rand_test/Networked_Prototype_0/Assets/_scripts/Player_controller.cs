@@ -146,7 +146,7 @@ public class Player_controller : NetworkBehaviour
 	{
 		coin_num.Value -= i;
 	}
-	public void inc_max_helath(int mx_health)
+	public void inc_max_health(int mx_health)
 	{
 
 		max_health += mx_health;

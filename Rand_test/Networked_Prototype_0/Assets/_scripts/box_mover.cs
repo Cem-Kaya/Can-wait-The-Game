@@ -226,10 +226,10 @@ public class box_mover : NetworkBehaviour
 		bullet_scale += in_bullet_scale;
 		bullet_speed += in_bullet_speed;
 	}
-	public void inc_max_helath_bm (int mx_health)
+	public void inc_max_health_bm (int mx_health)
 	{
 		if(IsOwner){
-			GameObject.Find("Player_controller").GetComponent<Player_controller>().inc_max_helath(mx_health);
+			GameObject.Find("Player_controller").GetComponent<Player_controller>().inc_max_health(mx_health);
 		}
 	}
 

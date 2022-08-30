@@ -13,6 +13,7 @@ public class Item_effect_manager : NetworkBehaviour
 	public float bullet_dmg;
 	public float bullet_scale;
 	public float bullet_speed;
+	public int increase_max_health;
 
 	// Start is called before the first frame update
 	void Start()
@@ -35,8 +36,12 @@ public class Item_effect_manager : NetworkBehaviour
 			player.dec_fire_rate_delay(delay_dec );
 			player.inc_speed(speed_up);
 			player.inc_bullet_att(bullet_lf , bullet_bounce,  bullet_dmg, bullet_scale, bullet_speed);
+			player.inc_max_health_bm(increase_max_health);
 
-			gameObject.GetComponent<NetworkObject>().Despawn();
+			if (IsServer)
+			{
+				gameObject.GetComponent<NetworkObject>().Despawn();
+			}
 		}
 		
 		
