@@ -217,6 +217,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   delay_dec: 10
+  speed_up: 0
 --- !u!114 &7106865952161664393
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -189,5 +189,17 @@ public class box_mover : NetworkBehaviour
 			fdelay -= delay; 
 		}
 	}
+
 	
+	public void inc_speed(int spped_up)
+	{
+		int max_speed = 60;
+		speed += spped_up; 
+		if (speed> max_speed)
+		{
+			speed = max_speed;
+		}
+	}
+
+
 }
