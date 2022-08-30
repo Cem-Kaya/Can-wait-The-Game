@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Netcode;
 using TMPro;
+using UnityEngine.UIElements;
 
 
 public class box_mover : NetworkBehaviour
@@ -28,6 +29,13 @@ public class box_mover : NetworkBehaviour
 	private Vector2 fire_direction;
 
 	[SerializeField] private Transform _spawner; // Netcode 
+
+	int bullet_bounce;
+	float bullet_lf; 	
+	float bullet_dmg; 
+	float bullet_scale;
+	float bullet_speed;
+
 	public override void OnNetworkSpawn()
 	{
 		//if (!IsOwner) Destroy(this);
@@ -45,11 +53,17 @@ public class box_mover : NetworkBehaviour
 		control.player.fire.started += ctx => start_fire(ctx.ReadValue<Vector2>());// gets input too early cant read multipress // register to the system with contect ctx 
 		control.player.fire.performed += ctx => mid_fire(ctx.ReadValue<Vector2>()); // register to the system with contect ctx 
 		control.player.fire.canceled += ctx => end_fire(ctx.ReadValue<Vector2>()); // register to the system with contect ctx 
-		//Debug.Log("end of awake ");
+																				   //Debug.Log("end of awake ");
+		bullet_bounce=0;
+		bullet_lf=0;
+		bullet_dmg=0;
+		bullet_scale =1 ;
+		bullet_speed = 7 ;
 	}
 	
 	public void Start()
 	{
+		
 		last_firesd = 0;
 		timer = 0;
 		fdelay = 25 ;
@@ -97,7 +111,7 @@ public class box_mover : NetworkBehaviour
 	{
 		moving--;
 		//Debug.Log("moveing: "+ moving);
-	}
+	} 
 
 	public void start_fire(Vector2 input_diraction)
 	{
@@ -117,34 +131,38 @@ public class box_mover : NetworkBehaviour
 	}
 
 	[ServerRpc]  //  (RequireOwnership = false) the function which runs on the server which will make some code run on the clients 	
-	private void request_fire_ServerRpc(Vector3 fire_dir)
+	private void request_fire_ServerRpc(Vector3 fire_dir,  float in_bullet_lf, int in_bullet_bounce, float in_bullet_dmg, float in_bullet_scale, float in_bullet_speed )
 	{
 		//Debug.Log("send server rpc ");
-		fire_ClientRpc(fire_dir);
+		fire_ClientRpc(fire_dir, in_bullet_lf, in_bullet_bounce, in_bullet_dmg, in_bullet_scale, in_bullet_speed);
 		
 	}
 
 	[ClientRpc]
-	private void fire_ClientRpc(Vector3 fire_dir)
+	private void fire_ClientRpc(Vector3 fire_dir , float in_bullet_lf, int in_bullet_bounce, float in_bullet_dmg, float in_bullet_scale , float in_bullet_speed )
 	{
 		//Debug.Log("send client rpc ");
-		execute_fire(fire_dir);
+		execute_fire(fire_dir , in_bullet_lf, in_bullet_bounce, in_bullet_dmg, in_bullet_scale , in_bullet_speed );
 	}
 	
-	private void execute_fire(Vector2 fire_dir)
+	private void execute_fire(Vector2 fire_dir , float in_bullet_lf, int in_bullet_bounce, float in_bullet_dmg,float in_bullet_scale, float in_bullet_speed )
 	{
 		//Debug.Log("timer: " + timer + " last_firesd" + last_firesd);
 		GameObject bullet = Instantiate(bullet_prefab, _spawner.position + new Vector3(fire_dir.x, fire_dir.y, 0), Quaternion.identity);
-		bullet.GetComponent<Rigidbody2D>().velocity = fire_dir * Player_controller.instance.bullet_speed;
+
+		
+		bullet.GetComponent<Bullet_controller>().set_bullet(in_bullet_lf, in_bullet_bounce, in_bullet_dmg, in_bullet_scale);
+		bullet.GetComponent<Rigidbody2D>().velocity = fire_dir * in_bullet_speed ;
 		last_firesd = timer;		
 
 	}
 	
-	private void fire()
+	private void fire()		
 	{		
 		//Debug.Log("fireing"+ fireing.ToString() + "timer: " + timer + " last_firesd" + last_firesd);		
 		if (timer++ > last_firesd + fdelay  &&  fireing > 0 ) {
-			request_fire_ServerRpc(fire_direction);
+
+			request_fire_ServerRpc(fire_direction, bullet_lf, bullet_bounce, bullet_dmg, bullet_scale, bullet_speed);
 						
 			//GameObject bullet = Instantiate(bullet_prefab, transform.position + new Vector3(fire_direction.x, fire_direction.y , 0) , Quaternion.identity);			
 			//bullet.GetComponent<Rigidbody2D>().velocity = fire_direction * 10;
@@ -193,13 +211,21 @@ public class box_mover : NetworkBehaviour
 	
 	public void inc_speed(int spped_up)
 	{
-		int max_speed = 60;
+		int max_speed = 35;
 		speed += spped_up; 
 		if (speed> max_speed)
 		{
 			speed = max_speed;
 		}
 	}
-
+	public void inc_bullet_att (float in_bullet_lf, int in_bullet_bounce, float in_bullet_dmg, float in_bullet_scale, float in_bullet_speed)
+	{
+		bullet_lf += in_bullet_lf;
+		bullet_bounce += in_bullet_bounce;
+		bullet_dmg += in_bullet_dmg;
+		bullet_scale += in_bullet_scale;
+		bullet_speed += in_bullet_speed;
+	}
+	
 
 }
