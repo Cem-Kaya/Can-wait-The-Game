@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2941659600489435996}
-  - component: {fileID: 2941659600489435995}
   - component: {fileID: 2941659600489435997}
+  - component: {fileID: 2941659600489435995}
   m_Layer: 0
   m_Name: Player_controller
   m_TagString: Untagged
@@ -33,19 +33,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2941659600489435995
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2941659600489435994}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f702910c00e4cf449e4d562c037aeae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health_text: {fileID: 0}
 --- !u!114 &2941659600489435997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,3 +49,25 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &2941659600489435995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2941659600489435994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f702910c00e4cf449e4d562c037aeae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bullet_speed: 10
+  health: 200
+  max_health: 200
+  fire_delay: 2
+  move_speed: 0
+  alive: 0
+  i_frame: 0
+  i_frame_sec: 0
+  coin_num:
+    m_InternalValue: 0
