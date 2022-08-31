@@ -240,7 +240,7 @@ public class box_mover : NetworkBehaviour
 	{
 	
 		GameObject.Find("Player_controller").GetComponent<Player_controller>().decrease_coin_num(price);
-            
+			
 	}
 
 }

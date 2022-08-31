@@ -21,17 +21,17 @@ public class Item_effect_manager : NetworkBehaviour
 	public TextMeshPro price_text;
 	public int price;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        if (price_text != null)
-        {
-            price_text.text = price.ToString() + " " + "₿";
-        }
-    }
+	// Start is called before the first frame update
+	void Start()
+	{
+		if (price_text != null)
+		{
+			price_text.text = price.ToString() + " " + "₿";
+		}
+	}
 
-    // Update is called once per frame
-    void Update()
+	// Update is called once per frame
+	void Update()
 	{
 		
 	}
