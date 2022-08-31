@@ -53,6 +53,14 @@ public class Door_controller : NetworkBehaviour
 			{
 				GetComponent<NetworkObject>().Despawn();
 			}
+			else
+			{
+				GetComponent<PolygonCollider2D>().enabled = true;
+				foreach (Transform child in transform)
+				{
+					child.gameObject.SetActive(true);
+				}
+			}
 		}
 
 	}
