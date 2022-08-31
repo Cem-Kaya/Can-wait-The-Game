@@ -31,7 +31,7 @@ public class Door_controller : NetworkBehaviour
 			yield return null ;
 
 		}
-		Debug.Log("door is done ");
+		//Debug.Log("door is done ");
 	}
 	public void unlock_doors()
 	{
