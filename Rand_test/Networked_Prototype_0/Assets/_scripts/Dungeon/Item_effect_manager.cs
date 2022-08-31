@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
-	
+using TMPro;
+
 public class Item_effect_manager : NetworkBehaviour
 {
 	public uint  delay_dec ;
@@ -15,12 +16,16 @@ public class Item_effect_manager : NetworkBehaviour
 	public float bullet_speed;
 	public int increase_max_health;
 	public int increase_health;
+	
 
-	// Start is called before the first frame update
-	void Start()
+	public TextMeshPro price_text;
+    public int price;
+
+    // Start is called before the first frame update
+    void Start()
 	{
-		
-	}
+        price_text.text = price.ToString();
+    }
 
 	// Update is called once per frame
 	void Update()
