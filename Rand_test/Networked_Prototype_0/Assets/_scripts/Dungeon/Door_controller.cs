@@ -7,18 +7,37 @@ public class Door_controller : NetworkBehaviour
 {
 	// Start is called before the first frame update
 	static bool door_cool_down = false;
-	
+	GameObject left_door;
+	GameObject right_door;
+
 	bool locked ;
 	private void Awake()
 	{
 		locked = true;
 		Starting_room_init.on_no_enemy += unlock_doors;
 		Inner_layout_manager.on_no_enemy += unlock_doors;
+		left_door = transform.GetChild(0).gameObject;
+		right_door = transform.GetChild(1).gameObject;
 	}
 
+	IEnumerator door_mover()
+	{
+		for (int i = 0; i < 100; i++)
+		{			
+			yield return new WaitForFixedUpdate();
+			yield return new WaitForFixedUpdate();
+			left_door.transform.localPosition = new Vector3 ( left_door.transform.localPosition.x -  0.00225f, left_door.transform.localPosition.y , left_door.transform.position.z);
+			right_door.transform.localPosition = new Vector3 (right_door.transform.localPosition.x + 0.00225f  , right_door.transform.localPosition.y, right_door.transform.position.z);
+			yield return null ;
+
+		}
+		Debug.Log("door is done ");
+	}
 	public void unlock_doors()
 	{
 		locked = false;
+		StartCoroutine(door_mover());
+
 	}
 
 	IEnumerator wait_for_map()
@@ -60,6 +79,7 @@ public class Door_controller : NetworkBehaviour
 				{
 					child.gameObject.SetActive(true);
 				}
+				
 			}
 		}
 
