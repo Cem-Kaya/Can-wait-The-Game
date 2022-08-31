@@ -20,7 +20,6 @@ public class box_mover : NetworkBehaviour
 	public uint fdelay; // 0.01 sec is 1  
 	private float terminal_velocity ;
 
-	public  int coin_num; 
 	Rigidbody2D rb;
 	private int moving;
 	private Vector2 movement_direction;
@@ -69,7 +68,6 @@ public class box_mover : NetworkBehaviour
 		fdelay = 25 ;
 		movement_direction = new Vector2(0, 0);
 		moving = 0;
-		coin_num = 0;
 		speed = 7 ;
 		rb = GetComponent<Rigidbody2D>();
 
@@ -79,7 +77,6 @@ public class box_mover : NetworkBehaviour
 
 	public void Update()
 	{
-		//coin_text.text = " coin :" + coin_num;
 	}
 
 	public void FixedUpdate()
@@ -238,6 +235,12 @@ public class box_mover : NetworkBehaviour
 		{
 			GameObject.Find("Player_controller").GetComponent<Player_controller>().inc_health(in_health);
 		}
+	}
+	public void dec_coin_num(int price)
+	{
+	
+		GameObject.Find("Player_controller").GetComponent<Player_controller>().decrease_coin_num(price);
+            
 	}
 
 }
