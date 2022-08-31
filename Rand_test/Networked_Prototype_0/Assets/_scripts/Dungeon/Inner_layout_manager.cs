@@ -45,6 +45,8 @@ public class Inner_layout_manager : NetworkBehaviour
 
 	public GameObject coin_prefab;
 	public GameObject health_pickup_prefab;
+
+	public GameObject shop_prefab;
 	private System.Random rng = new System.Random();
 	//rng for priorityqueue in sorter
 	private System.Random rng_sorter = new System.Random();
@@ -108,6 +110,15 @@ public class Inner_layout_manager : NetworkBehaviour
 		{
 			// Debug.Log("in special ROOM dah ? ");
 			on_no_enemy?.Invoke();
+			if (IsServer) {
+				string room_type = Dungeon_controller.instance.special[(tmp_inf.x, tmp_inf.y)];
+				if (room_type == "start")
+				{
+					GameObject shop = Instantiate(shop_prefab, new Vector3(0, 0, 0), Quaternion.identity);
+					shop.GetComponent<NetworkObject>().Spawn();
+					spawned_objects.Add(shop);
+				}
+			}
 		}
 
 

@@ -70,8 +70,10 @@ public class Shop_layout_manager : NetworkBehaviour
 			float tmp_y = ( sq -1 - ((i)%sq) ) * grid_len_y  - (room_len_y / 2) + (grid_len_y  ) / 2; //  fix this number later !!! TODO
 			
 			GameObject tmp_item = Instantiate(item, new Vector3(tmp_x,tmp_y,0), Quaternion.identity);
+            tmp_item.GetComponent<NetworkObject>().Spawn();
+			spawned.Add(tmp_item);
 
-			i++;
+            i++;
 		}
 	}
 
@@ -80,4 +82,21 @@ public class Shop_layout_manager : NetworkBehaviour
 	{
 		
 	}
+
+    public override void OnNetworkDespawn()
+    {
+ 
+
+        foreach (GameObject spawned_object in spawned)
+        {
+            //Debug.Log("Got in OnNetworkDespawn");
+
+            if (IsServer && (spawned_object != null) && spawned_object.GetComponent<NetworkObject>() != null && spawned_object.GetComponent<NetworkObject>().IsSpawned)
+            {
+                //Debug.Log("Got in OnNetworkDespawn's if clause");
+                spawned_object.GetComponent<NetworkObject>().Despawn();
+            }
+            base.OnNetworkDespawn();
+        }
+    }
 }
