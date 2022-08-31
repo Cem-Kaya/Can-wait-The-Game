@@ -1042,7 +1042,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1320315937}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.09375143, y: 0.33570004, z: -10}
+  m_LocalPosition: {x: -0.09376001, y: 0.05317998, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1126,7 +1126,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.8357401, y: 1}
+    m_SensorSize: {x: 1.7777778, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -1208,12 +1208,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sellable_prefabs_pool:
-  - {fileID: 1855165925238780599, guid: e4da2941bcf565646a115ea555bfa774, type: 3}
-  - {fileID: 1855165925238780599, guid: 2269aea88374f2f46bca5f448cacf6fa, type: 3}
   - {fileID: 1855165925238780599, guid: ccf19029e5a55024687afce67d949700, type: 3}
   - {fileID: 1855165925238780599, guid: 30474e3f510ba574a8293526741dc91e, type: 3}
-  - {fileID: 1855165925238780599, guid: 55ac8e398a9736b4d93da6ed84d14e26, type: 3}
-  - {fileID: 1855165925238780599, guid: ccf19029e5a55024687afce67d949700, type: 3}
+  - {fileID: 1855165925238780599, guid: e4da2941bcf565646a115ea555bfa774, type: 3}
+  - {fileID: 1855165925238780599, guid: 2269aea88374f2f46bca5f448cacf6fa, type: 3}
   spawned: []
   num_items: 4
 --- !u!4 &1534642813

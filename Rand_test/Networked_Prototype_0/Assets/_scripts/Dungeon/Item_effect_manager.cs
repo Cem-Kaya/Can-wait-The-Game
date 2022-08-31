@@ -26,7 +26,8 @@ public class Item_effect_manager : NetworkBehaviour
 	{
 		if (price_text != null)
 		{
-			price_text.text = price.ToString() + " " + "₿";
+            Debug.Log("My price is " + price);
+            price_text.text = price.ToString() + " " + "₿";
 		}
 	}
 

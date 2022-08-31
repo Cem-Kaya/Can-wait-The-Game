@@ -49,8 +49,8 @@ public class Shop_layout_manager : NetworkBehaviour
 	float room_len_y ;
 	private void Awake()
 	{
-		room_len_x = 29f;
-		room_len_y = 15f;
+		room_len_x = 23f;
+		room_len_y = 12f;
 		
 	}
 	void Start()
@@ -66,8 +66,8 @@ public class Shop_layout_manager : NetworkBehaviour
 			int grid_len_x = (int) Mathf.Floor(room_len_x / sq ) ;
 			int grid_len_y = (int) Mathf.Floor(room_len_y / sq ) ;
 
-			float tmp_x = ((int) (i/sq)) * grid_len_x  - (room_len_x / 2) + (grid_len_x  - 1) / 2;
-			float tmp_y = ( sq -1 - ((i)%sq) ) * grid_len_y  - (room_len_y / 2) + (grid_len_y  - 1) / 2; //  fix this number later !!! TODO
+			float tmp_x = ((int) (i/sq)) * grid_len_x  - (room_len_x / 2) + (grid_len_x  ) / 2;
+			float tmp_y = ( sq -1 - ((i)%sq) ) * grid_len_y  - (room_len_y / 2) + (grid_len_y  ) / 2; //  fix this number later !!! TODO
 			
 			GameObject tmp_item = Instantiate(item, new Vector3(tmp_x,tmp_y,0), Quaternion.identity);
 
