@@ -64,9 +64,10 @@ public class Inner_layout_manager : NetworkBehaviour
 	public delegate void on_no_enemy_event();
 	public static event on_no_enemy_event on_no_enemy;
 
-
+	
 	private void Awake()
 	{
+		
 		num_enemy = 0;
 		reduction_amount = 90;
 		created = false;
