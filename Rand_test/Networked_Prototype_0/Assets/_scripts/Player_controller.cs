@@ -22,7 +22,7 @@ public class Player_controller : NetworkBehaviour
 
 	public NetworkVariable<int> coin_num;
 
-
+	
 	void Awake()
 	{
 		
@@ -142,11 +142,20 @@ public class Player_controller : NetworkBehaviour
 		coin_num.Value += i;
 	}
 
+ 
+    
 	public void decrease_coin_num(int i)
 	{
-		coin_num.Value -= i;
+        decrease_coin_num_ServerRpc(i);
 	}
-	public void inc_max_health(int mx_health)
+
+    [ServerRpc (RequireOwnership = false)]
+    public void decrease_coin_num_ServerRpc(int i)
+    {
+        coin_num.Value -= i;
+    }
+
+    public void inc_max_health(int mx_health)
 	{
 
 		max_health += mx_health;

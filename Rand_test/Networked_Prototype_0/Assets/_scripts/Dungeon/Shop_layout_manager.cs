@@ -91,27 +91,29 @@ public class Shop_layout_manager : NetworkBehaviour
         //{
         //    Debug.Log(pair.Key + " " + pair.Value);
         //}
-
-        foreach (GameObject item in shop_info.current_floor_shop_items)
-        { 
-            
-            if (!shop_info.sale_status.ContainsKey(item.name+"(Clone)") || !shop_info.sale_status[item.name+"(Clone)"])
+        if (IsServer)
+        {
+            foreach (GameObject item in shop_info.current_floor_shop_items)
             {
-                int sq = (int)Mathf.Ceil(Mathf.Sqrt(shop_info.current_floor_shop_items.Count));
-                int grid_len_x = (int)Mathf.Floor(room_len_x / sq);
-                int grid_len_y = (int)Mathf.Floor(room_len_y / sq);
 
-                float tmp_x = ((int)(i / sq)) * grid_len_x - (room_len_x / 2) + (grid_len_x) / 2;
-                float tmp_y = (sq - 1 - ((i) % sq)) * grid_len_y - (room_len_y / 2) + (grid_len_y) / 2; //  fix this number later !!! TODO
+                if (!shop_info.sale_status.ContainsKey(item.name + "(Clone)") || !shop_info.sale_status[item.name + "(Clone)"])
+                {
+                    int sq = (int)Mathf.Ceil(Mathf.Sqrt(shop_info.current_floor_shop_items.Count));
+                    int grid_len_x = (int)Mathf.Floor(room_len_x / sq);
+                    int grid_len_y = (int)Mathf.Floor(room_len_y / sq);
 
-                GameObject tmp_item = Instantiate(item, new Vector3(tmp_x, tmp_y, 0), Quaternion.identity);
-                tmp_item.GetComponent<NetworkObject>().Spawn();
-                spawned.Add(tmp_item);
-                shop_info.add_to_sale_status(tmp_item.name);
+                    float tmp_x = ((int)(i / sq)) * grid_len_x - (room_len_x / 2) + (grid_len_x) / 2;
+                    float tmp_y = (sq - 1 - ((i) % sq)) * grid_len_y - (room_len_y / 2) + (grid_len_y) / 2; //  fix this number later !!! TODO
+
+                    GameObject tmp_item = Instantiate(item, new Vector3(tmp_x, tmp_y, 0), Quaternion.identity);
+                    tmp_item.GetComponent<NetworkObject>().Spawn();
+                    spawned.Add(tmp_item);
+                    shop_info.add_to_sale_status(tmp_item.name);
+                }
+
+                i++;
+
             }
-
-            i++;
-
         }
     }
 
