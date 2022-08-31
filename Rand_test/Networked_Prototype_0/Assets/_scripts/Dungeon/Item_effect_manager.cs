@@ -21,12 +21,15 @@ public class Item_effect_manager : NetworkBehaviour
 	public TextMeshPro price_text;
 	public int price;
 
-	// Start is called before the first frame update
-	void Start()
+    public delegate void on_purchase_event(GameObject in_item);
+    public static event on_purchase_event on_purchase;
+
+    // Start is called before the first frame update
+    void Start()
 	{
 		if (price_text != null)
 		{
-            Debug.Log("My price is " + price);
+            //Debug.Log("My price is " + price);
             price_text.text = price.ToString() + " " + "₿";
 		}
 	}
@@ -55,7 +58,9 @@ public class Item_effect_manager : NetworkBehaviour
 
 				if (IsServer)
 				{
-					gameObject.GetComponent<NetworkObject>().Despawn();
+                    on_purchase?.Invoke(gameObject);
+                    gameObject.GetComponent<NetworkObject>().Despawn();
+                      
 				}
 			}
 		}
