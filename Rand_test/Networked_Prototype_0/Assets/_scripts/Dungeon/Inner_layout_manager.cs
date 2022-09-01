@@ -47,6 +47,7 @@ public class Inner_layout_manager : NetworkBehaviour
 	public GameObject health_pickup_prefab;
 
 	public GameObject shop_prefab;
+	public GameObject item_room_prefab;
 	private System.Random rng = new System.Random();
 	//rng for priorityqueue in sorter
 	private System.Random rng_sorter = new System.Random();
@@ -117,6 +118,12 @@ public class Inner_layout_manager : NetworkBehaviour
 					GameObject shop = Instantiate(shop_prefab, new Vector3(0, 0, 0), Quaternion.identity);
 					shop.GetComponent<NetworkObject>().Spawn();
 					spawned_objects.Add(shop);
+				}
+				else if (room_type == "itemroom")
+				{
+					GameObject item_room = Instantiate(item_room_prefab, new Vector3(0, 0, 0), Quaternion.identity);
+                    item_room.GetComponent<NetworkObject>().Spawn();
+					spawned_objects.Add(item_room);
 				}
 			}
 		}

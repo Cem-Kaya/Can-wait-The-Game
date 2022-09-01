@@ -107,7 +107,7 @@ public class Item_room_manager : NetworkBehaviour
 
                     GameObject tmp_item = Instantiate(item, new Vector3(tmp_x, tmp_y, 0), Quaternion.identity);
                     tmp_item.GetComponent<NetworkObject>().Spawn();
-                    tmp_item.GetComponent<Item_effect_manager>().price = 0;
+                    tmp_item.GetComponent<Item_effect_manager>().disable_price_text_ClientRpc();
                     spawned.Add(tmp_item);
                     shop_info.add_to_sale_status(tmp_item.name);
                 }
@@ -118,6 +118,11 @@ public class Item_room_manager : NetworkBehaviour
         }
     }
 
+    //[ClientRpc]
+    //public void item_room_price_0_ClientRpc(Item_effect_manager tmp)
+    //{
+
+    //}
     // Update is called once per frame
     void Update()
     {

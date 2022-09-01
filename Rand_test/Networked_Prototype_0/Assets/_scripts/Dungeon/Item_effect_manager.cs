@@ -29,13 +29,24 @@ public class Item_effect_manager : NetworkBehaviour
 	{
 		if (price_text != null)
 		{
+			if(price == 0) {
+				price_text.enabled = false;
+			}
 			//Debug.Log("My price is " + price);
 			price_text.text = price.ToString() + " " + "₿";
 		}
+		
 	}
 
-	// Update is called once per frame
-	void Update()
+
+	[ClientRpc]
+    public void disable_price_text_ClientRpc()
+	{
+		price = 0;
+        price_text.enabled = false;
+    }
+    // Update is called once per frame
+    void Update()
 	{
 		
 	}
@@ -58,8 +69,8 @@ public class Item_effect_manager : NetworkBehaviour
 
 				if (IsServer)
 				{
-                    player.dec_coin_num(price);
-                    on_purchase?.Invoke(gameObject.name);
+					player.dec_coin_num(price);
+					on_purchase?.Invoke(gameObject.name);
 					gameObject.GetComponent<NetworkObject>().Despawn();
 					  
 				}
