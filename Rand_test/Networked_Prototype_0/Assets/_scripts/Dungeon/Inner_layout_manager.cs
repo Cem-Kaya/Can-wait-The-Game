@@ -48,6 +48,8 @@ public class Inner_layout_manager : NetworkBehaviour
 
 	public GameObject shop_prefab;
 	public GameObject item_room_prefab;
+	public GameObject boss_prefab;
+    
 	private System.Random rng = new System.Random();
 	//rng for priorityqueue in sorter
 	private System.Random rng_sorter = new System.Random();
@@ -125,7 +127,13 @@ public class Inner_layout_manager : NetworkBehaviour
                     item_room.GetComponent<NetworkObject>().Spawn();
 					spawned_objects.Add(item_room);
 				}
-			}
+                else if (room_type == "bossroom")
+                {
+                    GameObject boss = Instantiate(boss_prefab, new Vector3(0, 0, 0), Quaternion.identity);
+                    boss.GetComponent<NetworkObject>().Spawn();
+                    spawned_objects.Add(boss);
+                }
+            }
 		}
 
 
