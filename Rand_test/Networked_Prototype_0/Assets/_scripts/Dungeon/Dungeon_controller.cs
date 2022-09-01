@@ -40,6 +40,7 @@ public class Dungeon_controller : NetworkBehaviour
 	public Dictionary<(int, int), bool> cleaned = new Dictionary<(int, int), bool>();
 
 	private System.Random rng_sorter = new System.Random();
+	private System.Random rng_special_rooms = new System.Random();
 
 
 	// Start is called before the first frame update
@@ -60,6 +61,7 @@ public class Dungeon_controller : NetworkBehaviour
 	public void gen_map_ClientRpc(int my_seed)
 	{
 		//Debug.Log("clietn got rpc");
+		rng_special_rooms = new System.Random(my_seed);
 		current_floor = new Floor(my_seed);
 		StartCoroutine(gen_map());
 	}
@@ -114,7 +116,7 @@ public class Dungeon_controller : NetworkBehaviour
 
 	private float add_small_rand()
 	{
-		return rng_sorter.Next(-1000000000, 1000000000) / 100000000000.0f;
+		return rng_special_rooms.Next(-1000000000, 1000000000) / 100000000000.0f;
 	}
 	
 	public (int,int) find_boss_room()
