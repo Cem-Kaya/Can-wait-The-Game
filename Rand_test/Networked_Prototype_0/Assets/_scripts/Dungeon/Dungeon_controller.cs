@@ -31,6 +31,8 @@ public class Dungeon_controller : NetworkBehaviour
 	float grid_size_y;
 	int block_len_x;
 	int block_len_y;
+	(int, int) boss_room;
+	(int, int) item_room;
 
 	int line_thickness;
 	public Texture2D texture;
@@ -105,7 +107,7 @@ public class Dungeon_controller : NetworkBehaviour
 		draw_current_floor();
 		//
 		find_boss_room();
-		
+		find_item_room();
 		texture.Apply();
 		created = true;
 	}
@@ -114,23 +116,49 @@ public class Dungeon_controller : NetworkBehaviour
 	{
 		return rng_sorter.Next(-1000000000, 1000000000) / 100000000000.0f;
 	}
-
+	
 	public (int,int) find_boss_room()
 	{
 		(int, int) ret;
 		SortedList<float, (int, int)> sosted = new SortedList<float, (int, int)>() ;
 		foreach ((int,int) rm in current_floor.reachable_map_tree)
 		{
-			float dist = (current_floor.any_node_from_max_tree.x_cord - rm.Item1) + (current_floor.any_node_from_max_tree.y_cord - rm.Item2); // menheten distance 
+			float dist = Mathf.Abs(current_floor.any_node_from_max_tree.x_cord - rm.Item1) + Mathf.Abs(current_floor.any_node_from_max_tree.y_cord - rm.Item2)+ add_small_rand(); // menheten distance 
 			sosted[dist] = rm;
 			//sosted.Add(dist, rm);
 		}		
-		ret = sosted.Values[0];
+		ret = sosted.Values[sosted.Count-1];
 		draw_boss_room(ret.Item1, ret.Item2);
 
 		Debug.Log(ret);
+		boss_room = ret;
+		special.Add(ret , "bossroom");
 		return ret;
 	}
+	public (int, int) find_item_room()
+	{
+		(int, int) ret;
+		SortedList<float, (int, int)> sosted = new SortedList<float, (int, int)>();
+		foreach ((int, int) rm in current_floor.reachable_map_tree)
+		{
+			float dist = Mathf.Abs(current_floor.any_node_from_max_tree.x_cord - rm.Item1) +
+				Mathf.Abs(current_floor.any_node_from_max_tree.y_cord - rm.Item2) +
+				Mathf.Abs(boss_room.Item1 - rm.Item1) + Mathf.Abs(boss_room.Item2 - rm.Item2) + add_small_rand() ; // menheten distance 
+			if (rm != boss_room)
+			{
+				sosted[dist] = rm;
+			}
+		}
+		
+		ret = sosted.Values[sosted.Count - 1];
+		draw_boss_room(ret.Item1, ret.Item2);
+
+		Debug.Log("item_room" + ret);
+		item_room = ret;
+		special.Add(ret, "itemroom");
+		return ret;
+	}
+
 	// Update is called once per frame
 	void Update()
 	{
@@ -256,12 +284,15 @@ public class Dungeon_controller : NetworkBehaviour
 				local_y /= rconfig.ry;
 				//local_y /= 2;
 				//if x is inside line thickness
+				//intersection of lines, there are images, code is self explanatory
+				//transforming chunk room coordinates to its local coordinates for intersection checking (x+y<C) stuff
+
 				if (!(x < ind_x * room_x + line_thickness * 10 ) &&  !(x > ind_x * room_x + ind_x - line_thickness * 10))
 				{
 					if ((int)Mathf.Abs(local_x - local_y) < line_thickness || (int)Mathf.Abs(local_x + local_y) < line_thickness)
 					{
 						texture.SetPixel(x, y, new Color(Random.Range(0,255)/255.0f, Random.Range(0, 255) / 255.0f, Random.Range(0,255)/255.0f) );
-						Debug.Log("local x : " + local_x + " , local y " + local_y);
+						//Debug.Log("local x : " + local_x + " , local y " + local_y);
 
 					}
 				}
