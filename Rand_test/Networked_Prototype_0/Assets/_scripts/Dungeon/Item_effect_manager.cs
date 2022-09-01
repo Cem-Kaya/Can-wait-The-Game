@@ -47,7 +47,7 @@ public class Item_effect_manager : NetworkBehaviour
 			box_mover player = hitObject.gameObject.GetComponent<box_mover>();
 			if (Player_controller.instance.coin_num.Value >= price)
 			{
-				player.dec_coin_num(price);
+				
 				UI_Controller.current_instance.update_coin_text();
 				player.dec_fire_rate_delay(delay_dec);
 				player.inc_speed(speed_up);
@@ -58,7 +58,8 @@ public class Item_effect_manager : NetworkBehaviour
 
 				if (IsServer)
 				{
-					on_purchase?.Invoke(gameObject.name);
+                    player.dec_coin_num(price);
+                    on_purchase?.Invoke(gameObject.name);
 					gameObject.GetComponent<NetworkObject>().Despawn();
 					  
 				}

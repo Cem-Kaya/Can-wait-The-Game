@@ -74,17 +74,22 @@ public class Door_controller : NetworkBehaviour
 			}
 			else
 			{
-				GetComponent<PolygonCollider2D>().enabled = true;
-				foreach (Transform child in transform)
-				{
-					child.gameObject.SetActive(true);
-				}
-				
+				activate_doors_ClientRpc();
+
 			}
 		}
 
 	}
 
+	[ClientRpc]
+	public void activate_doors_ClientRpc()
+	{
+		GetComponent<PolygonCollider2D>().enabled = true;
+		foreach (Transform child in transform)
+		{
+			child.gameObject.SetActive(true);
+		}
+	}
 
 	void Start()		
 	{ 
