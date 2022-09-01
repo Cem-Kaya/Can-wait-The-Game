@@ -97,7 +97,7 @@ public class Inner_layout_manager : NetworkBehaviour
 
 		tmp_inf = Room_controller.instance.current_room_info;
 		rng = new System.Random(Dungeon_controller.instance.init_vector * tmp_inf.x * 42 + Dungeon_controller.instance.init_vector * tmp_inf.y * 68);
-		rng_sorter = new System.Random(Dungeon_controller.instance.init_vector * tmp_inf.x * 42 + Dungeon_controller.instance.init_vector * tmp_inf.y * 68);
+		rng_sorter = new System.Random(Dungeon_controller.instance.init_vector  + Dungeon_controller.instance.init_vector * tmp_inf.x * 42 + Dungeon_controller.instance.init_vector * tmp_inf.y * 68);
 		my_type = Dungeon_controller.instance.current_floor.floor_data[(tmp_inf.x, tmp_inf.y)].value;
 
 		if (!Dungeon_controller.instance.special.ContainsKey((tmp_inf.x, tmp_inf.y)))

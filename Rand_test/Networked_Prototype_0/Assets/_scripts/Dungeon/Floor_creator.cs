@@ -143,19 +143,22 @@ public class Floor
 	int max_x, max_y;
 
 	public List<door_dir> up_connection = new List<door_dir>();
-    public List<door_dir> down_connection = new List<door_dir>();
-    public List<door_dir> left_connection = new List<door_dir>();
-    public List<door_dir> right_connection = new List<door_dir>();
+	public List<door_dir> down_connection = new List<door_dir>();
+	public List<door_dir> left_connection = new List<door_dir>();
+	public List<door_dir> right_connection = new List<door_dir>();
 
 	public int max_tree_size;
-    public Tile any_node_from_max_tree;
+	public Tile any_node_from_max_tree;
 
 	//coordinates of directions in texture atlas
-    public Dictionary<door_dir, (int, int)> tile_map_coord = new Dictionary<door_dir, (int, int)>();
+	public Dictionary<door_dir, (int, int)> tile_map_coord = new Dictionary<door_dir, (int, int)>();
 
 	public Dictionary<(int, int), Tile> floor_data = new Dictionary<(int, int), Tile>();
 
+	public List<(int, int)> reachable_map_tree = new List<(int, int)>();
+
 	Dictionary<(door_dir, string), List<door_dir>> rules = new Dictionary<(door_dir, string), List<door_dir>>();
+	
 	public void fill_tables()
 	{
 		rules.Add((door_dir.blank, "u"), new List<door_dir> { door_dir.d, door_dir.urdl, door_dir.rdl, door_dir.dl, door_dir.ud, door_dir.dlu, door_dir.rd, door_dir.urd });
@@ -219,8 +222,8 @@ public class Floor
 
 		//ones with d in them
 		rules.Add((door_dir.rd, "u"), new List<door_dir> { door_dir.d, door_dir.ud, door_dir.urd, door_dir.urdl, door_dir.dl, door_dir.dlu, door_dir.rdl, door_dir.rd });
-        //ones without l in them
-        rules.Add((door_dir.rd, "r"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.u, door_dir.rd, door_dir.ur, door_dir.blank, door_dir.ud, door_dir.urd });
+		//ones without l in them
+		rules.Add((door_dir.rd, "r"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.u, door_dir.rd, door_dir.ur, door_dir.blank, door_dir.ud, door_dir.urd });
 		//ones without u in them
 		rules.Add((door_dir.rd, "d"), new List<door_dir> { door_dir.r, door_dir.d, door_dir.l, door_dir.rd, door_dir.rl, door_dir.blank, door_dir.dl, door_dir.rdl });
 		//ones with r in them
@@ -359,7 +362,7 @@ public class Floor
 
 		List<KeyValuePair<(int,int), Tile>> subList = floor_data.Where( item  => (item.Value.possible_num == min.possible_num)).ToList();
 
-        var ret = subList[RNG.Next(0,subList.Count)].Value ;
+		var ret = subList[RNG.Next(0,subList.Count)].Value ;
 		//Debug.Log( "the tile with min enthropy has " + ret.possible_num + "and is " + ret.x_cord + " , " + ret.y_cord);
 		return ret;
 	}
@@ -401,6 +404,7 @@ public class Floor
 		}
 
 	}
+
 	public void print_status()
 	{
 		for (int j = max_y - 1; j >= 0; j--)
@@ -493,7 +497,6 @@ public class Floor
 			Debug.Log("can not find a solution ");
 			return false;
 		}
-
 	}
 
 	//this function is utilized to get the biggest map out of all generated maps
@@ -508,7 +511,8 @@ public class Floor
 			}
 		}
 
-		//		
+		//traverse the whole grid. summary: the foreach on top starts traversing the whole grid, the one
+		//below (while loop) traverses all the connected rooms		
 		foreach(var tile in floor_data)
 		{
 			Tile node = tile.Value;
@@ -519,6 +523,7 @@ public class Floor
 			}		
 			
 			int this_tree_size=0;
+			//traverse one connected room
 			while (stack.Count > 0)
 			{				
 				Tile this_node = stack.Pop();
@@ -543,21 +548,9 @@ public class Floor
 					}
 					
 				}
-                if (right_connection.Contains(this_node.value))
-                {
+				if (right_connection.Contains(this_node.value))
+				{
 						Tile next_node = floor_data[(this_node.x_cord + 1, this_node.y_cord)];
-                    if (!stack.Contains(next_node)) {
-
-                        if (!visited[(next_node.x_cord, next_node.y_cord)])
-						{
-							stack.Push(next_node);
-						}
-					}
-
-                }
-                if (left_connection.Contains(this_node.value))
-                {
-                    Tile next_node = floor_data[(this_node.x_cord - 1, this_node.y_cord)];
 					if (!stack.Contains(next_node)) {
 
 						if (!visited[(next_node.x_cord, next_node.y_cord)])
@@ -566,10 +559,10 @@ public class Floor
 						}
 					}
 
-                }
-                if (down_connection.Contains(this_node.value))
-                {
-                    Tile next_node = floor_data[(this_node.x_cord, this_node.y_cord-1)];
+				}
+				if (left_connection.Contains(this_node.value))
+				{
+					Tile next_node = floor_data[(this_node.x_cord - 1, this_node.y_cord)];
 					if (!stack.Contains(next_node)) {
 
 						if (!visited[(next_node.x_cord, next_node.y_cord)])
@@ -578,20 +571,120 @@ public class Floor
 						}
 					}
 
-                }
-            }
+				}
+				if (down_connection.Contains(this_node.value))
+				{
+					Tile next_node = floor_data[(this_node.x_cord, this_node.y_cord-1)];
+					if (!stack.Contains(next_node)) {
+
+						if (!visited[(next_node.x_cord, next_node.y_cord)])
+						{
+							stack.Push(next_node);
+						}
+					}
+
+				}
+			}
 		}
 		//Debug.Log("max tree size:" + max_tree_size);
 		//Debug.Log("any node from max tree: " + any_node_from_max_tree.x_cord + " " + any_node_from_max_tree.y_cord);
 		if (max_tree_size > max_x* max_y /2)
-		{		
+		{
+			fill_max_tree_list();
 			return true;
-		} 
+		}
+		fill_max_tree_list();
 		return false;
 	}
 
+	public void fill_max_tree_list()
+	{
+		reachable_map_tree = new List<(int, int)>();
+		Dictionary<(int, int), bool> visited = new Dictionary<(int, int), bool>();
+		for (int j = max_y - 1; j >= 0; j--)
+		{
+			for (int i = 0; i < max_x; i++)
+			{
+				visited[(i, j)] = false;
+			}
+		}
+		//since the function below will traverse connected rooms this node is pushed to the stack so that raversal
+		//can start from a node inside the tree
+		Tile node = any_node_from_max_tree ;
+		Stack<Tile> stack = new Stack<Tile>();
+		if (!visited[(node.x_cord, node.y_cord)])
+		{
+			stack.Push(node);
+		}
+		
+		//traverse one connected room in the map
+		while (stack.Count > 0)
+		{
+			Tile this_node = stack.Pop();
+			visited[(this_node.x_cord, this_node.y_cord)] = true;
+			
+			
+			(int, int) tmp_touple = (this_node.x_cord, this_node.y_cord);
+			reachable_map_tree.Add(tmp_touple);
+			
+			
+			if (up_connection.Contains(this_node.value))
+			{
+				Tile next_node = floor_data[(this_node.x_cord, this_node.y_cord + 1)];
+				if (!stack.Contains(next_node))
+				{
+					if (!visited[(next_node.x_cord, next_node.y_cord)])
+					{
+						stack.Push(next_node);
+					}
+				}
+			}
+
+			if (right_connection.Contains(this_node.value))
+			{
+				Tile next_node = floor_data[(this_node.x_cord + 1, this_node.y_cord)];
+				if (!stack.Contains(next_node))
+				{
+					if (!visited[(next_node.x_cord, next_node.y_cord)])
+					{
+						stack.Push(next_node);
+					}
+				}
+			}
+
+			if (left_connection.Contains(this_node.value))
+			{
+				Tile next_node = floor_data[(this_node.x_cord - 1, this_node.y_cord)];
+				if (!stack.Contains(next_node))
+				{
+					if (!visited[(next_node.x_cord, next_node.y_cord)])
+					{
+						stack.Push(next_node);
+					}
+				}
+			}
+
+			if (down_connection.Contains(this_node.value))
+			{
+				Tile next_node = floor_data[(this_node.x_cord, this_node.y_cord - 1)];
+				if (!stack.Contains(next_node))
+				{
+					if (!visited[(next_node.x_cord, next_node.y_cord)])
+					{
+						stack.Push(next_node);
+					}
+				}
+			}
+		}
+	}
+
+	public List<(int,int)> get_max_tree()
+	{
+		return reachable_map_tree;
+	}
 }
 
+//DEPRECATED, ONLY USED TO SHOWCASE WAVE FUNCTION COLLAPSE
 public class Floor_creator : MonoBehaviour
 {
 	Color light_grey = new Color(0.7f, 0.7f, 0.7f, 1f);
@@ -706,8 +799,8 @@ public class Floor_creator : MonoBehaviour
 		}
 	}
 
-    IEnumerator gen_map()
-    {
+	IEnumerator gen_map()
+	{
 		while (true)
 		{
 			floor.start_collapse();
@@ -724,7 +817,7 @@ public class Floor_creator : MonoBehaviour
 			floor.reset_floor();
 			draw_grid();
 		}
-    }
+	}
 
 	IEnumerator update_texture()
 	{
