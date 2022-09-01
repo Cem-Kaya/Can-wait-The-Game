@@ -35,6 +35,7 @@ public class Door_controller : NetworkBehaviour
 	}
 	public void unlock_doors()
 	{
+		Debug.Log("unlocking doors");
 		locked = false;
 		StartCoroutine(door_mover());
 

@@ -109,7 +109,7 @@ public class Inner_layout_manager : NetworkBehaviour
 		else
 		{
 			// Debug.Log("in special ROOM dah ? ");
-			on_no_enemy?.Invoke();
+			if (IsServer) invoke_on_no_enemy_ClientRpc();
 			if (IsServer) {
 				string room_type = Dungeon_controller.instance.special[(tmp_inf.x, tmp_inf.y)];
 				if (room_type == "start")
@@ -124,6 +124,11 @@ public class Inner_layout_manager : NetworkBehaviour
 
 	}
 
+	[ClientRpc]
+	public void invoke_on_no_enemy_ClientRpc()
+	{
+		on_no_enemy?.Invoke();
+	}
 	// Update is called once per frame
 	void Update()
 	{
@@ -136,7 +141,7 @@ public class Inner_layout_manager : NetworkBehaviour
 		num_enemy--;
 		if(num_enemy == 0)
 		{
-			on_no_enemy?.Invoke();
+			if (IsServer) invoke_on_no_enemy_ClientRpc();
 		}
 		//Debug.Log("Num of enemies after the event is triggered: " + num_enemy);
 	}
@@ -202,7 +207,7 @@ public class Inner_layout_manager : NetworkBehaviour
 		}
 		else
 		{
-			on_no_enemy?.Invoke();
+			if (IsServer) invoke_on_no_enemy_ClientRpc();
 		}
 	
 		
