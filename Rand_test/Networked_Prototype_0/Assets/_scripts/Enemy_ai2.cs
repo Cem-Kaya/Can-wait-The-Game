@@ -108,7 +108,10 @@ public class Enemy_ai2 : NetworkBehaviour
 	private void walk()
 	{
 		//transform.rotation = look_dir;//Quaternion.LookRotation(Vector3.forward, walking_direction);
-		rb.velocity = Vector2.ClampMagnitude(walking_direction * speed + new Vector2(0.5f, 0.5f), speed);
+		if (rb != null)
+		{
+			rb.velocity = Vector2.ClampMagnitude(walking_direction * speed + new Vector2(0.5f, 0.5f), speed);
+		}
 	}
 
 
@@ -116,7 +119,7 @@ public class Enemy_ai2 : NetworkBehaviour
 	private void show_attack_ClientRpc(Vector3 fire_dir)
 	{
 		GameObject bullet = Instantiate(enemy_bulet_prefab, transform.position, Quaternion.identity);
-		fire_dir.Normalize();
+		fire_dir.Normalize();		
 		bullet.GetComponent<Rigidbody2D>().velocity = fire_dir * 10;
 
 	}
