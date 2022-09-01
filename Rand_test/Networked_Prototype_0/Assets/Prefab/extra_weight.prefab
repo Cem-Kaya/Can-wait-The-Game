@@ -214,6 +214,7 @@ MonoBehaviour:
   vision_range: 6
   speed: 3
   player_position: {x: 0, y: 0, z: 0}
+  health_for_setting: 25
   health:
     m_InternalValue: 0
 --- !u!50 &2528314809511988412

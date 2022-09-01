@@ -21,6 +21,8 @@ public class Enemy_ai : NetworkBehaviour
 	public float speed = 3;
 	public Vector3 player_position;
 
+	public int health_for_setting;
+
 	public NetworkVariable<float> health = new NetworkVariable<float>();
 	//network variable yaptim ya networkobject component ini koyunca boylece oldu.
 
@@ -54,7 +56,7 @@ public class Enemy_ai : NetworkBehaviour
 		rb = GetComponent<Rigidbody2D>();
 		StartCoroutine(random_walk());
 
-		if(IsServer) health.Value = 25f;
+		if(IsServer) health.Value = health_for_setting;
 	}
 
 	// Update is called once per frame
