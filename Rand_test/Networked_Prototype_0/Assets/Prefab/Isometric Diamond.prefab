@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 8130310601243210537}
   - component: {fileID: 8130310601243210550}
   - component: {fileID: 8130310601243210551}
-  - component: {fileID: 8130310601243210539}
   - component: {fileID: 486065639}
   - component: {fileID: 486065640}
+  - component: {fileID: 8130310601243210539}
   m_Layer: 8
   m_Name: Isometric Diamond
   m_TagString: Untagged
@@ -139,26 +139,6 @@ PolygonCollider2D:
       - {x: -0.5, y: 0}
       - {x: 0, y: -0.25}
       - {x: 0.5, y: 0}
---- !u!114 &8130310601243210539
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8130310601243210548}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96f161a2a1e3c014bb01a5efa2a80995, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemy_bulet_prefab: {fileID: 3328856245552549956, guid: 36f83498221551241bb0538899551136, type: 3}
-  state: 1
-  vision_range: 5
-  speed: 1
-  fdelay: 20
-  player_position: {x: 0, y: 0, z: 0}
-  health:
-    m_InternalValue: 0
 --- !u!114 &486065639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -201,3 +181,24 @@ MonoBehaviour:
   ScaleThreshold: 0.01
   InLocalSpace: 0
   Interpolate: 1
+--- !u!114 &8130310601243210539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8130310601243210548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96f161a2a1e3c014bb01a5efa2a80995, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemy_bulet_prefab: {fileID: 3328856245552549956, guid: 36f83498221551241bb0538899551136, type: 3}
+  state: 1
+  vision_range: 5
+  speed: 1
+  fdelay: 35
+  player_position: {x: 0, y: 0, z: 0}
+  health:
+    m_InternalValue: 0
+  health_for_setting: 12

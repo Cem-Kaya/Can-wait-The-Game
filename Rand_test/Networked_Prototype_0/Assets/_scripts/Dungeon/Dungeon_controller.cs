@@ -155,7 +155,7 @@ public class Dungeon_controller : NetworkBehaviour
 		ret = sosted.Values[sosted.Count - 1];
 		draw_boss_room(ret.Item1, ret.Item2);
 
-		Debug.Log("item_room" + ret);
+		//Debug.Log("item_room" + ret);
 		item_room = ret;
 		special.Add(ret, "itemroom");
 		return ret;

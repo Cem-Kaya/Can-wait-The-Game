@@ -18,6 +18,7 @@ public class Enemy_ai2 : NetworkBehaviour
 
 	public Vector3 player_position;
 	public NetworkVariable<float> health = new NetworkVariable<float>();
+	public int health_for_setting;
 
 	private ulong timer;
 	private ulong last_firesd;
@@ -51,7 +52,7 @@ public class Enemy_ai2 : NetworkBehaviour
 
 		rb = GetComponent<Rigidbody2D>();
 		StartCoroutine(random_walk());
-
+		if (IsServer) health.Value = health_for_setting;
 	}
 
 	void Update()
