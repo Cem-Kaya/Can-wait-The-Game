@@ -262,6 +262,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   confiner_object: {fileID: 0}
   confiner_collider: {fileID: 0}
+  once: 1
 --- !u!114 &199807860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -328,17 +329,17 @@ MonoBehaviour:
   m_MoveRepeatDelay: 0.5
   m_MoveRepeatRate: 0.1
   m_XRTrackingOrigin: {fileID: 0}
-  m_ActionsAsset: {fileID: -944628639613478452, guid: a6a74532a7cb2e64a9425aebab30dc13, type: 3}
-  m_PointAction: {fileID: 8661702536537174818, guid: a6a74532a7cb2e64a9425aebab30dc13, type: 3}
-  m_MoveAction: {fileID: -2262538962869133044, guid: a6a74532a7cb2e64a9425aebab30dc13, type: 3}
-  m_SubmitAction: {fileID: 1667069222361157086, guid: a6a74532a7cb2e64a9425aebab30dc13, type: 3}
-  m_CancelAction: {fileID: 8369084457569059989, guid: a6a74532a7cb2e64a9425aebab30dc13, type: 3}
-  m_LeftClickAction: {fileID: -6963397272234944192, guid: a6a74532a7cb2e64a9425aebab30dc13, type: 3}
-  m_MiddleClickAction: {fileID: -8609086153940225851, guid: a6a74532a7cb2e64a9425aebab30dc13, type: 3}
-  m_RightClickAction: {fileID: -5840093354784590877, guid: a6a74532a7cb2e64a9425aebab30dc13, type: 3}
-  m_ScrollWheelAction: {fileID: -6137723340177407186, guid: a6a74532a7cb2e64a9425aebab30dc13, type: 3}
-  m_TrackedDevicePositionAction: {fileID: 3539211635225115301, guid: a6a74532a7cb2e64a9425aebab30dc13, type: 3}
-  m_TrackedDeviceOrientationAction: {fileID: 49175952177284281, guid: a6a74532a7cb2e64a9425aebab30dc13, type: 3}
+  m_ActionsAsset: {fileID: -944628639613478452, guid: 84ffae88f70016e4a870e7056b6fa291, type: 3}
+  m_PointAction: {fileID: 8661702536537174818, guid: 84ffae88f70016e4a870e7056b6fa291, type: 3}
+  m_MoveAction: {fileID: -2262538962869133044, guid: 84ffae88f70016e4a870e7056b6fa291, type: 3}
+  m_SubmitAction: {fileID: 1667069222361157086, guid: 84ffae88f70016e4a870e7056b6fa291, type: 3}
+  m_CancelAction: {fileID: 8369084457569059989, guid: 84ffae88f70016e4a870e7056b6fa291, type: 3}
+  m_LeftClickAction: {fileID: -6963397272234944192, guid: 84ffae88f70016e4a870e7056b6fa291, type: 3}
+  m_MiddleClickAction: {fileID: -8609086153940225851, guid: 84ffae88f70016e4a870e7056b6fa291, type: 3}
+  m_RightClickAction: {fileID: -5840093354784590877, guid: 84ffae88f70016e4a870e7056b6fa291, type: 3}
+  m_ScrollWheelAction: {fileID: -6137723340177407186, guid: 84ffae88f70016e4a870e7056b6fa291, type: 3}
+  m_TrackedDevicePositionAction: {fileID: 3539211635225115301, guid: 84ffae88f70016e4a870e7056b6fa291, type: 3}
+  m_TrackedDeviceOrientationAction: {fileID: 49175952177284281, guid: 84ffae88f70016e4a870e7056b6fa291, type: 3}
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
 --- !u!114 &280367517
@@ -557,10 +558,10 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnUp: {fileID: 415196249}
+    m_SelectOnDown: {fileID: 415196249}
+    m_SelectOnLeft: {fileID: 415196249}
+    m_SelectOnRight: {fileID: 415196249}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -1171,11 +1172,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1373186091 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3917936038364450636, guid: 6442cf460b842004ca549386dd2147d9, type: 3}
-  m_PrefabInstance: {fileID: 3917936039157770087}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1539181260 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4117560263745922676, guid: 6f2fbfeb65ad00f46858e944b6cf3f29, type: 3}
@@ -1488,7 +1484,7 @@ Transform:
   m_Children:
   - {fileID: 280367515}
   m_Father: {fileID: 3917936039157770088}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1891252851
 GameObject:
@@ -1561,7 +1557,7 @@ PrefabInstance:
     - target: {fileID: 3479247532333118032, guid: 171e165b59ac2f84d9d339a4d21221d4, type: 3}
       propertyPath: tab_ui
       value: 
-      objectReference: {fileID: 1373186091}
+      objectReference: {fileID: 0}
     - target: {fileID: 3479247532333118033, guid: 171e165b59ac2f84d9d339a4d21221d4, type: 3}
       propertyPath: pause_ui
       value: 
