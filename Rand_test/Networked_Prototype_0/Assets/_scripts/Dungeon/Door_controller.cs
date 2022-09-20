@@ -176,7 +176,11 @@ public class Door_controller : NetworkBehaviour
 
 		foreach (var a in NetworkManager.Singleton.ConnectedClients)
 		{
-			a.Value.PlayerObject.GetComponent<box_mover>().teleport_to_ClientRpc(new Vector2(-transform.position.x + new_room_dir.x * 3.5f, -transform.position.y + new_room_dir.y * 3.5f));
+			if (a.Value.PlayerObject != null) {
+                a.Value.PlayerObject.GetComponent<box_mover>().teleport_to_ClientRpc(new Vector2(-transform.position.x + new_room_dir.x * 3.5f, -transform.position.y + new_room_dir.y * 3.5f));
+            
+			}
+			
 			// Debug.Log("teleported player " + a.Value.PlayerObject.NetworkObjectId + "  Y: " + a.Value.PlayerObject.transform.position.y);
 		}
 

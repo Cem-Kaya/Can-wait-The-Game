@@ -62,8 +62,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bullet_speed: 10
-  health: 200
-  max_health: 200
+  health: 20
+  max_health: 20
   fire_delay: 2
   move_speed: 0
   alive: 0

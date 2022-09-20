@@ -189,13 +189,16 @@ public class Enemy_ai2 : NetworkBehaviour
 			bool ret = false;
 			foreach (var a in NetworkManager.Singleton.ConnectedClients)
 			{
-				ret = Vector2.Distance(transform.position, a.Value.PlayerObject.transform.position) < vision_range;
-				if (ret)
+				if (a.Value.PlayerObject != null)
 				{
-					player_position = a.Value.PlayerObject.transform.position;
-					break;
+					ret = Vector2.Distance(transform.position, a.Value.PlayerObject.transform.position) < vision_range;
+					if (ret)
+					{
+						player_position = a.Value.PlayerObject.transform.position;
+						break;
+					}
+					//Debug.Log(a.Value.PlayerObject.transform.position);
 				}
-				//Debug.Log(a.Value.PlayerObject.transform.position);
 			}
 			return ret;
 		}

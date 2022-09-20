@@ -11,16 +11,18 @@ public class Player_controller : NetworkBehaviour
 	public static  Player_controller instance;
 	
 	public   float bullet_speed =10f;
-	public int health = 200 ;   
-	public int max_health = 200 ; // max health of the player    
+	public int health = 20 ;   
+	public int max_health = 20 ; // max health of the player    
 	public int fire_delay = 2 ;
 	public float move_speed;
 	public bool alive;
 	public bool i_frame ;
 	public float i_frame_sec;
+	public NetworkVariable<int> num_dead;
 
 
 	public NetworkVariable<int> coin_num;
+
 
 	
 	void Awake()
@@ -28,6 +30,7 @@ public class Player_controller : NetworkBehaviour
 		
 		i_frame = false;
 		i_frame_sec = 0.5f;
+		
 		if (instance == null)
 		{
 			instance = this;
@@ -42,7 +45,7 @@ public class Player_controller : NetworkBehaviour
 	{
 		DontDestroyOnLoad(this.gameObject);
 		coin_num.Value = 0;
-		
+		num_dead.Value = 0;
 		
 	}
 
@@ -103,9 +106,92 @@ public class Player_controller : NetworkBehaviour
 		SceneManager.LoadScene("Start_menu", LoadSceneMode.Single);
 	}
 
-	public void death()
+
+	[ServerRpc(RequireOwnership = false)]
+	public void increase_num_dead_ServerRpc()
 	{
-		health = 10;
+		num_dead.Value += 1;
+	}
+
+	[ServerRpc(RequireOwnership = false)]
+	public void check_if_all_dead_ServerRpc()
+	{
+		if (num_dead.Value == NetworkManager.Singleton.ConnectedClients.Count)
+		{
+			go_to_main_menu_ServerRpc();
+		}
+	}
+
+	//this is to kill a server
+
+	[ServerRpc(RequireOwnership = false)]
+	public void despawn_player_ServerRpc(ulong clientID)
+	{
+		NetworkManager.Singleton.ConnectedClients[clientID].PlayerObject.GetComponent<NetworkObject>().Despawn();   
+	}
+
+	public void kill_player()
+	{
+
+		increase_num_dead_ServerRpc();
+        ulong clientID = NetworkManager.Singleton.LocalClientId;
+        despawn_player_ServerRpc(clientID);
+        check_if_all_dead_ServerRpc();
+		//may not need this
+		//ulong clientID = NetworkManager.Singleton.LocalClientId;
+		//despawn_player_ServerRpc(clientID);
+        //foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player"))
+        //{
+        //	if (player.GetComponent<NetworkObject>().IsOwner)
+        //	{
+        //		clientID;
+        //	}
+        //}
+
+        //GameObject.Find("Player(Clone)").GetComponent<NetworkObject>().Despawn(); 
+
+        //    foreach (var a in NetworkManager.Singleton.ConnectedClients)
+        //    {
+
+        //        if ((a.Value.PlayerObject.GetComponent<NetworkObject>().IsOwner == true))
+        //        {
+        //a.Value.PlayerObject.GetComponent<NetworkObject>().Despawn();
+        //            //a.Value.PlayerObject.transform.position = new Vector3(999, 999, 0);
+        //        }
+        //    }
+
+        //gameObject.GetComponent<NetworkObject>().Despawn();
+
+    }
+
+	
+
+	[ServerRpc(RequireOwnership =false)]
+	public void go_to_main_menu_ServerRpc()
+	{
+        NetworkManager.Singleton.SceneManager.LoadScene("Start_menu", LoadSceneMode.Single);
+        go_to_main_menu_ClientRpc();
+	}
+
+		
+	[ClientRpc]
+	public void go_to_main_menu_ClientRpc()
+	{
+		//SceneManager.LoadScene("Start_menu", LoadSceneMode.Single);
+
+		//NetworkManager.Singleton.SceneManager.LoadScene("Start_menu", LoadSceneMode.Single);
+		Debug.Log("Working");
+		NetworkManager.Singleton.Shutdown();
+        Destroy(NetworkManager.Singleton.gameObject);
+        //SceneManager.LoadScene("Start_menu", LoadSceneMode.Single);
+        Destroy(Room_controller.instance.gameObject);
+        
+
+    }
+
+    public void death()
+	{
+		health = 20;
 		/*
 		foreach (var a in NetworkManager.Singleton.ConnectedClients)
 		{
@@ -126,8 +212,9 @@ public class Player_controller : NetworkBehaviour
 		*/
 		//SceneManager.LoadScene("Start_room");
 		
-		if(IsServer) death_ClientRpc();
-		
+		kill_player(); 
+
+
 	}
 
    
@@ -143,19 +230,19 @@ public class Player_controller : NetworkBehaviour
 	}
 
  
-    
+	
 	public void decrease_coin_num(int i)
 	{
-        decrease_coin_num_ServerRpc(i);
+		decrease_coin_num_ServerRpc(i);
 	}
 
-    [ServerRpc (RequireOwnership = false)]
-    public void decrease_coin_num_ServerRpc(int i)
-    {
-        coin_num.Value -= i;
-    }
+	[ServerRpc (RequireOwnership = false)]
+	public void decrease_coin_num_ServerRpc(int i)
+	{
+		coin_num.Value -= i;
+	}
 
-    public void inc_max_health(int mx_health)
+	public void inc_max_health(int mx_health)
 	{
 
 		max_health += mx_health;
