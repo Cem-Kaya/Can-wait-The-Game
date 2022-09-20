@@ -50,15 +50,17 @@ public class EndMenuController : NetworkBehaviour
 
         yield return new WaitForSeconds(3);
         NetworkManager.Singleton.Shutdown();
-        Destroy(NetworkManager.Singleton.gameObject);
+        Destroy(NetworkManager.Singleton.gameObject); 
         Destroy(Room_controller.instance.gameObject);
+
     }
 
     // Start is called before the first frame update
     void Start()
     {
         
-        if(!IsHost) StartCoroutine(network_manager_shutdown());
+        
+        if (!IsHost) StartCoroutine(network_manager_shutdown());
         if (IsServer)
         {
             StartCoroutine(network_destroyer_delay());
@@ -97,6 +99,15 @@ public class EndMenuController : NetworkBehaviour
     public void End_game()
     {
         Application.Quit();
+    }
+
+    public void OnDestroy()
+    {
+        GameObject destroyable= GameObject.Find("Room_controller");
+        if(destroyable != null)
+        {
+            Destroy(destroyable);
+        }
     }
 
 }
