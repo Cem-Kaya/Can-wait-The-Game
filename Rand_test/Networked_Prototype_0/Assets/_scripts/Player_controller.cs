@@ -19,15 +19,15 @@ public class Player_controller : NetworkBehaviour
 	public bool i_frame ;
 	public float i_frame_sec;
 	public NetworkVariable<int> num_dead;
+    public NetworkVariable<int> num_at_menu;
 
-
-	public NetworkVariable<int> coin_num;
+    public NetworkVariable<int> coin_num;
 
 
 	
 	void Awake()
 	{
-		
+		num_at_menu.Value = 0;
 		i_frame = false;
 		i_frame_sec = 0.5f;
 		
@@ -113,13 +113,27 @@ public class Player_controller : NetworkBehaviour
 		num_dead.Value += 1;
 	}
 
-	[ServerRpc(RequireOwnership = false)]
+    [ServerRpc(RequireOwnership = false)]
+    public void increase_num_at_menu_ServerRpc()
+    {
+        num_at_menu.Value += 1;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
 	public void check_if_all_dead_ServerRpc()
 	{
 		if (num_dead.Value == NetworkManager.Singleton.ConnectedClients.Count)
 		{
-			go_to_main_menu_ServerRpc();
+			Debug.Log("Time to go to end screen");
+			NetworkManager.Singleton.SceneManager.LoadScene("End_screen", LoadSceneMode.Single);
+			//go_to_end_screen_ServerRpc();
 		}
+	}
+
+	[ServerRpc]
+	public void go_to_end_screen_ServerRpc()
+	{
+		NetworkManager.Singleton.SceneManager.LoadScene("End_screen", LoadSceneMode.Single);
 	}
 
 	//this is to kill a server
@@ -134,44 +148,44 @@ public class Player_controller : NetworkBehaviour
 	{
 
 		increase_num_dead_ServerRpc();
-        ulong clientID = NetworkManager.Singleton.LocalClientId;
-        despawn_player_ServerRpc(clientID);
-        check_if_all_dead_ServerRpc();
+		ulong clientID = NetworkManager.Singleton.LocalClientId;
+		despawn_player_ServerRpc(clientID);
+		check_if_all_dead_ServerRpc();
 		//may not need this
 		//ulong clientID = NetworkManager.Singleton.LocalClientId;
 		//despawn_player_ServerRpc(clientID);
-        //foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player"))
-        //{
-        //	if (player.GetComponent<NetworkObject>().IsOwner)
-        //	{
-        //		clientID;
-        //	}
-        //}
+		//foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player"))
+		//{
+		//	if (player.GetComponent<NetworkObject>().IsOwner)
+		//	{
+		//		clientID;
+		//	}
+		//}
 
-        //GameObject.Find("Player(Clone)").GetComponent<NetworkObject>().Despawn(); 
+		//GameObject.Find("Player(Clone)").GetComponent<NetworkObject>().Despawn(); 
 
-        //    foreach (var a in NetworkManager.Singleton.ConnectedClients)
-        //    {
+		//    foreach (var a in NetworkManager.Singleton.ConnectedClients)
+		//    {
 
-        //        if ((a.Value.PlayerObject.GetComponent<NetworkObject>().IsOwner == true))
-        //        {
-        //a.Value.PlayerObject.GetComponent<NetworkObject>().Despawn();
-        //            //a.Value.PlayerObject.transform.position = new Vector3(999, 999, 0);
-        //        }
-        //    }
+		//        if ((a.Value.PlayerObject.GetComponent<NetworkObject>().IsOwner == true))
+		//        {
+		//a.Value.PlayerObject.GetComponent<NetworkObject>().Despawn();
+		//            //a.Value.PlayerObject.transform.position = new Vector3(999, 999, 0);
+		//        }
+		//    }
 
-        //gameObject.GetComponent<NetworkObject>().Despawn();
+		//gameObject.GetComponent<NetworkObject>().Despawn();
 
-    }
+	}
 
 	
 
-	[ServerRpc(RequireOwnership =false)]
-	public void go_to_main_menu_ServerRpc()
-	{
-        NetworkManager.Singleton.SceneManager.LoadScene("Start_menu", LoadSceneMode.Single);
-        go_to_main_menu_ClientRpc();
-	}
+	//[ServerRpc(RequireOwnership =false)]
+	//public void go_to_main_menu_ServerRpc()
+	//{
+	//	NetworkManager.Singleton.SceneManager.LoadScene("Start_menu", LoadSceneMode.Single);
+	//	go_to_main_menu_ClientRpc();
+	//}
 
 		
 	[ClientRpc]
@@ -179,17 +193,17 @@ public class Player_controller : NetworkBehaviour
 	{
 		//SceneManager.LoadScene("Start_menu", LoadSceneMode.Single);
 
-		//NetworkManager.Singleton.SceneManager.LoadScene("Start_menu", LoadSceneMode.Single);
+		NetworkManager.Singleton.SceneManager.LoadScene("Start_menu", LoadSceneMode.Single);
 		Debug.Log("Working");
 		NetworkManager.Singleton.Shutdown();
-        Destroy(NetworkManager.Singleton.gameObject);
-        //SceneManager.LoadScene("Start_menu", LoadSceneMode.Single);
-        Destroy(Room_controller.instance.gameObject);
-        
+		Destroy(NetworkManager.Singleton.gameObject);
+		//SceneManager.LoadScene("Start_menu", LoadSceneMode.Single);
+		Destroy(Room_controller.instance.gameObject);
+		
 
-    }
+	}
 
-    public void death()
+	public void death()
 	{
 		health = 20;
 		/*
