@@ -98,6 +98,7 @@ public class Inner_layout_manager : NetworkBehaviour
 	{
 		Enemy_ai.on_death += on_death_dec;
 		Enemy_ai2.on_death += on_death_dec;
+		Enemy_ai3_boss.on_death += on_death_dec;
 
 		tmp_inf = Room_controller.instance.current_room_info;
 		rng = new System.Random(Dungeon_controller.instance.init_vector * tmp_inf.x * 42 + Dungeon_controller.instance.init_vector * tmp_inf.y * 68);
@@ -142,7 +143,8 @@ public class Inner_layout_manager : NetworkBehaviour
 						GameObject boss = Instantiate(boss_prefab, new Vector3(0, 0, 0), Quaternion.identity);
 						boss.GetComponent<NetworkObject>().Spawn();
 						spawned_objects.Add(boss);
-                        Dungeon_controller.instance.cleaned[(tmp_inf.x, tmp_inf.y)] = true; // change later if added teleport 
+                        Dungeon_controller.instance.cleaned[(tmp_inf.x, tmp_inf.y)] = true;
+						num_enemy++; // change later if added teleport 
                     }
 				}
 			}
@@ -900,6 +902,7 @@ public class Inner_layout_manager : NetworkBehaviour
 	{
 		Enemy_ai.on_death -= on_death_dec;
 		Enemy_ai2.on_death -= on_death_dec;
+		Enemy_ai3_boss.on_death -= on_death_dec;
 
 		foreach (GameObject spawned_object in spawned_objects)
 		{

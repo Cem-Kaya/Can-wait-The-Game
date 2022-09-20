@@ -37,10 +37,12 @@ public class Time_capsule : NetworkBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (collision.gameObject.tag == "Player")
+        Debug.Log("Entered collision");
+        if (other.tag == "Player")
         {
+            Debug.Log("inif");
             despawn_all_players_ServerRpc();
             go_to_win_screen_ServerRpc();
         }
