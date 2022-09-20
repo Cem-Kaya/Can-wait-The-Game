@@ -135,8 +135,14 @@ public class Inner_layout_manager : NetworkBehaviour
 				}
 			}
 		}
-
-
+		// sementicly wrong but close enough to the correct place should place at the end o f all the generation paths 
+		foreach (var a in NetworkManager.Singleton.ConnectedClients)
+		{
+			if (a.Value.PlayerObject != null)
+			{
+				a.Value.PlayerObject.GetComponent<box_mover>().show();
+			}
+		}
 	}
 
 	[ClientRpc]

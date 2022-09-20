@@ -25,7 +25,7 @@ public class box_mover : NetworkBehaviour
 	Rigidbody2D rb;
 	private int moving;
 	private Vector2 movement_direction;
-	
+	bool can_move;
 	private int fireing ;
 	private Vector2 fire_direction;
 
@@ -44,7 +44,8 @@ public class box_mover : NetworkBehaviour
 
 
 	public void Awake()
-	{		
+	{
+		can_move = true;
 		control = new Player_input_actions();
 		terminal_velocity = 50 ;
 		control.player.move.started += ctx => start_move(ctx.ReadValue<Vector2>());// gets input too early cant read multipress // register to the system with contect ctx 
@@ -87,7 +88,7 @@ public class box_mover : NetworkBehaviour
 		rb.velocity = Vector3.ClampMagnitude(rb.velocity, terminal_velocity);
 		//Debug.Log("V : "+ rb.velocity);
 		fire();
-		if (moving>0) {			
+		if (moving>0 && can_move ) {			
 			rb.velocity = new Vector2(movement_direction.x , movement_direction.y );
 			rb.velocity *= speed;
 		}
@@ -172,9 +173,32 @@ public class box_mover : NetworkBehaviour
 
 	public void teleport_to(Vector2 to)
 	{
+		
 		rb.velocity = new Vector2(0, 0);
 		transform.position = to;
-
+		
+	}
+	
+	public void hide()
+	{
+		// get the sprite renderer component of this object
+		GetComponent<SpriteRenderer>().enabled = false;
+		can_move = false;
+	}
+	
+	public void show()
+	{
+		foreach (var a in NetworkManager.Singleton.ConnectedClients)
+		{
+			if (a.Value.PlayerObject != null)
+			{
+				a.Value.PlayerObject.GetComponent<box_mover>().show() ;
+			}
+			// Debug.Log("teleported player " + a.Value.PlayerObject.NetworkObjectId + "  Y: " + a.Value.PlayerObject.transform.position.y);
+		}
+		// get the sprite renderer component of this object
+		GetComponent<SpriteRenderer>().enabled = true;
+		can_move = true ;
 	}
 
 	[ClientRpc]
@@ -184,6 +208,7 @@ public class box_mover : NetworkBehaviour
 		{
 			rb.velocity = new Vector2(0, 0);
 			transform.position = to;
+			hide();
 		}
 	}
 
@@ -239,8 +264,7 @@ public class box_mover : NetworkBehaviour
 		}
 	}
 	public void dec_coin_num(int price)
-	{
-	
+	{	
 		GameObject.Find("Player_controller").GetComponent<Player_controller>().decrease_coin_num(price);
 			
 	}
