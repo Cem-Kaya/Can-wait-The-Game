@@ -150,7 +150,7 @@ public class Inner_layout_manager : NetworkBehaviour
 	}
 
 	
-    
+	
 	[ClientRpc]
 	public void invoke_on_no_enemy_ClientRpc()
 	{
