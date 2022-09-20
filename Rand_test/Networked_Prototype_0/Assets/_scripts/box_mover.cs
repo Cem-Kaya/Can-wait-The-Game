@@ -186,7 +186,7 @@ public class box_mover : NetworkBehaviour
 		can_move = false;
 	}
 	
-    [ClientRpc]
+	[ClientRpc]
 	public void show_ClientRpc()
 	{
 		//foreach (var a in NetworkManager.Singleton.ConnectedClients)
