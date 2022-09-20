@@ -70,6 +70,7 @@ MonoBehaviour:
   shop_prefab: {fileID: 7222555857828967032, guid: 80fbcf115646ca14eac4e7341e4a205c, type: 3}
   item_room_prefab: {fileID: 7222555857828967032, guid: dd0f014f7b5542445b184e0973182802, type: 3}
   boss_prefab: {fileID: 2528314809511988402, guid: 5bcdd0c9f28dc2548b79c93976638614, type: 3}
+  win_door_prefab: {fileID: 7371588465076059790, guid: 4d380bed9ba826543b54576069235245, type: 3}
   enemy_prefab_list:
   - {fileID: 2528314809511988402, guid: 299b75fe50a1ad2468efafad58816e64, type: 3}
   - {fileID: 8130310601243210548, guid: 365960c04cc8ec44a8491f16cf86ca96, type: 3}
