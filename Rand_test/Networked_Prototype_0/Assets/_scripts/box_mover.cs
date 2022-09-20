@@ -186,16 +186,17 @@ public class box_mover : NetworkBehaviour
 		can_move = false;
 	}
 	
-	public void show()
+    [ClientRpc]
+	public void show_ClientRpc()
 	{
-		foreach (var a in NetworkManager.Singleton.ConnectedClients)
-		{
-			if (a.Value.PlayerObject != null)
-			{
-				a.Value.PlayerObject.GetComponent<box_mover>().show() ;
-			}
-			// Debug.Log("teleported player " + a.Value.PlayerObject.NetworkObjectId + "  Y: " + a.Value.PlayerObject.transform.position.y);
-		}
+		//foreach (var a in NetworkManager.Singleton.ConnectedClients)
+		//{
+		//	if (a.Value.PlayerObject != null)
+		//	{
+		//		a.Value.PlayerObject.GetComponent<box_mover>().show() ;
+		//	}
+		//	// Debug.Log("teleported player " + a.Value.PlayerObject.NetworkObjectId + "  Y: " + a.Value.PlayerObject.transform.position.y);
+		//}
 		// get the sprite renderer component of this object
 		GetComponent<SpriteRenderer>().enabled = true;
 		can_move = true ;

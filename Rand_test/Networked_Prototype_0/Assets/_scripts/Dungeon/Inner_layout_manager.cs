@@ -4,6 +4,7 @@ using UnityEngine;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using System.Drawing;
+using Newtonsoft.Json.Bson;
 
 
 //my chunk represents my chunk coordinates (it is 3*5) my grid represents my grid coordinates' world coordinate values
@@ -135,16 +136,21 @@ public class Inner_layout_manager : NetworkBehaviour
 				}
 			}
 		}
-		// sementicly wrong but close enough to the correct place should place at the end o f all the generation paths 
-		foreach (var a in NetworkManager.Singleton.ConnectedClients)
+		// sementicly wrong but close enough to the correct place should place at the end o f all the generation paths
+		if (IsServer)
 		{
-			if (a.Value.PlayerObject != null)
+			foreach (var a in NetworkManager.Singleton.ConnectedClients)
 			{
-				a.Value.PlayerObject.GetComponent<box_mover>().show();
+				if (a.Value.PlayerObject != null)
+				{
+					a.Value.PlayerObject.GetComponent<box_mover>().show_ClientRpc();
+				}
 			}
 		}
 	}
 
+	
+    
 	[ClientRpc]
 	public void invoke_on_no_enemy_ClientRpc()
 	{
