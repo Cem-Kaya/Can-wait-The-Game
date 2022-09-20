@@ -114,7 +114,7 @@ public class Inner_layout_manager : NetworkBehaviour
 		else
 		{
 			// Debug.Log("in special ROOM dah ? ");
-			if (IsServer) invoke_on_no_enemy_ClientRpc();
+			if (IsServer && Dungeon_controller.instance.special[(tmp_inf.x, tmp_inf.y)] != "bossroom") invoke_on_no_enemy_ClientRpc();
 			if (IsServer) {
 				string room_type = Dungeon_controller.instance.special[(tmp_inf.x, tmp_inf.y)];
 				if (room_type == "start")
@@ -131,21 +131,29 @@ public class Inner_layout_manager : NetworkBehaviour
 				}
 				else if (room_type == "bossroom")
 				{
-                   
+				   
 
-                    if (Dungeon_controller.instance.cleaned.ContainsKey((tmp_inf.x, tmp_inf.y))) {
+					if (Dungeon_controller.instance.cleaned.ContainsKey((tmp_inf.x, tmp_inf.y))) {
 						GameObject win_door = Instantiate(win_door_prefab, new Vector3(0, 0, 0), Quaternion.identity);
 						win_door.GetComponent<NetworkObject>().Spawn();
 						spawned_objects.Add(win_door);
 					}
 					else
 					{
-						GameObject boss = Instantiate(boss_prefab, new Vector3(0, 0, 0), Quaternion.identity);
+                        if (!Dungeon_controller.instance.cleaned.ContainsKey((tmp_inf.x, tmp_inf.y)) || Dungeon_controller.instance.cleaned.ContainsKey((tmp_inf.x, tmp_inf.y)) && !Dungeon_controller.instance.cleaned[(tmp_inf.x, tmp_inf.y)])
+                        {
+                            Dungeon_controller.instance.cleaned[(tmp_inf.x, tmp_inf.y)] = true; // change later if added teleport 
+                        
+                        }
+                        else
+                        {
+                            if (IsServer) invoke_on_no_enemy_ClientRpc();
+                        }
+                        GameObject boss = Instantiate(boss_prefab, new Vector3(0, 0, 0), Quaternion.identity);
 						boss.GetComponent<NetworkObject>().Spawn();
 						spawned_objects.Add(boss);
-                        Dungeon_controller.instance.cleaned[(tmp_inf.x, tmp_inf.y)] = true;
 						num_enemy++; // change later if added teleport 
-                    }
+					}
 				}
 			}
 		}
