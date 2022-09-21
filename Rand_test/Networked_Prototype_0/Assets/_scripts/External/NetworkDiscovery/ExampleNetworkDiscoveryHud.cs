@@ -27,10 +27,7 @@ public class ExampleNetworkDiscoveryHud : MonoBehaviour
 
 	Dictionary<IPAddress, DiscoveryResponseData> discoveredServers = new Dictionary<IPAddress, DiscoveryResponseData>();
 
-	private  Vector2 DrawOffset = new Vector2(10, 210);
-
-	
-
+	private  Vector2 DrawOffset;
 
 	void Awake()
 	{
@@ -38,8 +35,9 @@ public class ExampleNetworkDiscoveryHud : MonoBehaviour
 		m_NetworkManager = GetComponent<NetworkManager>();
 		// get screan with in pixels 
 
-		DrawOffset = new Vector2 (Screen.width /2 , Screen.height /2 );
+		DrawOffset = new Vector2 ((Screen.width-500) /2 , Screen.height /3 );
 	}
+
 	private void Start()
 	{
 
@@ -72,7 +70,7 @@ public class ExampleNetworkDiscoveryHud : MonoBehaviour
 
 	void OnGUI()
 	{
-		GUILayout.BeginArea(new Rect(DrawOffset, new Vector2(200, 600)));
+		GUILayout.BeginArea(new Rect(DrawOffset, new Vector2(500, 1000)));
 
 		if (m_NetworkManager.IsServer || m_NetworkManager.IsClient)
 		{
@@ -105,11 +103,26 @@ public class ExampleNetworkDiscoveryHud : MonoBehaviour
 				m_Discovery.ClientBroadcast(new DiscoveryBroadcastData());
 			}
 			
-			GUILayout.Space(40);
+			GUILayout.Space(20);
 			
 			foreach (var discoveredServer in discoveredServers)
 			{
-				if (GUILayout.Button($"{discoveredServer.Value.ServerName}[{discoveredServer.Key.ToString()}]"))
+				string click_name = $"{discoveredServer.Value.ServerName}[{discoveredServer.Key.ToString()}]";
+				
+				if (click_name.Substring(8,3) == "172" || click_name.Substring(8, 3) == "127")
+				{
+					click_name += "(local computer same pc)";
+				}else if (click_name.Substring(8, 3) == "192")
+				{
+					click_name += "(local network same wifi)";
+				}
+				else
+				{
+					click_name += "(unknown/other)";
+				}
+
+
+				if (GUILayout.Button(click_name))
 				{
 					UnityTransport transport = (UnityTransport)m_NetworkManager.NetworkConfig.NetworkTransport;
 					
