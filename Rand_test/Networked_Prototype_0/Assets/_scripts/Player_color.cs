@@ -5,7 +5,7 @@ using Unity.Netcode;
 public class Player_color : NetworkBehaviour
 {
     private readonly NetworkVariable<Color> _netColor = new();
-    private readonly Color[] _colors = { Color.red, Color.blue, Color.green, Color.yellow, Color.black, Color.white, Color.magenta, Color.gray };
+    private readonly Color[] _colors = { Color.HSVToRGB(0.2f, 1f, 1f), Color.blue, Color.green, Color.yellow, Color.black, Color.white, Color.magenta, Color.gray };
     private int _index; 
 
     [SerializeField] private SpriteRenderer _renderer;
