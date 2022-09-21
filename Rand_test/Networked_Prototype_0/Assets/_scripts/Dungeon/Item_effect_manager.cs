@@ -40,13 +40,13 @@ public class Item_effect_manager : NetworkBehaviour
 
 
 	[ClientRpc]
-    public void disable_price_text_ClientRpc()
+	public void disable_price_text_ClientRpc()
 	{
 		price = 0;
-        price_text.enabled = false;
-    }
-    // Update is called once per frame
-    void Update()
+		price_text.enabled = false;
+	}
+	// Update is called once per frame
+	void Update()
 	{
 		
 	}

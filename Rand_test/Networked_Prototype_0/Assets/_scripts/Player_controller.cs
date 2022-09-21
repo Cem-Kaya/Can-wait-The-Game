@@ -11,17 +11,17 @@ public class Player_controller : NetworkBehaviour
 	public static  Player_controller instance;
 	
 	public   float bullet_speed =10f;
-	public int health = 20 ;   
-	public int max_health = 20 ; // max health of the player    
+	public int health = 40 ;   
+	public int max_health = 40 ; // max health of the player    
 	public int fire_delay = 2 ;
 	public float move_speed;
 	public bool alive;
 	public bool i_frame ;
 	public float i_frame_sec;
 	public NetworkVariable<int> num_dead;
-    public NetworkVariable<int> num_at_menu;
+	public NetworkVariable<int> num_at_menu;
 
-    public NetworkVariable<int> coin_num;
+	public NetworkVariable<int> coin_num;
 
 
 	
@@ -113,13 +113,13 @@ public class Player_controller : NetworkBehaviour
 		num_dead.Value += 1;
 	}
 
-    [ServerRpc(RequireOwnership = false)]
-    public void increase_num_at_menu_ServerRpc()
-    {
-        num_at_menu.Value += 1;
-    }
+	[ServerRpc(RequireOwnership = false)]
+	public void increase_num_at_menu_ServerRpc()
+	{
+		num_at_menu.Value += 1;
+	}
 
-    [ServerRpc(RequireOwnership = false)]
+	[ServerRpc(RequireOwnership = false)]
 	public void check_if_all_dead_ServerRpc()
 	{
 		if (num_dead.Value == NetworkManager.Singleton.ConnectedClients.Count)
@@ -205,7 +205,7 @@ public class Player_controller : NetworkBehaviour
 
 	public void death()
 	{
-		health = 20;
+		health = 40;
 		/*
 		foreach (var a in NetworkManager.Singleton.ConnectedClients)
 		{

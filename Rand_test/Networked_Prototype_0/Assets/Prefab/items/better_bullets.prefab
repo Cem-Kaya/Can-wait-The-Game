@@ -219,10 +219,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   delay_dec: 0
   speed_up: 0
-  bullet_bounce: 4
+  bullet_bounce: 3
   bullet_lf: 3
   bullet_dmg: 3
-  bullet_scale: 1.5
+  bullet_scale: 1.2
   bullet_speed: 7
   increase_max_health: 0
   increase_health: 0

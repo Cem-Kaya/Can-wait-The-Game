@@ -106,7 +106,7 @@ MonoBehaviour:
   player_position: {x: 0, y: 0, z: 0}
   health:
     m_InternalValue: 0
-  health_for_setting: 3
+  health_for_setting: 15
 --- !u!61 &2210109047259702972
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1127,7 +1127,7 @@ MonoBehaviour:
   vision_range: 5
   speed: 3
   player_position: {x: 0, y: 0, z: 0}
-  health_for_setting: 50
+  health_for_setting: 200
   health:
     m_InternalValue: 0
 --- !u!1 &2528314809635558867
@@ -1505,7 +1505,7 @@ MonoBehaviour:
   player_position: {x: 0, y: 0, z: 0}
   health:
     m_InternalValue: 0
-  health_for_setting: 3
+  health_for_setting: 15
 --- !u!61 &3767961709885535455
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2408,7 +2408,7 @@ MonoBehaviour:
   player_position: {x: 0, y: 0, z: 0}
   health:
     m_InternalValue: 0
-  health_for_setting: 3
+  health_for_setting: 15
 --- !u!61 &5980375974974620424
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3217,7 +3217,7 @@ MonoBehaviour:
   player_position: {x: 0, y: 0, z: 0}
   health:
     m_InternalValue: 0
-  health_for_setting: 3
+  health_for_setting: 15
 --- !u!61 &452104641809514459
 BoxCollider2D:
   m_ObjectHideFlags: 0

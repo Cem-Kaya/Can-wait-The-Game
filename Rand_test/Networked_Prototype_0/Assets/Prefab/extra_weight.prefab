@@ -295,10 +295,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   amiba: {fileID: 2528314809511988402}
   state: 1
-  vision_range: 6
+  vision_range: 9
   speed: 3
   player_position: {x: 0, y: 0, z: 0}
-  health_for_setting: 25
+  health_for_setting: 15
   health:
     m_InternalValue: 0
 --- !u!50 &2528314809511988412

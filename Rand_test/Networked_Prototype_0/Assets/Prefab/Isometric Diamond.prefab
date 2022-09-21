@@ -199,10 +199,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemy_bulet_prefab: {fileID: 3328856245552549956, guid: 36f83498221551241bb0538899551136, type: 3}
   state: 1
-  vision_range: 5
+  vision_range: 10
   speed: 1
   fdelay: 35
   player_position: {x: 0, y: 0, z: 0}
   health:
     m_InternalValue: 0
-  health_for_setting: 12
+  health_for_setting: 10
