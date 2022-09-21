@@ -95,11 +95,12 @@ public class box_mover : NetworkBehaviour
 
 	public void FixedUpdate()
 	{
+		sdelay--;
 		if (!IsOwner) return;
 		rb.velocity = Vector3.ClampMagnitude(rb.velocity, terminal_velocity);
 		//Debug.Log("V : "+ rb.velocity);
 		fire();
-		sdelay--;
+		
 		if (moving>0 && can_move ) {			
 			rb.velocity = new Vector2(movement_direction.x , movement_direction.y );
 			rb.velocity *= speed;
@@ -186,6 +187,7 @@ public class box_mover : NetworkBehaviour
 		GameObject bullet = Instantiate(bullet_prefab, _spawner.position + new Vector3(fire_dir.x, fire_dir.y, 0), Quaternion.identity);
 		if (sdelay <= 0)
 		{
+
 			PlaySound(bullet_sound);
 			sdelay = 5;
 		}
