@@ -20,7 +20,9 @@ public class box_mover : NetworkBehaviour
 	private ulong  last_firesd ;
 	private ulong timer;
 	public uint fdelay; // 0.01 sec is 1  
+	public long sdelay;
 	private float terminal_velocity ;
+	public AudioClip bullet_sound;
 
 	Rigidbody2D rb;
 	private int moving;
@@ -28,6 +30,7 @@ public class box_mover : NetworkBehaviour
 	bool can_move;
 	private int fireing ;
 	private Vector2 fire_direction;
+	AudioSource audioSource;
 
 	[SerializeField] private Transform _spawner; // Netcode 
 
@@ -75,9 +78,15 @@ public class box_mover : NetworkBehaviour
 		speed = 7 ;
 		rb = GetComponent<Rigidbody2D>();
 		animator = GetComponent<Animator>();
+		audioSource = GetComponent<AudioSource>();
 
 		//coin_text =  GameObject.Find("Coin Text").GetComponent<TextMeshProUGUI>() ;
 		//health_text = GameObject.Find("Health Text").GetComponent<TextMeshProUGUI>();
+	}
+	public void PlaySound(AudioClip clip)
+	{
+		audioSource.PlayOneShot(clip);
+
 	}
 
 	public void Update()
@@ -90,6 +99,7 @@ public class box_mover : NetworkBehaviour
 		rb.velocity = Vector3.ClampMagnitude(rb.velocity, terminal_velocity);
 		//Debug.Log("V : "+ rb.velocity);
 		fire();
+		sdelay--;
 		if (moving>0 && can_move ) {			
 			rb.velocity = new Vector2(movement_direction.x , movement_direction.y );
 			rb.velocity *= speed;
@@ -174,8 +184,11 @@ public class box_mover : NetworkBehaviour
 	{
 		//Debug.Log("timer: " + timer + " last_firesd" + last_firesd);
 		GameObject bullet = Instantiate(bullet_prefab, _spawner.position + new Vector3(fire_dir.x, fire_dir.y, 0), Quaternion.identity);
-
-		
+		if (sdelay <= 0)
+		{
+			PlaySound(bullet_sound);
+			sdelay = 5;
+		}
 		bullet.GetComponent<Bullet_controller>().set_bullet(in_bullet_lf, in_bullet_bounce, in_bullet_dmg, in_bullet_scale);
 		bullet.GetComponent<Rigidbody2D>().velocity = fire_dir * in_bullet_speed ;
 		last_firesd = timer;		
