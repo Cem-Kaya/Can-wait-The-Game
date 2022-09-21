@@ -439,7 +439,9 @@ public class Inner_layout_manager : NetworkBehaviour
 
 	public void layout_health()
 	{
-		if ( rng.Next(0, 10) >=3 ) //mono eney type of room 
+		int tmp_rand = rng.Next(0, 10);
+		//Debug.Log("tmp_rand: "+ tmp_rand);
+		if (tmp_rand >= 3 || true ) //mono eney type of room 
 		{
 			int num_health = rng.Next(1, 4);
 			for (int i = 0; i < num_health; i++)
