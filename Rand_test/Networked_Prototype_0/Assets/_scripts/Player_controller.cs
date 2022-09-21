@@ -20,12 +20,17 @@ public class Player_controller : NetworkBehaviour
 	public float i_frame_sec;
 	public NetworkVariable<int> num_dead;
 	public NetworkVariable<int> num_at_menu;
+	
+	AudioSource audioSource;
 
 	public NetworkVariable<int> coin_num;
 
+	public AudioClip bullet_sound;
+	public AudioClip health_sound;
+    public AudioClip coin_sound;
 
-	
-	void Awake()
+
+    void Awake()
 	{
 		num_at_menu.Value = 0;
 		i_frame = false;
@@ -46,11 +51,19 @@ public class Player_controller : NetworkBehaviour
 		DontDestroyOnLoad(this.gameObject);
 		coin_num.Value = 0;
 		num_dead.Value = 0;
-		
-	}
+        audioSource = GetComponent<AudioSource>();
 
-	// Update is called once per frame
-	void Update()
+    }
+
+    public void PlaySound(AudioClip clip)
+    {
+        audioSource.PlayOneShot(clip);
+
+    }
+
+
+    // Update is called once per frame
+    void Update()
 	{
 		
 	}
@@ -241,9 +254,15 @@ public class Player_controller : NetworkBehaviour
 	public void increase_coin_num(int i)
 	{
 		coin_num.Value += i;
-	}
+		if (IsServer) PlayCoinSound_ClientRpc();
 
- 
+    }
+
+	[ClientRpc]
+    public void PlayCoinSound_ClientRpc()
+	{
+        PlaySound(coin_sound);
+    }
 	
 	public void decrease_coin_num(int i)
 	{

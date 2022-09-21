@@ -5,6 +5,9 @@ using Unity.Netcode;
 
 public class Colection_script : NetworkBehaviour
 {
+
+    AudioSource audioSource;
+
     // Start is called before the first frame update
     void Start()
     {

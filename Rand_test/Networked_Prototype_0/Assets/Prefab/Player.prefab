@@ -244,7 +244,9 @@ MonoBehaviour:
   coin_text: {fileID: 0}
   health_text: {fileID: 0}
   fdelay: 0
+  sdelay: 0
   bullet_sound: {fileID: 8300000, guid: 3ea865a2730d2eb478bcd7ca3f8a9363, type: 3}
+  health_sound: {fileID: 8300000, guid: b83bf8726a7fac349a54389f0c57cda6, type: 3}
   _spawner: {fileID: 2931956275494323237}
 --- !u!114 &1860055655739974895
 MonoBehaviour:

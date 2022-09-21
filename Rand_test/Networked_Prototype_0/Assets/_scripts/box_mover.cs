@@ -22,7 +22,7 @@ public class box_mover : NetworkBehaviour
 	public uint fdelay; // 0.01 sec is 1  
 	public long sdelay;
 	private float terminal_velocity ;
-	public AudioClip bullet_sound;
+
 
 	Rigidbody2D rb;
 	private int moving;
@@ -30,7 +30,6 @@ public class box_mover : NetworkBehaviour
 	bool can_move;
 	private int fireing ;
 	private Vector2 fire_direction;
-	AudioSource audioSource;
 
 	[SerializeField] private Transform _spawner; // Netcode 
 
@@ -78,15 +77,10 @@ public class box_mover : NetworkBehaviour
 		speed = 7 ;
 		rb = GetComponent<Rigidbody2D>();
 		animator = GetComponent<Animator>();
-		audioSource = GetComponent<AudioSource>();
+		
 
 		//coin_text =  GameObject.Find("Coin Text").GetComponent<TextMeshProUGUI>() ;
 		//health_text = GameObject.Find("Health Text").GetComponent<TextMeshProUGUI>();
-	}
-	public void PlaySound(AudioClip clip)
-	{
-		audioSource.PlayOneShot(clip);
-
 	}
 
 	public void Update()
@@ -187,8 +181,8 @@ public class box_mover : NetworkBehaviour
 		GameObject bullet = Instantiate(bullet_prefab, _spawner.position + new Vector3(fire_dir.x, fire_dir.y, 0), Quaternion.identity);
 		if (sdelay <= 0)
 		{
-
-			PlaySound(bullet_sound);
+			
+			Player_controller.instance.PlaySound(Player_controller.instance.bullet_sound);
 			sdelay = 5;
 		}
 		bullet.GetComponent<Bullet_controller>().set_bullet(in_bullet_lf, in_bullet_bounce, in_bullet_dmg, in_bullet_scale);
@@ -302,8 +296,11 @@ public class box_mover : NetworkBehaviour
 		if (IsOwner)
 		{
 			GameObject.Find("Player_controller").GetComponent<Player_controller>().inc_health(in_health);
+			Player_controller.instance.PlaySound(Player_controller.instance.health_sound);
 		}
 	}
+
+	
 	public void dec_coin_num(int price)
 	{	
 		GameObject.Find("Player_controller").GetComponent<Player_controller>().decrease_coin_num(price);
