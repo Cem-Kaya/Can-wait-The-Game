@@ -134,20 +134,20 @@ public class Inner_layout_manager : NetworkBehaviour
 				   
 
 					if (Dungeon_controller.instance.cleaned.ContainsKey((tmp_inf.x, tmp_inf.y))) {
-                        if (IsServer) invoke_on_no_enemy_ClientRpc();
-                        GameObject win_door = Instantiate(win_door_prefab, new Vector3(0, 0, 0), Quaternion.identity);
+						if (IsServer) invoke_on_no_enemy_ClientRpc();
+						GameObject win_door = Instantiate(win_door_prefab, new Vector3(0, 0, 0), Quaternion.identity);
 						win_door.GetComponent<NetworkObject>().Spawn();
 						spawned_objects.Add(win_door);
 					}
 					else
 					{
-                        if (!Dungeon_controller.instance.cleaned.ContainsKey((tmp_inf.x, tmp_inf.y)) || Dungeon_controller.instance.cleaned.ContainsKey((tmp_inf.x, tmp_inf.y)) && !Dungeon_controller.instance.cleaned[(tmp_inf.x, tmp_inf.y)])
-                        {
-                            Dungeon_controller.instance.cleaned[(tmp_inf.x, tmp_inf.y)] = true; // change later if added teleport 
-                        
-                        }
-                        
-                        GameObject boss = Instantiate(boss_prefab, new Vector3(0, 0, 0), Quaternion.identity);
+						if (!Dungeon_controller.instance.cleaned.ContainsKey((tmp_inf.x, tmp_inf.y)) || Dungeon_controller.instance.cleaned.ContainsKey((tmp_inf.x, tmp_inf.y)) && !Dungeon_controller.instance.cleaned[(tmp_inf.x, tmp_inf.y)])
+						{
+							Dungeon_controller.instance.cleaned[(tmp_inf.x, tmp_inf.y)] = true; // change later if added teleport 
+						
+						}
+						
+						GameObject boss = Instantiate(boss_prefab, new Vector3(0, 0, 0), Quaternion.identity);
 						boss.GetComponent<NetworkObject>().Spawn();
 						spawned_objects.Add(boss);
 						num_enemy++; // change later if added teleport 

@@ -97,20 +97,29 @@ public class box_mover : NetworkBehaviour
 
 
 		//Debug.Log("moving is :" + moving);
-
 		if (fireing > 0)
 		{
-            animator.SetFloat("Move X", fire_direction.x);
-            animator.SetFloat("Move Y", fire_direction.y);
-        }
-		else 
-		{
-            animator.SetFloat("Move X", movement_direction.x);
-            animator.SetFloat("Move Y", movement_direction.y);
-        }
-		
-    }
+			if (IsOwner)  send_anim_to_ServerRpc(fire_direction.x, fire_direction.y);
+			animator.SetFloat("Move X", fire_direction.x);
+			animator.SetFloat("Move Y", fire_direction.y);
 
+		}
+		else
+		{
+			if(IsOwner) send_anim_to_ServerRpc(movement_direction.x, movement_direction.y );
+			animator.SetFloat("Move X", movement_direction.x);
+			animator.SetFloat("Move Y", movement_direction.y);
+		}
+
+
+	}
+
+	[ServerRpc]
+	private void send_anim_to_ServerRpc(float x , float y )
+	{
+		animator.SetFloat("Move X", x );
+		animator.SetFloat("Move Y", y);
+	}
 	public void start_move(Vector2 input_diraction)
 	{
 		moving++;
@@ -119,9 +128,9 @@ public class box_mover : NetworkBehaviour
 	public void mid_move(Vector2 input_diraction)
 	{
 		movement_direction = input_diraction;
-        
-        //Debug.Log("start move :" + input_diraction);
-    }
+		
+		//Debug.Log("start move :" + input_diraction);
+	}
 		
 	public void end_move(Vector2 input_diraction)
 	{
