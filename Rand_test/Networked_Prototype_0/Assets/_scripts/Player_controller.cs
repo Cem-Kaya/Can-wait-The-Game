@@ -12,7 +12,7 @@ public class Player_controller : NetworkBehaviour
 	
 	public   float bullet_speed =10f;
 	public int health = 40 ;   
-	public int max_health = 40 ; // max health of the player    
+	public int max_health = 60 ; // max health of the player    
 	public int fire_delay = 2 ;
 	public float move_speed;
 	public bool alive;
@@ -27,10 +27,10 @@ public class Player_controller : NetworkBehaviour
 
 	public AudioClip bullet_sound;
 	public AudioClip health_sound;
-    public AudioClip coin_sound;
+	public AudioClip coin_sound;
 
 
-    void Awake()
+	void Awake()
 	{
 		num_at_menu.Value = 0;
 		i_frame = false;
@@ -51,29 +51,29 @@ public class Player_controller : NetworkBehaviour
 		DontDestroyOnLoad(this.gameObject);
 		coin_num.Value = 0;
 		num_dead.Value = 0;
-        audioSource = GetComponent<AudioSource>();
+		audioSource = GetComponent<AudioSource>();
 
-    }
+	}
 
-    public void PlaySound(AudioClip clip)
-    {
-        audioSource.PlayOneShot(clip);
+	public void PlaySound(AudioClip clip)
+	{
+		audioSource.PlayOneShot(clip);
 
-    }
+	}
 
 
-    // Update is called once per frame
-    void Update()
+	// Update is called once per frame
+	void Update()
 	{
 		
 	}
 	private  IEnumerator i_frame_delay()
 	{
-
 		yield return new WaitForSeconds(i_frame_sec);
 		i_frame = false;
 	}
 	public   void take_damage(int damage ) {
+		//Debug.Log("shoudl take damage from player controller !" + i_frame);
 		if (!i_frame)
 		{
 			i_frame = true;
@@ -256,13 +256,13 @@ public class Player_controller : NetworkBehaviour
 		coin_num.Value += i;
 		if (IsServer) PlayCoinSound_ClientRpc();
 
-    }
+	}
 
 	[ClientRpc]
-    public void PlayCoinSound_ClientRpc()
+	public void PlayCoinSound_ClientRpc()
 	{
-        PlaySound(coin_sound);
-    }
+		PlaySound(coin_sound);
+	}
 	
 	public void decrease_coin_num(int i)
 	{

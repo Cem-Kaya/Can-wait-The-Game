@@ -235,8 +235,12 @@ public class Enemy_ai2 : NetworkBehaviour
 		}
 		else if (other.gameObject.tag == "Player")
 		{
-			//Debug.Log("Player hit");
-			Player_controller.instance.take_damage(1);
+			if (other.gameObject.GetComponent<NetworkObject>().IsOwner)
+			{
+				//Debug.Log("should take damage from enemy ai 1");
+				Player_controller.instance.take_damage(1); //GameObject.Find("Player_controller").GetComponent<Player_controller>().take_damage(1);
+
+			}
 		}
 	}
 }

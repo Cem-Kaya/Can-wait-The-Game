@@ -27,7 +27,7 @@ public class ExampleNetworkDiscoveryHud : MonoBehaviour
 
 	Dictionary<IPAddress, DiscoveryResponseData> discoveredServers = new Dictionary<IPAddress, DiscoveryResponseData>();
 
-	public Vector2 DrawOffset = new Vector2(10, 210);
+	private  Vector2 DrawOffset = new Vector2(10, 210);
 
 	
 
@@ -36,6 +36,9 @@ public class ExampleNetworkDiscoveryHud : MonoBehaviour
 	{
 		m_Discovery = GetComponent<ExampleNetworkDiscovery>();
 		m_NetworkManager = GetComponent<NetworkManager>();
+		// get screan with in pixels 
+
+		DrawOffset = new Vector2 (Screen.width /2 , Screen.height /2 );
 	}
 	private void Start()
 	{
