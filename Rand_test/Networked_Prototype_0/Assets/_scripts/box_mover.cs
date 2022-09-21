@@ -36,6 +36,7 @@ public class box_mover : NetworkBehaviour
 	float bullet_dmg; 
 	float bullet_scale;
 	float bullet_speed;
+	Animator animator;
 
 	public override void OnNetworkSpawn()
 	{
@@ -73,6 +74,7 @@ public class box_mover : NetworkBehaviour
 		moving = 0;
 		speed = 7 ;
 		rb = GetComponent<Rigidbody2D>();
+		animator = GetComponent<Animator>();
 
 		//coin_text =  GameObject.Find("Coin Text").GetComponent<TextMeshProUGUI>() ;
 		//health_text = GameObject.Find("Health Text").GetComponent<TextMeshProUGUI>();
@@ -92,9 +94,22 @@ public class box_mover : NetworkBehaviour
 			rb.velocity = new Vector2(movement_direction.x , movement_direction.y );
 			rb.velocity *= speed;
 		}
+
+
 		//Debug.Log("moving is :" + moving);
 
-	}
+		if (fireing > 0)
+		{
+            animator.SetFloat("Move X", fire_direction.x);
+            animator.SetFloat("Move Y", fire_direction.y);
+        }
+		else 
+		{
+            animator.SetFloat("Move X", movement_direction.x);
+            animator.SetFloat("Move Y", movement_direction.y);
+        }
+		
+    }
 
 	public void start_move(Vector2 input_diraction)
 	{
@@ -104,8 +119,9 @@ public class box_mover : NetworkBehaviour
 	public void mid_move(Vector2 input_diraction)
 	{
 		movement_direction = input_diraction;
-		//Debug.Log("start move :" + input_diraction);
-	}
+        
+        //Debug.Log("start move :" + input_diraction);
+    }
 		
 	public void end_move(Vector2 input_diraction)
 	{
