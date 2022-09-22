@@ -215,8 +215,8 @@ public class Enemy_ai : NetworkBehaviour
 				//Debug.Log("should take damage from enemy ai 1");
 				Player_controller.instance.take_damage(1); //GameObject.Find("Player_controller").GetComponent<Player_controller>().take_damage(1);
 
-            }
-        }
+			}
+		}
 	}
 
 	
