@@ -1127,6 +1127,7 @@ MonoBehaviour:
   vision_range: 5
   speed: 3
   player_position: {x: 0, y: 0, z: 0}
+  win_door_prefab: {fileID: 7371588465076059790, guid: 4d380bed9ba826543b54576069235245, type: 3}
   health_for_setting: 200
   health:
     m_InternalValue: 0

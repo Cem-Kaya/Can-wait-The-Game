@@ -13,6 +13,7 @@ public class Enemy_ai3_boss : NetworkBehaviour
 	public float vision_range = 5;
 	public float speed = 3;
 	public Vector3 player_position;
+	public GameObject win_door_prefab;
 
 	public int health_for_setting;
 
@@ -115,13 +116,22 @@ public class Enemy_ai3_boss : NetworkBehaviour
 
 	private void die()
 	{
+        
 		if (IsServer) die_ServerRpc();
 	}
 
 	[ServerRpc]
 	private void die_ServerRpc()
 	{
-		if (once == false)
+        GameObject win_door = Instantiate(win_door_prefab, new Vector3(0, 0, 0), Quaternion.identity);
+        win_door.GetComponent<NetworkObject>().Spawn();
+		if (IsServer)
+		{
+            Inner_layout_manager inner_manager = GameObject.Find("Inner_layout_manager").GetComponent<Inner_layout_manager>();
+            inner_manager.spawned_objects.Add(win_door);
+        }
+        
+        if (once == false)
 		{
 			once = true;
 			if (!(transform.localScale.magnitude < (0.9)) && IsServer) // 3.50 is the defult magnatude 

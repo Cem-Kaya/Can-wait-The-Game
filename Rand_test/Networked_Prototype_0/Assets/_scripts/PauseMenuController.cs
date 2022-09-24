@@ -44,16 +44,17 @@ public class PauseMenuController : MonoBehaviour
 
     void Pause(InputAction.CallbackContext context)
     {
-        is_paused = !is_paused;
 
-        if (is_paused)
-        {
-            Activate_menu();
-        }
-        else
-        {
-            Deactivate_menu();
-        }
+        //is_paused = !is_paused;
+
+        //if (is_paused)
+        //{
+        //    Activate_menu();
+        //}
+        //else
+        //{
+        //    Deactivate_menu();
+        //}
     }
 
     void Activate_menu()

@@ -134,7 +134,7 @@ public class box_mover : NetworkBehaviour
 	{
 		movement_direction = input_diraction;
 		
-		Debug.Log("start move :" + input_diraction + "moving :" + moving);
+		//Debug.Log("start move :" + input_diraction + "moving :" + moving);
 	}
 		
 	public void end_move(Vector2 input_diraction)
