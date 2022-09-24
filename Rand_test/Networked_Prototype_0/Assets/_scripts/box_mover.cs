@@ -63,7 +63,7 @@ public class box_mover : NetworkBehaviour
 		bullet_lf=0;
 		bullet_dmg=0;
 		bullet_scale =1 ;
-		bullet_speed = 7 ;
+		bullet_speed = 14 ;
 	}
 	
 	public void Start()
@@ -74,7 +74,7 @@ public class box_mover : NetworkBehaviour
 		fdelay = 25 ;
 		movement_direction = new Vector2(0, 0);
 		moving = 0;
-		speed = 7 ;
+		speed = 8 ;
 		rb = GetComponent<Rigidbody2D>();
 		animator = GetComponent<Animator>();
 		
@@ -134,7 +134,7 @@ public class box_mover : NetworkBehaviour
 	{
 		movement_direction = input_diraction;
 		
-		//Debug.Log("start move :" + input_diraction);
+		Debug.Log("start move :" + input_diraction + "moving :" + moving);
 	}
 		
 	public void end_move(Vector2 input_diraction)
